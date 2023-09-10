@@ -9,8 +9,9 @@ const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
   return (
-    <Layout pageTitle="Staking | Quicksilver">
+    <Layout pageTitle="Quicksilver DApp">
       <main className={`${styles.main} ${inter.className}`}>
+        sdfsdfdsf
       </main>
     </Layout>
   )

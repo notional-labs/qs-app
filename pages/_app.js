@@ -1,7 +1,12 @@
-import '@/styles/globals.css'
-import localFont from 'next/font/local';
-
+import '@/styles/globals.css';
+import "@/styles/menu.css";
+import "@/styles/dashboard.css";
+import {nexa, quicksand} from '@/assets/fonts/fonts';
 
 export default function App({ Component, pageProps }) {
-  return <Component {...pageProps} />
+  return (
+    <div className={`${nexa.variable} ${quicksand.variable} font-quicksand `}>
+      <Component {...pageProps} />
+    </div>
+  )
 }
