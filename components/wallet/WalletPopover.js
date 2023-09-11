@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React , {useState} from 'react';
 import {
     Button,
     Image,
@@ -12,13 +12,15 @@ import {
     Text,
     VStack
 } from '@chakra-ui/react'
-import useWallet from '@/state/wallet';
 import { shortenAddress } from '@/helper/address';
 import { WalletConfigs } from '@/state/config';
 import { CopyIcon } from '@chakra-ui/icons';
+import { useSelector, useDispatch } from 'react-redux';
+import { disconnectWallet } from '@/state/wallet/slice';
 
 export default function WalletPopover() {
-    const { address, typeWallet, disconnectWallet } = useWallet()
+    const dispatch = useDispatch()
+    const { address, typeWallet } = useSelector(state => state.wallet)
 
     const toast = useToast()
     const { isOpen, onToggle, onClose } = useDisclosure()
@@ -35,7 +37,7 @@ export default function WalletPopover() {
 
     const handleDisconnectWallet = () => {
         onClose()
-        disconnectWallet()
+        dispatch(disconnectWallet())
     }
 
     return (

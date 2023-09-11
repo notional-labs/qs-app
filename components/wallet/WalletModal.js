@@ -10,20 +10,21 @@ import {
     Button,
     useDisclosure,
     Link,
-    Image,
     useToast,
     Text,
     SimpleGrid,
     Avatar
 } from '@chakra-ui/react'
-import useWallet from '@/state/wallet';
 import { SupportedWallets, WalletConfigs } from '@/state/config';
+import { useSelector, useDispatch } from 'react-redux';
+import connectToWallet from '@/state/wallet/thunks/connectWallet';
 export default function WalletModal() {
-    const [isKeplrInstalled, setIsKeplrInstalled] = React.useState(false);
-    const [isLeapInstalled, setIsLeapInstalled] = React.useState(false);
-    const [isCosmostationInstalled, setIsCosmostationInstalled] = React.useState(false);
+    const dispatch = useDispatch()
+    const [isKeplrInstalled, setIsKeplrInstalled] = useState(false);
+    const [isLeapInstalled, setIsLeapInstalled] = useState(false);
+    const [isCosmostationInstalled, setIsCosmostationInstalled] = useState(false);
 
-    const { connectWallet, connecting } = useWallet()
+    const { connecting } = useSelector(state => state.wallet)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const toast = useToast();
 
@@ -64,7 +65,7 @@ export default function WalletModal() {
                 isClosable: true
             })
         } else {
-            await connectWallet(walletType)
+            dispatch(connectToWallet(walletType))
         }
     }
     return (

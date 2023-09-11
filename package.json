@@ -16,11 +16,13 @@
     "@emotion/styled": "^11.11.0",
     "@keplr-wallet/stores": "^0.10.3",
     "@keplr-wallet/types": "^0.10.3",
+    "@reduxjs/toolkit": "^1.9.5",
     "framer-motion": "^10.16.4",
     "next": "13.4.19",
     "quicksilverjs": "^0.8.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-redux": "^8.1.2",
     "reactstrap": "^9.2.0"
   },
   "devDependencies": {
