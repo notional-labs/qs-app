@@ -9,6 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.1.1",
+    "@chakra-ui/next-js": "^2.1.5",
+    "@chakra-ui/react": "^2.8.1",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@keplr-wallet/stores": "^0.10.3",
+    "@keplr-wallet/types": "^0.10.3",
+    "framer-motion": "^10.16.4",
     "next": "13.4.19",
     "quicksilverjs": "^0.8.0",
     "react": "18.2.0",
