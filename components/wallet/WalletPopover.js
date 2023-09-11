@@ -38,6 +38,9 @@ export default function WalletPopover() {
     const handleDisconnectWallet = () => {
         onClose()
         dispatch(disconnectWallet())
+        if (window) {
+            localStorage.removeItem('WalletType')
+        }
     }
 
     return (
