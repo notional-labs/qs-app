@@ -1,33 +1,28 @@
 import { createSlice } from "@reduxjs/toolkit";
-import connectToWallet from "./thunks/connectWallet";
+import connectToNetwork from "./thunks/connectNetwork";
 
 const initialState = {
     connecting: false,
     connected: false,
-    typeWallet: "",
+    selectedNetwork: "",
     address: "",
     balance: "",
 }
 
 export const slice = createSlice({
-    name: 'wallet',
+    name: 'network',
     initialState,
     reducers: {
-        disconnectWallet: (state, action) => {
-            state.connected = false
-            state.address = ""
-            state.typeWallet = ""
-        },
     },
     extraReducers(builder) {
-        builder.addCase(connectToWallet.pending, (state) => {
+        builder.addCase(connectToNetwork.pending, (state) => {
             state.connecting = true
         })
-        builder.addCase(connectToWallet.fulfilled, (state, action) => {
+        builder.addCase(connectToNetwork.fulfilled, (state, action) => {
             state.connecting = false
             state.address = action.payload.address
-            state.typeWallet = action.payload.typeWallet
             state.balance = action.payload.balance
+            state.selectedNetwork = action.payload.network
             state.connected = action.payload.connected
         })
     }
