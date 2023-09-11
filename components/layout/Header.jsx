@@ -7,9 +7,7 @@ import WalletPopover from '../wallet/WalletPopover';
 
 export default function Header() {
     const { connected } = useWallet()
-    useEffect(() => {
-        console.log(connected)
-    }, [connected])
+
     if (!connected) return <WalletModal />
 
     return (
