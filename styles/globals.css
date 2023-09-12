@@ -93,6 +93,9 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+    font-family: SVN-Nexa Light;
+    scrollbar-color: red orange;
+    scrollbar-width: thin;
 }
 
 a {
