@@ -9,6 +9,7 @@ const fetchWalletDetails = async (windowWallet, offlineSigner, walletType) => {
     let bech32 = pubkey?.bech32Address;
     if (bech32) {
         let roBalance = await offlineSigner.getAllBalances(bech32);
+        localStorage.setItem('WalletType', walletType);
         return {address: bech32, balance: roBalance, connected: true, typeWallet: walletType}
     }
     return {connected: false, typeWallet: "", address: "", balance: ""}
