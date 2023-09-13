@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import connectToWallet from "./thunks/connectWallet";
+import connectToClient from "./thunks/connectClient";
 
 const initialState = {
+    client: null,
     connecting: false,
     connected: false,
     typeWallet: "",
@@ -20,6 +22,9 @@ export const slice = createSlice({
         },
     },
     extraReducers(builder) {
+        builder.addCase(connectToClient.fulfilled, (state, action) => {
+            state.client = action.payload
+        })
         builder.addCase(connectToWallet.pending, (state) => {
             state.connecting = true
         })

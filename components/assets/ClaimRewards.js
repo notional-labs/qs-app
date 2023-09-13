@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import {
     VStack,
     Flex,
@@ -8,8 +8,21 @@ import {
     Tooltip,
 } from "@chakra-ui/react";
 import { InfoIcon } from "@chakra-ui/icons";
+import { useSelector } from "react-redux";
 
 export default function ClaimRewards() {
+    const { client, address} = useSelector(state => state.wallet)
+
+    const [availableRewards, setAvailableRewards] = useState(0)
+
+    useEffect(() => {
+        if (client) {client.cosmos.auth.v1beta1.account({
+            address: "quick1n8g3upr3f5mldctpmyjnzng6j2gv3y29pf34th"
+          })
+            client.cosmos.distribution.v1beta1.delegationTotalRewards({delegator_address: "quick1n8g3upr3f5mldctpmyjnzng6j2gv3y29pf34th"}).then(res => console.log(res))
+        }
+
+    }, [client, address])
     return (
         <Flex
             bgColor={'rgba(0, 0, 0, 0.6)'}

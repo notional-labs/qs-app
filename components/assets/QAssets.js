@@ -17,7 +17,7 @@ export default function QAssets() {
             </Text>
             <SimpleGrid columns={4} gap={6} w='full'>
                 {[1, 2, 3, 4].map((item, index) =>
-                    <QAssetCard />
+                    <QAssetCard key={item} />
                 )}
             </SimpleGrid>
         </Box>

@@ -19,6 +19,7 @@
     "@cosmjs/tendermint-rpc": "^0.30.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@hoangdv2429/quicksilverjs": "^0.0.1",
     "@keplr-wallet/stores": "^0.10.3",
     "@keplr-wallet/types": "^0.10.3",
     "@reduxjs/toolkit": "^1.9.5",

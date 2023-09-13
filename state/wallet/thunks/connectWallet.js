@@ -1,25 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { ProdQuickSilverChainInfo, ProdChainInfos } from '@/state/chains/prod'
-import { TestQuickSilverChainInfo, TestChainInfos } from '@/state/chains/test'
-import { DevQuickSilverChainInfo, DevChainInfos } from '@/state/chains/dev'
 import { getKeplrFromWindow } from '@keplr-wallet/stores';
 import { getSigningQuicksilverClient } from "quicksilverjs";
-const QuickSilverChains = {
-    "preprod": ProdQuickSilverChainInfo,
-    "prod": ProdQuickSilverChainInfo,
-    "test": TestQuickSilverChainInfo,
-    "dev": DevQuickSilverChainInfo,
-}
-
-const Chains = {
-    "preprod": ProdChainInfos,
-    "prod": ProdChainInfos,
-    "test": TestChainInfos,
-    "dev": DevChainInfos,
-}
-
-const ChainInfos = Chains[process.env.NEXT_PUBLIC_CHAIN_ENV]
-const QuickSilverChainInfo = QuickSilverChains[process.env.NEXT_PUBLIC_CHAIN_ENV]
+import { TestQuickSilverChainInfo } from '@/state/chains/test'
+import { QuickSilverChainInfo } from "../utils";
 
 const fetchWalletDetails = async (windowWallet, offlineSigner, walletType) => {
     let pubkey = await windowWallet?.getKey(QuickSilverChainInfo.chainId);

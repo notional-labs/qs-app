@@ -6,6 +6,7 @@ import WalletPopover from '../wallet/WalletPopover';
 import { useSelector, useDispatch } from 'react-redux';
 import connectToWallet from '@/state/wallet/thunks/connectWallet';
 import { SupportedWallets } from '@/state/config';
+import connectToClient from '@/state/wallet/thunks/connectClient';
 export default function Header() {
     const dispatch = useDispatch()
     const {connected, connecting} = useSelector(state => state.wallet)
@@ -19,6 +20,10 @@ export default function Header() {
         }
     }, [])
 
+    useEffect(() => {
+        dispatch(connectToClient())
+    }, [])
+    
     return (
         <Flex w='full' justifyContent={'end'}>
             {connected ? <WalletPopover /> :
