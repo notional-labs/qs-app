@@ -96,6 +96,7 @@ export default function Staking() {
                     _hover={{
                         backgroundColor: '#000000'
                     }}
+                    boxShadow={'0px 0px 5px 0px rgba(255, 255, 255, 0.50)'}
                     padding={'1.5em 4em'}
                 >
                     ATOM

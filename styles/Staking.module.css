@@ -59,7 +59,7 @@
 }
 
 .verticalLine {
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.00) 0%, #FFF 44.27%, rgba(255, 255, 255, 0.00) 100%);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, #FFF 44.27%, rgba(255, 255, 255, 0.00) 100%);
     width: 1px;
     height: 100%;
     opacity: 0.5;
@@ -104,4 +104,14 @@
 .switch_network_modal_sub_text {
     font-size: 14px;
     color: rgba(151, 151, 151, 1);
+}
+
+.tableMainText {
+    font-weight: bold;
+    font-size: 19px;
+}
+
+.tableSubText {
+    font-size: 15px;
+    color: rgba(158, 158, 158, 1);
 }
