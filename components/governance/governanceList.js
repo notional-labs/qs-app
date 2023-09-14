@@ -12,6 +12,8 @@ import {
   HStack,
   InputLeftAddon,
   Flex,
+  Center,
+  Box,
 } from "@chakra-ui/react";
 import { Search2Icon, ChevronDownIcon } from "@chakra-ui/icons";
 const proposal = [
@@ -184,98 +186,93 @@ const proposal = [
 
 const GovernanceList = () => {
   return (
-    <div
-      style={{
-        textAlign: "center",
-        margin: "1rem 0",
-        height: "100vh",
-        position: 'relative'
-
-      }}
-    >
-      <div>
-        <h1 style={{ color: "#FBFBFB" }}>Governance</h1>
-        <p style={{ color: "#CDCDCD" }}>
-          Vote on Cosmos proposals through the Quicksilver platform.
-        </p>
+    <Center w={"100%"} margin={"1vh"}>
+      <Box style={{ position: "relative", backgroundColor: 'rgba(42, 42, 42, 0.7)' }}>
+        <div>
+          <h1 style={{ color: "#FBFBFB" }}>Governance</h1>
+          <p style={{ color: "#CDCDCD" }}>
+            Vote on Cosmos proposals through the Quicksilver platform.
+          </p>
+          <div
+            style={{
+              justifyContent: "space-between",
+              display: "flex",
+              marginTop: "2rem",
+            }}
+          >
+            <>
+              <InputGroup
+                style={{
+                  border: "0.5px solid #979797",
+                  borderRadius: "20px",
+                  padding: "10px",
+                  width: "336px",
+                }}
+              >
+                <HStack>
+                  <InputLeftAddon
+                    pointerEvents="none"
+                    children={<Search2Icon color="gray" />}
+                  />
+                  <Input
+                    style={{ backgroundColor: "#2A2A2A" }}
+                    type="text"
+                    color='white'
+                    placeholder="Search For Proposal"
+                  />
+                </HStack>
+              </InputGroup>
+            </>
+            <>
+              <Menu>
+                <MenuButton
+                  style={{
+                    border: "1px solid white",
+                    borderRadius: "5px",
+                    color: "white",
+                    padding: "10px",
+                  }}
+                  as={Button}
+                  rightIcon={<ChevronDownIcon color="orange" />}
+                >
+                  Filter by Status
+                </MenuButton>
+                <MenuList>
+                  <MenuItem>Voting</MenuItem>
+                  <MenuItem>Passed</MenuItem>
+                  <MenuItem>Rejected</MenuItem>
+                </MenuList>
+              </Menu>
+            </>
+          </div>
+        </div>
         <div
+          // className="grid-col"
+          // id="grid-staking-card"
           style={{
-            justifyContent: "space-between",
-            display: "flex",
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
+            gap: "2rem",
             marginTop: "2rem",
+            zIndex: "100",
           }}
         >
-          <>
-            <InputGroup
-              style={{
-                border: "0.5px solid #979797",
-                borderRadius: "20px",
-                padding: "10px",
-                width: "336px",
-              }}
-            >
-              <HStack>
-                <InputLeftAddon
-                  pointerEvents="none"
-                  children={<Search2Icon color="gray" />}
-                />
-                <Input
-                  style={{ backgroundColor: "#2A2A2A" }}
-                  type="text"
-                  placeholder="Search For Proposal"
-                />
-              </HStack>
-            </InputGroup>
-          </>
-          <>
-            <Menu>
-              <MenuButton
-                style={{
-                  border: "1px solid white",
-                  borderRadius: "5px",
-                  color: "white",
-                  padding: "10px",
-                }}
-                as={Button}
-                rightIcon={<ChevronDownIcon color="orange" />}
-              >
-                Filter by Status
-              </MenuButton>
-              <MenuList>
-                <MenuItem>Voting</MenuItem>
-                <MenuItem>Passed</MenuItem>
-                <MenuItem>Rejected</MenuItem>
-              </MenuList>
-            </Menu>
-          </>
+          {proposal.map((proposal, index) => {
+            return (
+              <GovernanceItem
+                proposalId={proposal.proposal_id}
+                title={proposal.content.title}
+                vote={proposal.final_tally_result}
+                startTime={proposal.voting_start_time}
+                endTime={proposal.voting_end_time}
+                index={index}
+                key={proposal.proposal_id}
+              />
+            );
+          })}
         </div>
-      </div>
-      <div
-        // className="grid-col"
-        // id="grid-staking-card"
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(2, 1fr)",
-          gap: "2rem",
-          marginTop: "2rem",
-          zIndex: '100'
-        }}
-      >
-        {proposal.map((proposal, index) => {
-          return (
-            <GovernanceItem
-              proposalId={proposal.proposal_id}
-              title={proposal.content.title}
-              vote={proposal.final_tally_result}
-              startTime={proposal.voting_start_time}
-              endTime={proposal.voting_end_time}
-              index={index}
-              key={proposal.proposal_id}
-            />
-          );
-        })}
-      </div>
-    </div>
+      </Box>
+    </Center>
   );
 };
 

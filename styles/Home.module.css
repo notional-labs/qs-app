@@ -247,6 +247,7 @@
   width: 200%; 
   height: 200%;
 }
+
 .bg img {
   position: absolute; 
   top: 0; 
@@ -256,9 +257,4 @@
   margin: auto; 
   min-width: 50%;
   min-height: 50%;
-<<<<<<< HEAD
 }
-=======
-}
-
->>>>>>> remotes/origin/son/staking_page
