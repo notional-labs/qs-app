@@ -101,8 +101,8 @@ const SideBar = ({ currentPath }) => {
                         <Flex justify={'space-between'} direction={'column'}>
                             <NavbarBrand className="text-black dark:text-white logo flex items-center font-semibold text-xl">
                                 {
-                                    full ? <ChakraImage alt="cnweb logo" src={'/logos/qs-text.svg'} />
-                                        : <ChakraImage alt="cnweb logo" src={'/logos/qs_logo.svg'} boxSize={'100%'} />
+                                    full ? <ChakraImage alt="cnweb logo" src={'/logo/qs-text.svg'} />
+                                        : <ChakraImage alt="cnweb logo" src={'/logo/qs_logo.svg'} boxSize={'100%'} />
                                 }
                                 <button 
                                     className={full ? `resize-btn` : `resize-btn minimal-btn`} onClick={resize} style={{left: full ? '.9em' : '-.9em'}}>

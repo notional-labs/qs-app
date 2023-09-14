@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import Head from "next/head";
 import style from '@/styles/Home.module.css'
+import style from '@/styles/Home.module.css'
 
 const Layout = (props) => {
   return (
