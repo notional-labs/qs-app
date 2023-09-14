@@ -3,14 +3,15 @@
     color: rgba(251, 251, 251, 1);
     padding: 2em;
     border-radius: 10px;
-    background: #2A2A2A;
+    background: rgb(42, 42, 42, 0.6);
     backdrop-filter: blur(7px);
+
 }
 
 .pannel_mode_btn {
     background-color: transparent;
     border: none;
-    font-size: 1.5em;
+    font-size: 1.25em;
 }
 
 .amount_btn {
@@ -21,12 +22,13 @@
 }
 
 .stat_info {
-    margin: 10px 0
+    margin: 10px 0;
+    font-size: 15px
 }
 
 .stat_info_key {
     color: var(--neutral-100, #CDCDCD);
-    font-size: 20px;
+    font-size: 15px;
     font-style: normal;
     line-height: 150%;
     /* 24px */
@@ -37,7 +39,7 @@
 .stat_info_value {
     color: var(--neutral-50, #FBFBFB);
     text-align: right;
-    font-size: 20px;
+    font-size: 15px;
     font-style: normal;
     font-weight: bold;
     line-height: 150%;
@@ -54,7 +56,7 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
-    font-size: 16px;
+    font-size: 12px;
     margin-top: 10px;
 }
 
@@ -73,7 +75,7 @@
 }
 
 .panel_container {
-    padding: 2em;
+    padding: 1em 2em;
     width: 200%;
     font-size: 18px;
 }
@@ -86,9 +88,14 @@
     padding: 0 0 0 1em;
 }
 
+.chosen {
+    color: #E77728;
+}
+
 .in_color {
     font-weight: bold;
     color: #E77728;
+    font-size: 15px;
 }
 
 .switch_network_modal {

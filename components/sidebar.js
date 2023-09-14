@@ -1,69 +1,43 @@
 import React, { useState, useEffect } from "react";
 import { Navbar, NavbarBrand } from "reactstrap";
 import Image from "next/image";
+import { Image as ChakraImage, Flex } from "@chakra-ui/react";
 import Link from "next/link";
-import DropDown from "./dropdown";
-import { useTheme } from "next-themes";
-import LightIcon from "@/assets/icons/thin/sun.svg";
-import DarkIcon from "@/assets/icons/thin/moon.svg";
-import DashboardIcon from "@/assets/icons/thin/dashboard.svg";
-import ExportIcon from "@/assets/icons/thin/export.svg";
-import NotiIcon from "@/assets/icons/thin/notification.svg";
-import UserIcon from "@/assets/icons/thin/human.svg";
-import QuizIcon from "@/assets/icons/thin/quiz.svg";
-import ClassIcon from "@/assets/icons/thin/class.svg";
+import { Center, Box } from "@chakra-ui/react";
 
 const navButton = [
     {
-        text: "New Quiz",
-        path: "/new-quiz",
-        img: QuizIcon,
+        text: "Staking",
+        path: "/staking",
+        img: '/icons/staking.svg',
     },
     {
-        text: "New Class",
-        path: "/new-class",
-        img: ClassIcon,
+        text: "Assets",
+        path: "/assets",
+        img: '/icons/assets.svg',
     },
     {
-        text: "Dashboard",
-        path: "/dashboard",
-        img: DashboardIcon,
-        subNav: [
-            {
-                text: "Quizzes",
-                path: "/dashboard/quizzes",
-                img: QuizIcon,
-            },
-            {
-                text: "Classes",
-                path: "/dashboard/classes",
-                img: ClassIcon,
-            }
-        ]
+        text: "Defi",
+        path: "/defi",
+        img: '/icons/defi.svg',
     },
     {
-        text: "Export",
-        path: "/export",
-        img: ExportIcon,
+        text: "Airdrop",
+        path: "/airdrop",
+        img: '/icons/airdrop.svg',
     },
     {
-        text: "Notifications",
-        path: "/notifications",
-        img: NotiIcon,
+        text: "Governance",
+        path: "/governance",
+        img: '/icons/governance.svg',
     }
 ];
 
-const Menu = ({ currentPath }) => {
+const SideBar = ({ currentPath }) => {
     const sidebar = React.createRef();
     const [width, setWidth] = useState(233);
     const [full, setFull] = useState(true);
     const [isShows, setIsShows] = useState([]);
-    const [mounted, setMounted] = useState(false);
-    const { systemTheme, theme, setTheme } = useTheme();
-
-    useEffect(() => {
-        setMounted(true);
-    }, [])
 
     useEffect(() => {
         let showArray = navButton.map((_) => {
@@ -89,7 +63,7 @@ const Menu = ({ currentPath }) => {
     }, []);
 
     useEffect(() => {
-         if (width < 233) {
+        if (width < 233) {
             console.log(width)
             setFull(false);
         }
@@ -115,101 +89,67 @@ const Menu = ({ currentPath }) => {
         }
     };
 
-    const renderThemeChanger = () => {
-        if (!mounted) return null;
-        const currentTheme = theme === "system" ? systemTheme : theme;
-
-        if (currentTheme === "dark") {
-            return (
-                <a onClick={() => setTheme('light')} style={{ "cursor": "pointer" }}>
-                    <Image src={LightIcon} alt="sun icon" className="invert dark:invert-0" />
-                    <p>Light Mode</p>
-                </a>
-            )
-        }
-
-        else {
-            return (
-                <a onClick={() => setTheme('dark')} style={{ "cursor": "pointer" }}>
-                    <Image src={DarkIcon} alt="moon icon" className="invert dark:invert-0" />
-                    <p>Dark Mode</p>
-                </a>
-            )
-        }
-    };
-
     return (
-        <div className={full ? `sidebar` : `sidebar minimal-size`} ref={sidebar}>
-            <Navbar
-                className="menu"
-                light
-                expand="md"
-            >
-                <NavbarBrand href="/" className="text-black dark:text-white logo flex items-center font-semibold text-xl">
-                    <Image
-                        src={CNWeb}
-                        alt="cnweb logo"
-                        className="invert dark:invert-0 h-12 w-12"
-                    />
-                    CNWeb-30
-                </NavbarBrand>
-                <div className="menu-bar">
-                    {navButton.map((button, index) => {
-                        return (
-                            <Link
-                                href={button.path}
-                                key={index}
-                                onMouseEnter={() => {
-                                    handleMouseEnter(button, index);
-                                }}
-                                onMouseLeave={() => {
-                                    handleMouseLeave(button, index);
-                                }}
-                                className="menu-bar-item"
-                                style={{
-                                    background: currentPath === button.text && "linear-gradient(145deg, #4f4f4f, #2d2d2d)",
-                                    boxShadow: currentPath === button.text && "7px 7px 22px #242424, -7px -7px 22px #383838",
-                                }}
-
-                            >
-                                <Image alt="" src={button.img} />
-                                <p>
-                                    {button.text}
-                                </p>
-                                {button.subNav && (
-                                    <DropDown
-                                        minimized={full}
-                                        buttonList={button.subNav}
-                                        isShow={isShows[index]}
-                                    />
-                                )}
-                            </Link>
-                        );
-                    })}
-                </div>
-                <div className="menu-down flex items-center">
-                    <Link 
-                    href="/account"
-                    className="menu-bar-item"
-                    style={{
-                        background: currentPath === "Account" && "rgba(73, 73, 73, 0.595)",
-                        marginBottom: "10px"
-                    }}
+        <Center margin={'20px'} zIndex={1}>
+            <div className={full ? `sidebar` : `sidebar minimal-size`} ref={sidebar}>
+                <Center>
+                    <Navbar
+                        className="menu"
+                        light
+                        expand="md"
                     >
-                        <Image alt="an user icon" src={UserIcon} />
-                        <p>
-                            Account
-                        </p>
-                    </Link>
-                    {renderThemeChanger()}
-                </div>
-            </Navbar>
-            <a className={full ? `resize-btn` : `resize-btn minimal-btn`} onClick={resize}>
-                <span className="up-arrow"></span>
-                <span className="down-arrow"></span>
-            </a>
-        </div>
+                        <Flex justify={'space-between'} direction={'column'}>
+                            <NavbarBrand className="text-black dark:text-white logo flex items-center font-semibold text-xl">
+                                {
+                                    full ? <ChakraImage alt="cnweb logo" src={'/logo/qs-text.svg'} />
+                                        : <ChakraImage alt="cnweb logo" src={'/logo/qs_logo.svg'} boxSize={'100%'} />
+                                }
+                                <button 
+                                    className={full ? `resize-btn` : `resize-btn minimal-btn`} onClick={resize} style={{left: full ? '.9em' : '-.9em'}}>
+                                    <span className="up-arrow"></span>
+                                    <span className="down-arrow"></span>
+                                </button>
+                            </NavbarBrand>
+                            <div className="menu-bar">
+                                {navButton.map((button, index) => {
+                                    return (
+                                        <Link
+                                            href={button.path}
+                                            key={index}
+                                            onMouseEnter={() => {
+                                                handleMouseEnter(button, index);
+                                            }}
+                                            onMouseLeave={() => {
+                                                handleMouseLeave(button, index);
+                                            }}
+                                            style={{
+                                                background: currentPath === button.text && "rgba(231, 119, 40, 1)",
+                                                boxShadow: currentPath === button.text && "7px 7px 22px #242424, -7px -7px 22px #383838",
+                                            }}
+
+                                        >
+                                            <ChakraImage src={button.img} boxSize={'80%'} />
+                                            <p style={{
+                                                color: 'rgba(255, 255, 255, 1)',
+                                                display: !full && 'none',
+                                                color: currentPath === button.text ? 'rgba(14, 14, 14, 1)' : 'rgba(255, 255, 255, 1)'
+                                            }}
+                                            >
+                                                {button.text}
+                                            </p>
+                                        </Link>
+                                    );
+                                })}
+                            </div>
+                            <div className="menu-down flex items-center" style={{ color: '#979797', fontSize: '12px', display: !full && 'none' }}>
+                                Powered by Quicksilver Protocol.
+                            </div>
+                        </Flex>
+                    </Navbar>
+                </Center>
+            </div>
+        </Center>
     );
 };
 
-export default Menu;
+export default SideBar;
