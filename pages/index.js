@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <Layout pageTitle="Quicksilver DApp">
       <main className={`${styles.main} ${inter.className}`}>
-        sdfsdfdsf
+        
       </main>
     </Layout>
   )

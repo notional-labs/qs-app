@@ -1,39 +1,35 @@
 import React, { useState, useEffect } from "react";
 import { Navbar, NavbarBrand } from "reactstrap";
 import Image from "next/image";
+import { Image as ChakraImage, Flex } from "@chakra-ui/react";
 import Link from "next/link";
-import DefiIcon from "@/assets/icons/defi.svg";
-import AirdropIcon from "@/assets/icons/airdrop.svg";
-import GovIcon from "@/assets/icons/governance.svg";
-import StakingIcon from "@/assets/icons/staking.svg";
-import AssetsIcon from "@/assets/icons/assets.svg";
-import Quicksilver from "@/assets/logos/qs-text.svg";
+import { Center, Box } from "@chakra-ui/react";
 
 const navButton = [
     {
         text: "Staking",
         path: "/staking",
-        img: StakingIcon,
+        img: '/icons/staking.svg',
     },
     {
         text: "Assets",
         path: "/assets",
-        img: AssetsIcon,
+        img: '/icons/assets.svg',
     },
     {
         text: "Defi",
         path: "/defi",
-        img: DefiIcon,
+        img: '/icons/defi.svg',
     },
     {
         text: "Airdrop",
         path: "/airdrop",
-        img: AirdropIcon,
+        img: '/icons/airdrop.svg',
     },
     {
         text: "Governance",
         path: "/governance",
-        img: GovIcon,
+        img: '/icons/governance.svg',
     }
 ];
 
@@ -67,7 +63,7 @@ const SideBar = ({ currentPath }) => {
     }, []);
 
     useEffect(() => {
-         if (width < 233) {
+        if (width < 233) {
             console.log(width)
             setFull(false);
         }
@@ -94,55 +90,65 @@ const SideBar = ({ currentPath }) => {
     };
 
     return (
-        <div className={full ? `sidebar` : `sidebar minimal-size`} ref={sidebar}>
-            <Navbar
-                className="menu"
-                light
-                expand="md"
-            >
-                <NavbarBrand href="/" className="text-black dark:text-white logo flex items-center font-semibold text-xl">
-                    <Image
-                        src={Quicksilver}
-                        alt="cnweb logo"
-                        className="invert dark:invert-0 h-12 w-12"
-                    />
-                </NavbarBrand>
-                <div className="menu-bar">
-                    {navButton.map((button, index) => {
-                        return (
-                            <Link
-                                href={button.path}
-                                key={index}
-                                onMouseEnter={() => {
-                                    handleMouseEnter(button, index);
-                                }}
-                                onMouseLeave={() => {
-                                    handleMouseLeave(button, index);
-                                }}
-                                className="menu-bar-item"
-                                style={{
-                                    background: currentPath === button.text && "linear-gradient(145deg, #4f4f4f, #2d2d2d)",
-                                    boxShadow: currentPath === button.text && "7px 7px 22px #242424, -7px -7px 22px #383838",
-                                }}
+        <Center margin={'20px'} zIndex={1}>
+            <div className={full ? `sidebar` : `sidebar minimal-size`} ref={sidebar}>
+                <Center>
+                    <Navbar
+                        className="menu"
+                        light
+                        expand="md"
+                    >
+                        <Flex justify={'space-between'} direction={'column'}>
+                            <NavbarBrand className="text-black dark:text-white logo flex items-center font-semibold text-xl">
+                                {
+                                    full ? <ChakraImage alt="cnweb logo" src={'/logo/qs-text.svg'} />
+                                        : <ChakraImage alt="cnweb logo" src={'/logo/qs_logo.svg'} boxSize={'100%'} />
+                                }
+                                <button 
+                                    className={full ? `resize-btn` : `resize-btn minimal-btn`} onClick={resize} style={{left: full ? '.9em' : '-.9em'}}>
+                                    <span className="up-arrow"></span>
+                                    <span className="down-arrow"></span>
+                                </button>
+                            </NavbarBrand>
+                            <div className="menu-bar">
+                                {navButton.map((button, index) => {
+                                    return (
+                                        <Link
+                                            href={button.path}
+                                            key={index}
+                                            onMouseEnter={() => {
+                                                handleMouseEnter(button, index);
+                                            }}
+                                            onMouseLeave={() => {
+                                                handleMouseLeave(button, index);
+                                            }}
+                                            style={{
+                                                background: currentPath === button.text && "rgba(231, 119, 40, 1)",
+                                                boxShadow: currentPath === button.text && "7px 7px 22px #242424, -7px -7px 22px #383838",
+                                            }}
 
-                            >
-                                <Image alt="" src={button.img} />
-                                <p>
-                                    {button.text}
-                                </p>
-                            </Link>
-                        );
-                    })}
-                </div>
-                <div className="menu-down flex items-center">
-                    Powered by Quicksilver Protocol. Made by Notional with love.
-                </div>
-            </Navbar>
-            <a className={full ? `resize-btn` : `resize-btn minimal-btn`} onClick={resize}>
-                <span className="up-arrow"></span>
-                <span className="down-arrow"></span>
-            </a>
-        </div>
+                                        >
+                                            <ChakraImage src={button.img} boxSize={'80%'} />
+                                            <p style={{
+                                                color: 'rgba(255, 255, 255, 1)',
+                                                display: !full && 'none',
+                                                color: currentPath === button.text ? 'rgba(14, 14, 14, 1)' : 'rgba(255, 255, 255, 1)'
+                                            }}
+                                            >
+                                                {button.text}
+                                            </p>
+                                        </Link>
+                                    );
+                                })}
+                            </div>
+                            <div className="menu-down flex items-center" style={{ color: '#979797', fontSize: '12px', display: !full && 'none' }}>
+                                Powered by Quicksilver Protocol.
+                            </div>
+                        </Flex>
+                    </Navbar>
+                </Center>
+            </div>
+        </Center>
     );
 };
 
