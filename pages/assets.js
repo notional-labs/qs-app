@@ -21,17 +21,20 @@ import StakingInfo from "@/components/assets/StakingInfo";
 import Portfolio from "@/components/assets/Portfolio";
 import StakeIntent from "@/components/assets/StakeIntent";
 import QAssets from "@/components/assets/QAssets";
+import UnbondingAssets from "@/components/assets/UnbondingAssets";
 
 function Assets() {
     return (
         <Layout pageTitle="Assets | Quicksilver">
-            <Center className="dashboard h-screen bg-center bg-background bg-cover bg-no-repeat flex items-center">
+            <Box className="dashboard bg-center bg-background bg-cover" py={10}>
                 <Center
+                    w='full'
                     border='1px solid white'
                     bgColor={'rgba(211,211,211, 0.1)'}
                     borderRadius={'10px'}
                     color='white'
                     p={10}
+                    mb={10}
                 >
                     <VStack opacity='unset' gap={6}>
                         <Flex gap={20}>
@@ -50,7 +53,20 @@ function Assets() {
                         <QAssets />
                     </VStack>
                 </Center>
-            </Center>
+                <Center
+                    w='full'
+                    border='1px solid white'
+                    bgColor={'rgba(211,211,211, 0.1)'}
+                    borderRadius={'10px'}
+                    color='white'
+                    p={10}
+                >
+                    <UnbondingAssets />
+                </Center>
+            </Box>
+
+
+
         </Layout >
     );
 }
