@@ -48,7 +48,7 @@
 
 .input_prefix {
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
 }
 
 .amount_input_balance {

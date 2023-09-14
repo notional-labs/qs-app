@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react';
-import { Flex } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import WalletModal from '../wallet/WalletModal';
 import WalletPopover from '../wallet/WalletPopover';
 import { useSelector, useDispatch } from 'react-redux';
@@ -20,9 +20,9 @@ export default function Header() {
     }, [])
 
     return (
-        <Flex w='full' justifyContent={'end'}>
+        <Box position={'fixed'} top={10} right={10} zIndex={10}>
             {connected ? <WalletPopover /> :
                 <WalletModal />}
-        </Flex>
+        </Box>
     )
 }

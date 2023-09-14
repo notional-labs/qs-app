@@ -1,5 +1,5 @@
 
-import React , {useState} from 'react';
+import React , {useEffect, useState} from 'react';
 import {
     Button,
     Image,
@@ -17,6 +17,7 @@ import { WalletConfigs } from '@/state/config';
 import { CopyIcon } from '@chakra-ui/icons';
 import { useSelector, useDispatch } from 'react-redux';
 import { disconnectWallet } from '@/state/wallet/slice';
+import connectToWallet from '@/state/wallet/thunks/connectWallet';
 
 export default function WalletPopover() {
     const dispatch = useDispatch()
@@ -43,6 +44,13 @@ export default function WalletPopover() {
         }
     }
 
+    useEffect(() => {
+        if (typeWallet && window) {
+            window.addEventListener("keplr_keystorechange", () => {
+                dispatch(connectToWallet(typeWallet))
+            })
+        }
+    }, [typeWallet])
     return (
         <Popover
             isOpen={isOpen}
@@ -81,7 +89,6 @@ export default function WalletPopover() {
                             py={4}
                         >
                             <VStack alignItems={'start'} gap={1} w='full'>
-                                <Text fontSize={'20px'}>Cosmos</Text>
                                 <Text fontSize={'14px'}>{shortenAddress(address)}</Text>
                             </VStack>
                         </Button>

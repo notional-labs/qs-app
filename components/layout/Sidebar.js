@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Navbar, NavbarBrand } from "reactstrap";
-import Image from "next/image";
-import { Image as ChakraImage, Flex } from "@chakra-ui/react";
+import { Box, Image as ChakraImage, Flex } from "@chakra-ui/react";
 import Link from "next/link";
-import { Center, Box } from "@chakra-ui/react";
+import { Center } from "@chakra-ui/react";
+import { usePathname } from 'next/navigation'
 
 const navButton = [
     {
@@ -33,7 +33,8 @@ const navButton = [
     }
 ];
 
-const SideBar = ({ currentPath }) => {
+const SideBar = () => {
+    const currentPath = usePathname()
     const sidebar = React.createRef();
     const [width, setWidth] = useState(233);
     const [full, setFull] = useState(true);
@@ -105,7 +106,7 @@ const SideBar = ({ currentPath }) => {
                                         : <ChakraImage alt="cnweb logo" src={'/logo/qs_logo.svg'} boxSize={'100%'} />
                                 }
                                 <button 
-                                    className={full ? `resize-btn` : `resize-btn minimal-btn`} onClick={resize} style={{left: full ? '.9em' : '-.9em'}}>
+                                    className={full ? `resize-btn` : `resize-btn minimal-btn`} onClick={resize} style={{left: full ? '2.3em' : '-.9em'}}>
                                     <span className="up-arrow"></span>
                                     <span className="down-arrow"></span>
                                 </button>
@@ -123,8 +124,8 @@ const SideBar = ({ currentPath }) => {
                                                 handleMouseLeave(button, index);
                                             }}
                                             style={{
-                                                background: currentPath === button.text && "rgba(231, 119, 40, 1)",
-                                                boxShadow: currentPath === button.text && "7px 7px 22px #242424, -7px -7px 22px #383838",
+                                                background: currentPath.includes(button.path) && "rgba(231, 119, 40, 1)",
+                                                boxShadow: currentPath.includes(button.path) && "7px 7px 22px #242424, -7px -7px 22px #383838",
                                             }}
 
                                         >
@@ -132,7 +133,7 @@ const SideBar = ({ currentPath }) => {
                                             <p style={{
                                                 color: 'rgba(255, 255, 255, 1)',
                                                 display: !full && 'none',
-                                                color: currentPath === button.text ? 'rgba(14, 14, 14, 1)' : 'rgba(255, 255, 255, 1)'
+                                                color: currentPath.includes(button.path)? 'rgba(14, 14, 14, 1)' : 'rgba(255, 255, 255, 1)'
                                             }}
                                             >
                                                 {button.text}
@@ -141,9 +142,9 @@ const SideBar = ({ currentPath }) => {
                                     );
                                 })}
                             </div>
-                            <div className="menu-down flex items-center" style={{ color: '#979797', fontSize: '12px', display: !full && 'none' }}>
+                            {full ? <div className="menu-down flex items-center" style={{ color: '#979797', height:'18px', fontSize: '12px'}}>
                                 Powered by Quicksilver Protocol.
-                            </div>
+                            </div> : <Box h='18px'/> } 
                         </Flex>
                     </Navbar>
                 </Center>
