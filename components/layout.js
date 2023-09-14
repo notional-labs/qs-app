@@ -12,7 +12,7 @@ const Layout = (props) => {
         <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
       </Head>
       <div class={`${style.bg}`}>
-        <img src="/imgs/background.svg" alt="" />
+        <img src="/imgs/background.jpg" alt="" />
       </div>
       <div>
         {props.children}
