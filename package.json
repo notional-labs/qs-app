@@ -9,11 +9,17 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.1.1",
+    "@chakra-ui/react": "^2.8.1",
+    "chart.js": "^4.4.0",
     "next": "13.4.19",
     "quicksilverjs": "^0.8.0",
     "react": "18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "18.2.0",
-    "reactstrap": "^9.2.0"
+    "react-markdown": "^8.0.7",
+    "reactstrap": "^9.2.0",
+    "remark-gfm": "^3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.15",
