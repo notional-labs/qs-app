@@ -39,9 +39,9 @@ const GovernanceItem = ({
           style={{ borderRadius: "10px", border: "1px solid #3E497C" }}
           w="100px"
         >
-          <HStack>
-            <TimeIcon />
-            <Text>Ongoing</Text>
+          <HStack style={{padding: '8px 10px 8px 10px'}}>
+            <TimeIcon boxSize={4}/>
+            <Text fontSize={12}>Ongoing</Text>
           </HStack>
         </Center>
         <Center w="100px">

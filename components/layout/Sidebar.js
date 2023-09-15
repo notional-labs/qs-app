@@ -10,26 +10,31 @@ const navButton = [
         text: "Staking",
         path: "/staking",
         img: '/icons/staking.svg',
+        currentPathImg: '/icons/stakingb.svg'
     },
     {
         text: "Assets",
         path: "/assets",
         img: '/icons/assets.svg',
+        currentPathImg: '/icons/assetsb.svg'
     },
     {
         text: "Defi",
         path: "/defi",
         img: '/icons/defi.svg',
+        currentPathImg: '/icons/defib.svg'
     },
     {
         text: "Airdrop",
         path: "/airdrop",
         img: '/icons/airdrop.svg',
+        currentPathImg: '/icons/airdropb.svg'
     },
     {
         text: "Governance",
         path: "/governance",
         img: '/icons/governance.svg',
+        currentPathImg: '/icons/governanceb.svg'
     }
 ];
 
@@ -106,7 +111,7 @@ const SideBar = () => {
                                         : <ChakraImage alt="cnweb logo" src={'/logo/qs_logo.svg'} boxSize={'100%'} />
                                 }
                                 <button 
-                                    className={full ? `resize-btn` : `resize-btn minimal-btn`} onClick={resize} style={{left: full ? '2.3em' : '-.9em'}}>
+                                    className={full ? `resize-btn` : `resize-btn minimal-btn`} onClick={resize} style={{left: full ? '1em' : '-.9em'}}>
                                     <span className="up-arrow"></span>
                                     <span className="down-arrow"></span>
                                 </button>
@@ -129,7 +134,7 @@ const SideBar = () => {
                                             }}
 
                                         >
-                                            <ChakraImage src={button.img} boxSize={'80%'} />
+                                            {currentPath.includes(button.path) ? <ChakraImage src={button.currentPathImg} boxSize={'80%'} /> : <ChakraImage src={button.img} boxSize={'80%'} />}
                                             <p style={{
                                                 color: 'rgba(255, 255, 255, 1)',
                                                 display: !full && 'none',

@@ -1,5 +1,6 @@
 import React from "react";
 import GovernanceItem from "./governanceItem";
+import GovStyle from '@/styles/Governance.module.css'
 import {
   Button,
   Input,
@@ -15,7 +16,7 @@ import {
   Center,
   Box,
 } from "@chakra-ui/react";
-import { Search2Icon, ChevronDownIcon } from "@chakra-ui/icons";
+import { Search2Icon, ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
 const proposal = [
   {
     proposal_id: "1",
@@ -187,7 +188,7 @@ const proposal = [
 const GovernanceList = () => {
   return (
     <Center w={"100%"} margin={"1vh"}>
-      <Box style={{ position: "relative", backgroundColor: 'rgba(42, 42, 42, 0.7)' }}>
+      <Box className={GovStyle.governance_container}>
         <div>
           <h1 style={{ color: "#FBFBFB" }}>Governance</h1>
           <p style={{ color: "#CDCDCD" }}>
@@ -201,27 +202,17 @@ const GovernanceList = () => {
             }}
           >
             <>
-              <InputGroup
-                style={{
-                  border: "0.5px solid #979797",
-                  borderRadius: "20px",
-                  padding: "10px",
-                  width: "336px",
-                }}
-              >
-                <HStack>
-                  <InputLeftAddon
-                    pointerEvents="none"
-                    children={<Search2Icon color="gray" />}
-                  />
-                  <Input
-                    style={{ backgroundColor: "#2A2A2A" }}
-                    type="text"
-                    color='white'
-                    placeholder="Search For Proposal"
-                  />
-                </HStack>
-              </InputGroup>
+            <InputGroup w={'30%'}>
+                        <InputLeftElement pointerEvents='none'>
+                            <SearchIcon color='gray.300' />
+                        </InputLeftElement>
+                        <Input
+                            type='tel'
+                            placeholder='Search Proposal'
+                            borderRadius={'20px'}
+                            _focus={{ borderColor: '#E77728', boxShadow: 'none' }}
+                        />
+                    </InputGroup>
             </>
             <>
               <Menu>
@@ -229,18 +220,19 @@ const GovernanceList = () => {
                   style={{
                     border: "1px solid white",
                     borderRadius: "5px",
-                    color: "white",
                     padding: "10px",
+                    backgroundColor: 'inherit',
+                    color: 'rgba(151, 151, 151, 1)'
                   }}
                   as={Button}
                   rightIcon={<ChevronDownIcon color="orange" />}
                 >
                   Filter by Status
                 </MenuButton>
-                <MenuList>
-                  <MenuItem>Voting</MenuItem>
-                  <MenuItem>Passed</MenuItem>
-                  <MenuItem>Rejected</MenuItem>
+                <MenuList backgroundColor='inherit'>
+                  <MenuItem backgroundColor='inherit'>Voting</MenuItem>
+                  <MenuItem backgroundColor='inherit'>Passed</MenuItem>
+                  <MenuItem backgroundColor='inherit'>Rejected</MenuItem>
                 </MenuList>
               </Menu>
             </>
