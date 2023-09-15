@@ -5,14 +5,17 @@ import {
     Text,
     HStack,
     Divider,
-    Progress,
+    useDisclosure,
     Avatar,
     Button,
 } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import NetworkSlider from "./NetworkSelect";
+import IntentModal from "./IntentModal";
 
 export default function StakeIntent() {
+    const {isOpen, onClose, onOpen} = useDisclosure()
+
     return (
         <VStack
             alignItems={'start'}
@@ -21,7 +24,7 @@ export default function StakeIntent() {
         >
             <HStack w='full' justifyContent={'space-between'}>
                 <Text fontSize={'18px'}>Stake Intent</Text>
-                <Button color='#FF8500' p={0} h={'min'} variant='ghost' rightIcon={<ChevronRightIcon />} fontSize={'14px'}
+                <Button onClick={onOpen} color='#FF8500' p={0} h={'min'} variant='ghost' rightIcon={<ChevronRightIcon />} fontSize={'14px'}
                     _hover={{textDecoration: 'underline'}}
                 >
                     Edit / Reset Intent
@@ -91,6 +94,7 @@ export default function StakeIntent() {
 
                 </Flex>
             </VStack>
+            <IntentModal isOpen={isOpen} onClose={onClose} />
         </VStack>
     );
 }

@@ -25,7 +25,7 @@ export default function QAssetCard() {
                 </HStack>
                 <VStack alignItems={'end'}>
                     <Text>12.34%</Text>
-                    <Text fontSize={'12px'}>QUICKSILVER APY</Text>
+                    <Text fontSize={'12px'}>APY</Text>
                 </VStack>
             </Flex>
             <Flex

@@ -20,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 import { InfoIcon } from "@chakra-ui/icons";
 
-export default function RewardModal({ isOpen, onClose }) {
+export default function IntentModal({ isOpen, onClose }) {
     return (
         <Modal
             isOpen={isOpen}
@@ -40,7 +40,7 @@ export default function RewardModal({ isOpen, onClose }) {
                     <Center justifyContent={'start'} gap={'10px'}>
                         <Image src='/logo/qs_logo.svg' />
                         <Text fontSize={'24px'}>
-                            Claim Participation Rewards
+                            Set Intent Summary
                         </Text>
                     </Center>
                     <ModalCloseButton
@@ -53,19 +53,8 @@ export default function RewardModal({ isOpen, onClose }) {
                     />
                 </ModalHeader>
                 <ModalBody px={8}>
-                    <Divider my={3} />
-                    <HStack w='full' justifyContent={'space-between'}>
-                        <Text fontSize={'16px'} color='#CDCDCD'>Total Claim Amount</Text>
-                        <Text>1234.1234 QCK</Text>
-                    </HStack>
-                    <HStack w='full' justifyContent={'space-between'}>
-                        <Text fontSize={'16px'} color='#CDCDCD'>Claim Reward Date</Text>
-                        <Text>12th April 2023, 12:34:56</Text>
-                    </HStack>
-                    <Divider my={3} />
-                    <Text fontSize={'16px'} color='#CDCDCD'>Your claims are measured against your qAsset balances from the previous epoch.</Text>
-                    <Text fontSize={'24px'} mt={4} mb={2}>
-                        EXISTING QASSET BALANCES
+                    <Text fontSize={'24px'} fontWeight={700} mt={4} mb={2}>
+                        VALIDATOR LIST
                     </Text>
                     <VStack w='full' border='1px gray solid' borderRadius={'12px'} gap={2} py={2}>
                         <Flex w='full' justifyContent='space-between' p={2}>
@@ -73,7 +62,7 @@ export default function RewardModal({ isOpen, onClose }) {
                                 <Avatar src='/assets/Cosmos.png' size='xs' />
                                 <Text fontSize={'16px'} color='#CDCDCD'>Osmosis</Text>
                             </HStack>
-                            <Text>1234.56 qOSMO</Text>
+                            <Text>12.5%</Text>
                         </Flex>
                         <Divider />
                         <Flex w='full' justifyContent='space-between' p={2}>
@@ -81,7 +70,7 @@ export default function RewardModal({ isOpen, onClose }) {
                                 <Avatar src='/assets/Cosmos.png' size='xs' />
                                 <Text fontSize={'16px'} color='#CDCDCD'>Osmosis</Text>
                             </HStack>
-                            <Text>1234.56 qOSMO</Text>
+                            <Text>12.5%</Text>
                         </Flex>
                         <Divider />
                         <Flex w='full' justifyContent='space-between' p={2}>
@@ -89,10 +78,13 @@ export default function RewardModal({ isOpen, onClose }) {
                                 <Avatar src='/assets/Cosmos.png' size='xs' />
                                 <Text fontSize={'16px'} color='#CDCDCD'>Osmosis</Text>
                             </HStack>
-                            <Text>1234.56 qOSMO</Text>
+                            <Text>12.5%</Text>
                         </Flex>
                     </VStack>
-                    <Checkbox disabled size='sm' m={2}>
+                    <Text fontSize={'16px'} color='#CDCDCD' mt={2}>
+                        Aggregate staking intent for all stakers is calculated at the end of each epoch. Given limitations in concurrent redelegations, redelegation to the new intent may take up to 21 days.
+                    </Text>
+                    <Checkbox disabled size='sm' mt={2}>
                         <Text as={'i'} fontSize={'13px'} color={'#FBFBFB'}>
                             Enable Automatic Claiming of Rewards {" "}
                             <Tooltip label='Coming soon' fontSize='md'>
@@ -100,12 +92,7 @@ export default function RewardModal({ isOpen, onClose }) {
                             </Tooltip>
                         </Text>
                     </Checkbox>
-                    <Text fontSize={'16px'} color='#CDCDCD'>
-                        Make sure to auto-claim your participation rewards to have your staking intent respected by the protocol.
-                    </Text>
-                    <Text fontSize={'16px'} color='#CDCDCD'>
-                        You will need to approve 2 transactions on your wallet to enable automatic claiming of rewards and to claim these rewards.
-                    </Text>
+
                     <Button w='full'
                         my={4}
                         fontWeight={400}
@@ -114,7 +101,7 @@ export default function RewardModal({ isOpen, onClose }) {
                             bgColor: '#FF850096'
                         }}
                         color='black'>
-                            Claim Rewards
+                            Confirm Your Staking Intent
                     </Button>
                 </ModalBody>
             </ModalContent>

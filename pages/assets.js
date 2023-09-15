@@ -1,4 +1,3 @@
-import SideBar from "@/components/sidebar";
 import Layout from "@/components/layout";
 import React, { useEffect, useState } from "react";
 import {
@@ -22,11 +21,13 @@ import Portfolio from "@/components/assets/Portfolio";
 import StakeIntent from "@/components/assets/StakeIntent";
 import QAssets from "@/components/assets/QAssets";
 import UnbondingAssets from "@/components/assets/UnbondingAssets";
+import PageHead from "@/components/layout/PageHead";
 
 function Assets() {
     return (
-        <Layout pageTitle="Assets | Quicksilver">
-            <Box className="dashboard bg-center bg-background bg-cover" py={10}>
+        <>
+            <PageHead pageTitle="Assets | Quicksilver" />
+            <Box my={'12vh'} mx={20} w='full'>
                 <Center
                     w='full'
                     border='1px solid white'
@@ -36,8 +37,8 @@ function Assets() {
                     p={10}
                     mb={10}
                 >
-                    <VStack opacity='unset' gap={6}>
-                        <Flex gap={20}>
+                    <VStack opacity='unset' gap={6} w='full'>
+                        <Flex gap={20} w='full' justifyContent={'space-between'}>
                             <RewardsInfo />
                             <ClaimRewards />
                         </Flex>
@@ -63,11 +64,11 @@ function Assets() {
                 >
                     <UnbondingAssets />
                 </Center>
-            </Box>
+            </Box></>
 
 
 
-        </Layout >
+
     );
 }
 

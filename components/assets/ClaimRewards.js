@@ -6,15 +6,17 @@ import {
     Button,
     Checkbox,
     Tooltip,
+    useDisclosure,
 } from "@chakra-ui/react";
 import { InfoIcon } from "@chakra-ui/icons";
 import { useSelector } from "react-redux";
+import RewardModal from "./RewardModal";
 
 export default function ClaimRewards() {
     const { client, address} = useSelector(state => state.wallet)
 
     const [availableRewards, setAvailableRewards] = useState(0)
-
+    const {isOpen, onClose, onOpen} = useDisclosure()
     useEffect(() => {
         if (client) {client.cosmos.auth.v1beta1.account({
             address: "quick1n8g3upr3f5mldctpmyjnzng6j2gv3y29pf34th"
@@ -44,6 +46,7 @@ export default function ClaimRewards() {
                 </Checkbox>
             </VStack>
             <Button
+                onClick={onOpen}
                 px={4}
                 size='sm'
                 fontWeight={400}
@@ -51,9 +54,11 @@ export default function ClaimRewards() {
                 _hover={{
                     bgColor: '#FF850054'
                 }}
+                color='white'
                 borderRadius={4}>
                 Claim Rewards
             </Button>
+            <RewardModal isOpen={isOpen} onClose={onClose} />
         </Flex>
     );
 }
