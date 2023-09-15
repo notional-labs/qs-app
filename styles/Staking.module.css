@@ -95,7 +95,6 @@
 .in_color {
     font-weight: bold;
     color: #E77728;
-    font-size: 15px;
 }
 
 .switch_network_modal {
@@ -115,7 +114,7 @@
 
 .tableMainText {
     font-weight: bold;
-    font-size: 19px;
+    font-size: 15px;
 }
 
 .tableSubText {
