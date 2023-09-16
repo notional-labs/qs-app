@@ -18,9 +18,11 @@ import {
 import { ChevronLeftIcon, SearchIcon } from '@chakra-ui/icons'
 import ValidatorCard from '@/components/card/validator'
 import { GoPencil } from "react-icons/go";
+import StakingModal from '../modal/staking'
 
 const ValidatorPanel = (props) => {
     const [pannelMode, setPannelMode] = useState(0)
+    const [show, setShow] = useState(false)
     return (
         <Center w={'100%'} padding={'10vh'} minH={'100%'}>
             <Box className={`${stakingStyles.staking_container}`} w={'100%'} h={'100%'}>
@@ -212,6 +214,7 @@ const ValidatorPanel = (props) => {
                                 _hover={{
                                     backgroundColor: '#ba5c1a'
                                 }}
+                                onClick={() => setShow(true)}
                             >
                                 Next
                             </Button>
@@ -220,6 +223,11 @@ const ValidatorPanel = (props) => {
                     </Center>
                 </Flex>
             </Box>
+
+            <StakingModal
+                isShow={show}
+                setIsShow={setShow}
+            />
         </Center>
     )
 }

@@ -36,6 +36,15 @@
     border-bottom: 1px dashed #CDCDCD
 }
 
+.modal_stat_key {
+    color: var(--neutral-100, #CDCDCD);
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 150%;
+    /* 21px */
+}
+
 .stat_info_value {
     color: var(--neutral-50, #FBFBFB);
     text-align: right;
