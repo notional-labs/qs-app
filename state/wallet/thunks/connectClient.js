@@ -8,7 +8,6 @@ const connectToClient = createAsyncThunk("wallet/connect-client", async () => {
     try {
         const { createGrpcGateWayClient } = quicksilver.ClientFactory; 
         result = await createGrpcGateWayClient({ endpoint: QuickSilverChainInfo.rest });
-        console.log(result.cosmos.bank.v1beta1)
     } catch (e) {
         console.log("connect client err: ", e)
     }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import {
 
     Popover,
@@ -10,29 +10,22 @@ import {
     VStack,
     Image
 } from '@chakra-ui/react'
-import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
+import { DataMap } from '@/state/network/utils'
+import { useDispatch, useSelector } from 'react-redux'
+import connectToNetwork from '@/state/network/thunks/connectNetwork'
+
+const networkArr = Object.entries(DataMap)
 
 export default function NetworkSelect() {
+    const dispatch = useDispatch()
     const { isOpen, onToggle, onClose } = useDisclosure()
 
-    const networks = [
-        {
-            title: 'Cosmos',
-            image:
-                '/assets/Cosmos.png',
-        },
-        {
-            title: 'Osmosis',
-            image:
-                '/assets/Juno.png',
-        },
-        {
-            title: 'Regen',
-            image:
-                '/assets/Osmosis.png',
-        },
-    ]
+    const { selectedDenom, connecting } = useSelector(state => state.network)
 
+    const handleSelectNetwork = useCallback((denom) => {
+        onClose()
+        dispatch(connectToNetwork(denom))
+    }, [])
     return (
         <Popover
             isOpen={isOpen}
@@ -52,33 +45,38 @@ export default function NetworkSelect() {
                     _hover={{
                         opacity: 0.8
                     }}
-                    leftIcon={<Image src={networks[0].image} w='32px' h='32px' />}
+                    isLoading={connecting}
+                    leftIcon={<Image src={DataMap[selectedDenom]?.base_logo} w='32px' h='32px' />}
                 >
-                    Cosmos
+                    {DataMap[selectedDenom]?.symbol}
                 </Button>
             </PopoverTrigger>
             <PopoverContent bgColor={'#202020'} w='full'>
-                <PopoverBody>
-                    <VStack gap={8} w='full'>
-                        <Button
-                            w='full'
-                            colorScheme='blackAlpha'
-                            fontWeight={500}
-                            borderRadius={'4px'}
-                            h='50px'
-                            fontSize='22px'
-                            _hover={{
-                                opacity: 0.8
-                            }}
-                            leftIcon={<Image src={networks[0].image} w='32px' h='32px' />}
-                        >
-                            Cosmos
-                        </Button>
+                <PopoverBody bg='rgba(0, 0, 0, 0.36)' px={0}>
+                    <VStack gap={0} w='full' >
+                        {networkArr.map(([key, value]) =>
+                            <Button
+                                w='full'
+                                key={`network-${key}`}
+                                colorScheme='blackAlpha'
+                                fontWeight={500}
+                                borderRadius={'4px'}
+                                h='60px'
+                                p={'5px'}
+                                fontSize='22px'
+                                _hover={{
+                                    opacity: 0.8,
+                                    bgColor:'gray.800'
+                                }}
+                                onClick={() => handleSelectNetwork(key)}
+                                leftIcon={<Image src={value.base_logo} w='32px' h='32px' />}
+                            >
+                                {value.symbol}
+                            </Button>
+                        )}
                     </VStack>
-
                 </PopoverBody>
             </PopoverContent>
         </Popover>
-
     )
 }

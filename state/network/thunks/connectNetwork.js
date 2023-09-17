@@ -1,22 +1,23 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { getKeplrFromWindow } from '@keplr-wallet/stores';
 import { getSigningQuicksilverClient } from "quicksilverjs";
-import { ChainInfos } from "@/state/network/utils";
+import { DataMap } from "@/state/network/utils";
 
 const fetchNetworkDetails = async (windowWallet, offlineSigner, chainId) => {
     let pubkey = await windowWallet?.getKey(chainId);
     let bech32 = pubkey?.bech32Address;
     if (bech32) {
         let roBalance = await offlineSigner.getAllBalances(bech32);
+
         return { address: bech32, balance: roBalance, connected: true }
     }
     return { connected: false, address: "", balance: "" }
 }
 
-const connectToNetwork = createAsyncThunk("network/connect", async (network, { getState }) => {
+const connectToNetwork = createAsyncThunk("network/connect", async (denom, { getState }) => {
     let result = { connected: false, address: "", balance: "" }
-    let walletType = (await getState()).typeWallet
-    const chainInfo = ChainInfos.find(function (el) { return el.chainId === network })
+    let walletType = (await getState()).wallet.typeWallet
+    const chainInfo = DataMap[denom].network
     try {
         if (walletType === 'keplr') {
             const keplr = await getKeplrFromWindow();
@@ -107,10 +108,11 @@ const connectToNetwork = createAsyncThunk("network/connect", async (network, { g
             });
             result = await fetchNetworkDetails(window.cosmostation.providers.keplr, offlineSigner1, chainInfo.chainId)
         }
+        localStorage.setItem('NetworkDenom', denom);
     } catch (e) {
         console.log(e)
     }
-    return {...result, network}
+    return {...result, denom}
 })
 
 export default connectToNetwork;

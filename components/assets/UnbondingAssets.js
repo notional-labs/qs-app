@@ -49,7 +49,7 @@ export default function UnbondingAssets() {
                 {[1, 2, 3, 4].map((item, index) =>
                     <>
                         <UnbondingItem key={item} />
-                        {(index!== 3) && <Divider />}
+                        {(index!== 3) && <Divider key={item} />}
                     </>
                 )}
             </VStack>

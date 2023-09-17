@@ -21,7 +21,7 @@ export default function ClaimRewards() {
         if (client) {client.cosmos.auth.v1beta1.account({
             address: "quick1n8g3upr3f5mldctpmyjnzng6j2gv3y29pf34th"
           })
-            client.cosmos.distribution.v1beta1.delegationTotalRewards({delegator_address: "quick1n8g3upr3f5mldctpmyjnzng6j2gv3y29pf34th"}).then(res => console.log(res))
+            // client.cosmos.distribution.v1beta1.delegationTotalRewards({delegator_address: "quick1n8g3upr3f5mldctpmyjnzng6j2gv3y29pf34th"}).then(res => console.log(res))
         }
 
     }, [client, address])

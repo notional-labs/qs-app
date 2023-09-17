@@ -10,7 +10,7 @@ import {
     Button,
 } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
-import NetworkSlider from "./NetworkSelect";
+import NetworkSelect from "./NetworkSelect";
 import IntentModal from "./IntentModal";
 
 export default function StakeIntent() {
@@ -30,7 +30,7 @@ export default function StakeIntent() {
                     Edit / Reset Intent
                 </Button>
             </HStack>
-            <NetworkSlider />
+            <NetworkSelect />
             <Divider />
             <VStack w='full' maxH='180px' overflowY={'scroll'} pr={2} gap={3}
                 sx={{

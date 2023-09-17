@@ -65,7 +65,6 @@ const SideBar = () => {
 
     useEffect(() => {
         if (width < 233) {
-            console.log(width)
             setFull(false);
         }
     }, [width]);
