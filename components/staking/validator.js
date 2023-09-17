@@ -190,7 +190,7 @@ const ValidatorPanel = (props) => {
                     >
                         <Flex justify={'space-between'}>
                             <Center gap={'10px'}>
-                                <Text className={`${stakingStyles.tableMainText}`}>
+                                <Text className={`${stakingStyles.tableMainText}`} fontSize={'20px'}>
                                     10.123123 ATOM
                                 </Text>
                                 <Center>

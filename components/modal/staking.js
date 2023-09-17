@@ -17,6 +17,7 @@ import {
     VStack,
     StackDivider,
     Container,
+    Collapse,
 } from "@chakra-ui/react"
 import stakingStyles from '@/styles/Staking.module.css'
 import { useEffect, useState } from "react"
@@ -78,8 +79,13 @@ const StakingModal = (props) => {
                 </ModalHeader>
                 <ModalBody padding={'0'}>
                     <Box padding={'1em 0'}>
+
                         <Text className={`${stakingStyles.modal_m_size}`} padding={'0 2em'}>
-                            Confirm your staking amount and your intent for staking allocation.
+                            {
+                                isFinished ? 'Transaction successful'
+                                    : isProcessing ? 'Approve the transaction in your wallet.'
+                                        : 'Confirm your staking amount and your intent for staking allocation.'
+                            }
                         </Text>
                         <div
                             style={{
@@ -128,7 +134,11 @@ const StakingModal = (props) => {
                         borderRadius={'0 0 20px 20px'}
                         borderTop={'0.5px solid var(--neutral-stroke, rgba(255, 255, 255, 0.20))'}
                     >
-                        <ValidatorIntent />
+                        {
+                            <Collapse in={!isProcessing && !isFinished} unmountOnExit>
+                                <ValidatorIntent />
+                            </Collapse>
+                        }
                         <Box padding={'1em 2em'}>
 
                             <Text
