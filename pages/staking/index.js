@@ -17,8 +17,8 @@ export default function Staking() {
         <>
             <PageHead pageTitle="Staking | Quicksilver" />
                 {
-                    step === 1 ? <StakingPannel setStep={setStep} />
-                        : <ValidatorPanel setStep={setStep} />
+                    step === 1 ? <StakingPannel setStep={setStep} step={step}/>
+                        : <ValidatorPanel setStep={setStep} step={step}/>
                 }
         </>
     )

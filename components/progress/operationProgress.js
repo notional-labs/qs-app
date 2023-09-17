@@ -18,22 +18,24 @@ const OperationProgress = (props) => {
                                 color='#39db77'
                             />
                         </Box> : <Box padding='1em'>
-                            <Lottie animationData={finishAnimation} loop={false}/>
+                            <Lottie animationData={finishAnimation} loop={false} />
                         </Box>
                 }
-                <Box>
-                    <Text fontWeight={'bold'} fontSize={'16px'}>
-                        {props.mainText}
-                    </Text>
-                    <Text fontSize={'14px'} color='rgba(205, 205, 205, 1)' fontWeight={'400'}>
-                        {props.subText}
-                    </Text>
-                    {
-                        props.txHash && <Text fontSize={'14px'} marginTop={'10px'} color='rgba(205, 205, 205, 1)' fontWeight={'400'}>
-                            Transaction Hash <Link color='rgba(62, 115, 240, 1)'>{props.txHash}</Link>
+                <Center>
+                    <Box>
+                        <Text fontWeight={'bold'} fontSize={'16px'}>
+                            {props.mainText}
                         </Text>
-                    }
-                </Box>
+                        <Text fontSize={'14px'} color='rgba(205, 205, 205, 1)' fontWeight={'400'}>
+                            {props.subText}
+                        </Text>
+                        {
+                            props.txHash && <Text fontSize={'14px'} marginTop={'10px'} color='rgba(205, 205, 205, 1)' fontWeight={'400'}>
+                                Transaction Hash <Link color='rgba(62, 115, 240, 1)'>{props.txHash}</Link>
+                            </Text>
+                        }
+                    </Box>
+                </Center>
             </Flex>
         </Center>
     )

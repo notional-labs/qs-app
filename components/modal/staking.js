@@ -137,21 +137,21 @@ const StakingModal = (props) => {
                         {
                             <Collapse in={!isProcessing && !isFinished} unmountOnExit>
                                 <ValidatorIntent />
+                                <Box padding={'1em 2em'}>
+
+                                    <Text
+                                        className={`${stakingStyles.modal_m_size}`}
+                                    >
+                                        Aggregate staking intent for all stakers is calculated at the end of each epoch.
+                                    </Text>
+                                    <Text
+                                        className={`${stakingStyles.modal_m_size}`}
+                                    >
+                                        Given limitations in concurrent redelegations, redelegation to the new intent may take up to 21 days.
+                                    </Text>
+                                </Box>
                             </Collapse>
                         }
-                        <Box padding={'1em 2em'}>
-
-                            <Text
-                                className={`${stakingStyles.modal_m_size}`}
-                            >
-                                Aggregate staking intent for all stakers is calculated at the end of each epoch.
-                            </Text>
-                            <Text
-                                className={`${stakingStyles.modal_m_size}`}
-                            >
-                                Given limitations in concurrent redelegations, redelegation to the new intent may take up to 21 days.
-                            </Text>
-                        </Box>
                         <VStack w={'100%'} align={'stretch'}>
                             {
                                 isFinished ? <OperationProgress
