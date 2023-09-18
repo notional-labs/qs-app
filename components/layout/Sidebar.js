@@ -65,7 +65,6 @@ const SideBar = () => {
 
     useEffect(() => {
         if (width < 233) {
-            console.log(width)
             setFull(false);
         }
     }, [width]);
@@ -91,7 +90,7 @@ const SideBar = () => {
     };
 
     return (
-        <Center margin={'20px'} zIndex={1}>
+        <Box mx={'20px'} my={'12vh'} zIndex={1}>
             <div className={full ? `sidebar` : `sidebar minimal-size`} ref={sidebar}>
                 <Center>
                     <Navbar
@@ -149,7 +148,7 @@ const SideBar = () => {
                     </Navbar>
                 </Center>
             </div>
-        </Center>
+        </Box>
     );
 };
 
