@@ -6,9 +6,12 @@ import WalletPopover from '../wallet/WalletPopover';
 import { useSelector, useDispatch } from 'react-redux';
 import connectToWallet from '@/state/wallet/thunks/connectWallet';
 import { SupportedWallets } from '@/state/config';
+import connectToClient from '@/state/wallet/thunks/connectClient';
+import connectToNetwork from '@/state/network/thunks/connectNetwork';
 export default function Header() {
     const dispatch = useDispatch()
     const {connected, connecting} = useSelector(state => state.wallet)
+    const {connected: networkConnected, connecting: networkConnecting} = useSelector(state => state.network)
 
     useEffect(() => {
         if (window && !connected && !connecting) {
@@ -19,6 +22,21 @@ export default function Header() {
         }
     }, [])
 
+    useEffect(() => {
+        if (window && !networkConnected && !networkConnecting) {
+            let oldNetwork = localStorage.getItem('NetworkDenom');
+            if (oldNetwork) {
+                dispatch(connectToNetwork(oldNetwork))
+            } else {
+                dispatch(connectToNetwork("uatom"))
+            }
+        }
+    }, [])
+
+    useEffect(() => {
+        dispatch(connectToClient())
+    }, [])
+    
     return (
         <Box position={'fixed'} top={10} right={10} zIndex={10}>
             {connected ? <WalletPopover /> :
