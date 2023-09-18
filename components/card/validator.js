@@ -24,7 +24,7 @@ const ValidatorCard = (props) => {
     const [isStar, setIsStar] = useState(false)
     return (
         <Grid
-            templateColumns='40% 15% 15% 15% 15%'
+            templateColumns='40% 20% 20% 20%'
             borderBottom={'solid 1px rgba(77, 77, 77, 1)'}
         >
             <Box
@@ -72,13 +72,6 @@ const ValidatorCard = (props) => {
                 >
                     <Text className={`${stakingStyles.tableMainText}`}>
                         {props.commission}
-                    </Text>
-                </Center>
-            </Flex>
-            <Flex justify={'start'} padding={'1em 0'}>
-                <Center borderRadius={'10px'} backgroundColor={'#9E9E9E'} w={'70%'} padding={'.5em'}>
-                    <Text className={`${stakingStyles.tableMainText}`}>
-                        {props.record}
                     </Text>
                 </Center>
             </Flex>

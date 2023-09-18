@@ -70,11 +70,10 @@ const ValidatorPanel = (props) => {
                             </Center>
                         </Flex>
                         <Box margin={'3em 0'} h={'100%'}>
-                            <Grid templateColumns='40% 15% 15% 15% 15%' padding={'0 1em'} fontWeight='bold' fontSize={'14px'}>
+                            <Grid templateColumns='40% 20% 20% 20%' padding={'0 1em'} fontWeight='bold' fontSize={'14px'}>
                                 <Box>VALIDATOR</Box>
                                 <Box>VOTING POWER</Box>
                                 <Box>COMMISSION</Box>
-                                <Box>VOTING RECORD</Box>
                                 <Box>PR SCORE</Box>
                             </Grid>
                             <Box
@@ -101,7 +100,6 @@ const ValidatorPanel = (props) => {
                                     votingPower={'12,793,452'}
                                     votingPowerPercentage={`${'6.18'} %`}
                                     commission={`${'22.35'} %`}
-                                    record={'12/65'}
                                     prScore={1}
                                 />
                                 <ValidatorCard
@@ -110,7 +108,6 @@ const ValidatorPanel = (props) => {
                                     votingPower={'12,793,452'}
                                     votingPowerPercentage={`${'6.18'} %`}
                                     commission={`${'22.35'} %`}
-                                    record={'12/65'}
                                     prScore={1}
                                 />
                                 <ValidatorCard
@@ -119,7 +116,6 @@ const ValidatorPanel = (props) => {
                                     votingPower={'12,793,452'}
                                     votingPowerPercentage={`${'6.18'} %`}
                                     commission={`${'22.35'} %`}
-                                    record={'12/65'}
                                     prScore={1}
                                 />
                                 <ValidatorCard
@@ -128,7 +124,6 @@ const ValidatorPanel = (props) => {
                                     votingPower={'12,793,452'}
                                     votingPowerPercentage={`${'6.18'} %`}
                                     commission={`${'22.35'} %`}
-                                    record={'12/65'}
                                     prScore={1}
                                 />
                                 <ValidatorCard
@@ -137,7 +132,6 @@ const ValidatorPanel = (props) => {
                                     votingPower={'12,793,452'}
                                     votingPowerPercentage={`${'6.18'} %`}
                                     commission={`${'22.35'} %`}
-                                    record={'12/65'}
                                     prScore={1}
                                 />
                                 <ValidatorCard
@@ -146,7 +140,6 @@ const ValidatorPanel = (props) => {
                                     votingPower={'12,793,452'}
                                     votingPowerPercentage={`${'6.18'} %`}
                                     commission={`${'22.35'} %`}
-                                    record={'12/65'}
                                     prScore={1}
                                 />
                                 <ValidatorCard
@@ -155,7 +148,6 @@ const ValidatorPanel = (props) => {
                                     votingPower={'12,793,452'}
                                     votingPowerPercentage={`${'6.18'} %`}
                                     commission={`${'22.35'} %`}
-                                    record={'12/65'}
                                     prScore={1}
                                 />
                                 <ValidatorCard
@@ -164,7 +156,6 @@ const ValidatorPanel = (props) => {
                                     votingPower={'12,793,452'}
                                     votingPowerPercentage={`${'6.18'} %`}
                                     commission={`${'22.35'} %`}
-                                    record={'12/65'}
                                     prScore={1}
                                 />
                                 <ValidatorCard
@@ -173,7 +164,6 @@ const ValidatorPanel = (props) => {
                                     votingPower={'12,793,452'}
                                     votingPowerPercentage={`${'6.18'} %`}
                                     commission={`${'22.35'} %`}
-                                    record={'12/65'}
                                     prScore={1}
                                 />
                             </Box>

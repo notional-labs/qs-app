@@ -1,7 +1,7 @@
 .staking_container {
     box-shadow: 0px 0px 5px 0px rgba(255, 255, 255, 0.6);
     color: rgba(251, 251, 251, 1);
-    padding: 2em;
+    padding: 1em;
     border-radius: 10px;
     background: rgb(42, 42, 42, 0.6);
     backdrop-filter: blur(7px);
@@ -23,7 +23,7 @@
 
 .stat_info {
     margin: 10px 0;
-    font-size: 15px
+    font-size: 15px;
 }
 
 .stat_info_key {

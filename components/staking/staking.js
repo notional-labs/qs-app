@@ -16,8 +16,11 @@ import {
     AccordionPanel,
     AccordionIcon,
 } from '@chakra-ui/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import SelectNetwork from '@/components/modal/selectNetwork'
+import data from '@/assets/zones/data.json' assert { type: "json" }
+import { getZoneLocal } from '@/services/zone'
+import { getDisplayDenom } from '@/services/string'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -50,7 +53,19 @@ const getOption = (chainInfo) => {
 const StakingPannel = (props) => {
     const [pannelMode, setPannelMode] = useState(0)
     const [balances, setBalances] = useState([])
+    const [chainId, setChainId] = useState(data.zones[0].chain_id)
     const [isOpenNetworkSelect, setIsOpenNetworkSelect] = useState(false)
+
+    useEffect(() => {
+        const chainId = localStorage.getItem('current_network')
+        if (chainId || chainId !== '') {
+            setChainId(chainId)
+        }
+    }, [])
+
+    useEffect(() => {
+        localStorage.setItem('current_network', chainId)
+    }, [chainId])
 
     return (
         <Center w={'100%'} margin={'10vh'}>
@@ -85,7 +100,7 @@ const StakingPannel = (props) => {
                         padding={'1.5em 4em'}
                         boxShadow='0px 0px 5px 0px rgba(255, 255, 255, 0.50)'
                     >
-                        ATOM
+                        {getDisplayDenom(getZoneLocal(chainId).base_denom)}
                     </Button>
                 </Flex>
                 <Flex justify={'space-between'}>
@@ -359,6 +374,8 @@ const StakingPannel = (props) => {
                 <SelectNetwork
                     isShow={isOpenNetworkSelect}
                     setIsShow={setIsOpenNetworkSelect}
+                    zones={data.zones}
+                    setChainId={setChainId}
                 />
             </Box>
         </Center>

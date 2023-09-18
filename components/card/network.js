@@ -5,8 +5,10 @@ import {
     Center,
     Heading,
     Box,
+    Button,
 } from '@chakra-ui/react'
 import stakingStyles from '@/styles/Staking.module.css'
+import { getDisplayDenom } from '@/services/string'
 
 const NetworkCard = (props) => {
     return (
@@ -16,15 +18,19 @@ const NetworkCard = (props) => {
             border='1px solid var(--neutral-stroke, rgba(255, 255, 255, 0.20))'
             padding={'1em 2em'}
             justify={'space-between'}
+            onClick={() => {
+                props.setChainId(props.zone.chain_id)
+                props.setIsShow(false)
+            }}
         >
             <Center gap={'10px'}>
-                <Image src='/atom.svg' boxSize={'100%'}/>
+                <Image src='/atom.svg' boxSize={'100%'} />
                 <Box>
-                    <Heading as='h6' size={'md'}>  
-                        Cosmoshub
+                    <Heading as='h6' size={'md'}>
+                        {props.zone.name}
                     </Heading>
                     <Text className={`${stakingStyles.switch_network_modal_sub_text}`}>
-                        ATOM
+                        {getDisplayDenom(props.zone.base_denom)}
                     </Text>
                 </Box>
             </Center>
