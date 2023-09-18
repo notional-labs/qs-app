@@ -25,6 +25,7 @@
     "@reduxjs/toolkit": "^1.9.5",
     "antd": "^5.9.0",
     "framer-motion": "^10.16.4",
+    "lottie-react": "^2.4.0",
     "next": "13.4.19",
     "quicksilverjs": "^0.8.0",
     "react": "18.2.0",
