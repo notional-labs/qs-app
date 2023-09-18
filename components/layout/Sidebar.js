@@ -106,7 +106,7 @@ const SideBar = () => {
                                         : <ChakraImage alt="cnweb logo" src={'/logo/qs_logo.svg'} boxSize={'100%'} />
                                 }
                                 <button 
-                                    className={full ? `resize-btn` : `resize-btn minimal-btn`} onClick={resize} style={{left: full ? '2.3em' : '-.9em'}}>
+                                    className={full ? `resize-btn` : `resize-btn minimal-btn`} onClick={resize} style={{left: full ? '.9em' : '-.9em'}}>
                                     <span className="up-arrow"></span>
                                     <span className="down-arrow"></span>
                                 </button>
