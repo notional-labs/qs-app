@@ -70,7 +70,6 @@ const SideBar = () => {
 
     useEffect(() => {
         if (width < 233) {
-            console.log(width)
             setFull(false);
         }
     }, [width]);
@@ -96,7 +95,7 @@ const SideBar = () => {
     };
 
     return (
-        <Center margin={'20px'} zIndex={1}>
+        <Box mx={'20px'} my={'12vh'} zIndex={1}>
             <div className={full ? `sidebar` : `sidebar minimal-size`} ref={sidebar}>
                 <Center>
                     <Navbar
@@ -111,7 +110,7 @@ const SideBar = () => {
                                         : <ChakraImage alt="cnweb logo" src={'/logo/qs_logo.svg'} boxSize={'100%'} />
                                 }
                                 <button 
-                                    className={full ? `resize-btn` : `resize-btn minimal-btn`} onClick={resize} style={{left: full ? '1em' : '-.9em'}}>
+                                    className={full ? `resize-btn` : `resize-btn minimal-btn`} onClick={resize} style={{left: full ? '.9em' : '-.9em'}}>
                                     <span className="up-arrow"></span>
                                     <span className="down-arrow"></span>
                                 </button>
@@ -154,7 +153,7 @@ const SideBar = () => {
                     </Navbar>
                 </Center>
             </div>
-        </Center>
+        </Box>
     );
 };
 

@@ -4,9 +4,10 @@ import connectToNetwork from "./thunks/connectNetwork";
 const initialState = {
     connecting: false,
     connected: false,
-    selectedNetwork: "",
+    selectedDenom: "",
     address: "",
     balance: "",
+    zoneData: {}
 }
 
 export const slice = createSlice({
@@ -22,7 +23,7 @@ export const slice = createSlice({
             state.connecting = false
             state.address = action.payload.address
             state.balance = action.payload.balance
-            state.selectedNetwork = action.payload.network
+            state.selectedDenom = action.payload.denom
             state.connected = action.payload.connected
         })
     }
