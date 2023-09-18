@@ -38,7 +38,7 @@ export default function Header() {
     }, [])
     
     return (
-        <Box position={'fixed'} top={10} right={10} zIndex={10}>
+        <Box position={'absolute'} top={10} right={10} zIndex={10}>
             {connected ? <WalletPopover /> :
                 <WalletModal />}
         </Box>
