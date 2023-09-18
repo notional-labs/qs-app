@@ -1,10 +1,10 @@
 import axios from 'axios'
-import data from '@/assets/zones/data.json'
+import { ProdZoneInfos } from '@/state/chains/prod'
 
 export const getZoneWithChainId = async (chainId) => {
     try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_REST_API}/quicksilver/interchainstaking/v1/zones`)
-        const {zones} = res
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_QUICKSILVER_API}/quicksilver/interchainstaking/v1/zones`)
+        const {zones} = res.data
         if (!zones || zones.length === 0) {
             throw new Error('Fail to query zones')
         }
@@ -46,7 +46,7 @@ export const getRedemptionRate = async (chainId) => {
 
 export const getZoneLocal = (chainId) => {
     try {
-        const zone = data.zones.filter(z => {
+        const zone = ProdZoneInfos.filter(z => {
             if (z.chain_id === chainId) {
                 return true
             }

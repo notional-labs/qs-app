@@ -360,6 +360,7 @@ export const ProdChainInfos = [
 
 export const ProdZoneInfos = [
     {
+        name: "Cosmoshub",
         connection_id: "connection-1",
         chain_id: "cosmoshub-4",
         deposit_address: {
@@ -389,8 +390,11 @@ export const ProdZoneInfos = [
         account_prefix: "cosmos",
         local_denom: "uqatom",
         base_denom: "uatom",
+        local_logo: "/assets/qAtom.svg",
+        base_logo: "/assets/Cosmos.png",
     },
     {
+        name: "Juno",
         connection_id: "connection-50",
         chain_id: "juno-1",
         deposit_address: {
@@ -421,8 +425,11 @@ export const ProdZoneInfos = [
         account_prefix: "juno",
         local_denom: "uqjuno",
         base_denom: "ujuno",
+        local_logo: "/assets/qJuno.svg",
+        base_logo: "/assets/Juno.png",
     },
     {
+        name: "Osmosis",
         connection_id: "connection-2",
         chain_id: "osmosis-1",
         deposit_address: {
@@ -456,8 +463,11 @@ export const ProdZoneInfos = [
         account_prefix: "osmo",
         local_denom: "uqosmo",
         base_denom: "uosmo",
+        local_logo: "/assets/qOsmo.svg",
+        base_logo: "/assets/Osmosis.png",
     },
     {
+        name: "Regen",
         connection_id: "connection-9",
         chain_id: "regen-1",
         deposit_address: {
@@ -490,8 +500,11 @@ export const ProdZoneInfos = [
         account_prefix: "regen",
         local_denom: "uqregen",
         base_denom: "uregen",
+        local_logo: "/assets/qRegen.svg",
+        base_logo: "/assets/Regen.png",
     },
     {
+        name: "Sommelier",
         connection_id: "connection-54",
         chain_id: "sommelier-3",
         deposit_address: {
@@ -525,8 +538,11 @@ export const ProdZoneInfos = [
         account_prefix: "somm",
         local_denom: "uqsomm",
         base_denom: "usomm",
+        local_logo: "/assets/qSomm.svg",
+        base_logo: "/assets/sommelier.png",
     },
     {
+        name: "Stargaze",
         connection_id: "connection-0",
         chain_id: "stargaze-1",
         deposit_address: {
@@ -559,6 +575,8 @@ export const ProdZoneInfos = [
         account_prefix: "stars",
         local_denom: "uqstars",
         base_denom: "ustars",
+        local_logo: "/assets/qSTAR.svg",
+        base_logo: "/assets/Stargaze.png",
     }
 ]
 

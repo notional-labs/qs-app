@@ -22,6 +22,23 @@ import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 
 const ValidatorCard = (props) => {
     const [isStar, setIsStar] = useState(false)
+
+    const handleCheck = (e) => {
+        if (e.target.checked) {
+            if (props.selectVals.length >= 8) {
+                e.target.checked = false
+                return
+            }
+            props.setSelectVals([...props.selectVals, props.address])
+        }
+        else {
+            const filter = props.selectVals.filter(address => {
+                return address !== props.address
+            })
+            props.setSelectVals([...filter])
+        }
+    }
+
     return (
         <Grid
             templateColumns='40% 20% 20% 20%'
@@ -34,7 +51,7 @@ const ValidatorCard = (props) => {
             >
                 <Flex>
                     <Center gap={'5px'} fontSize='15px'>
-                        <Checkbox colorScheme='orange' borderColor={'#E77728'} />
+                        <Checkbox colorScheme='orange' borderColor={'#E77728'} onChange={handleCheck}/>
                         <IconButton
                             variant='ghost'
                             colorScheme='teal'

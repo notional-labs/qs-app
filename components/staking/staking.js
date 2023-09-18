@@ -1,7 +1,6 @@
-import { Inter } from 'next/font/google'
 import stakingStyles from '@/styles/Staking.module.css'
 import {
-    Button, ButtonGroup, Image, Box, Checkbox, 
+    Button, ButtonGroup, Image, Box, Checkbox,
     Center,
     Flex,
     NumberInput,
@@ -16,13 +15,13 @@ import {
     AccordionPanel,
     AccordionIcon,
 } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
+import { useState, useCallback } from 'react'
 import SelectNetwork from '@/components/modal/selectNetwork'
-import data from '@/assets/zones/data.json' assert { type: "json" }
-import { getZoneLocal } from '@/services/zone'
+import { ProdZoneInfos } from '@/state/chains/prod'
+import { useDispatch, useSelector } from 'react-redux'
+import connectToNetwork from '@/state/network/thunks/connectNetwork'
+import { DataMap } from '@/state/network/utils'
 import { getDisplayDenom } from '@/services/string'
-
-const inter = Inter({ subsets: ['latin'] })
 
 const getInputPrefix = (logo = '/atom.svg', text = 'ATOM', imgSize = '100%') => {
     return (
@@ -43,8 +42,9 @@ const getOption = (chainInfo) => {
     return (
         <div className={`${stakingStyles.input_prefix}`}>
             <Image
-                src='/atom.svg'
+                src={chainInfo?.base_logo}
                 alt='native token logo'
+                boxSize={'32px'}
             />
         </div>
     )
@@ -53,19 +53,13 @@ const getOption = (chainInfo) => {
 const StakingPannel = (props) => {
     const [pannelMode, setPannelMode] = useState(0)
     const [balances, setBalances] = useState([])
-    const [chainId, setChainId] = useState(data.zones[0].chain_id)
     const [isOpenNetworkSelect, setIsOpenNetworkSelect] = useState(false)
+    const dispatch = useDispatch()
+    const { selectedDenom, connecting } = useSelector(state => state.network)
 
-    useEffect(() => {
-        const chainId = localStorage.getItem('current_network')
-        if (chainId || chainId !== '') {
-            setChainId(chainId)
-        }
+    const handleSelectNetwork = useCallback((denom) => {
+        dispatch(connectToNetwork(denom))
     }, [])
-
-    useEffect(() => {
-        localStorage.setItem('current_network', chainId)
-    }, [chainId])
 
     return (
         <Center w={'100%'} margin={'10vh'}>
@@ -91,7 +85,7 @@ const StakingPannel = (props) => {
                         </button>
                     </Flex>
                     <Button
-                        leftIcon={getOption()} onClick={() => setIsOpenNetworkSelect(true)}
+                        leftIcon={getOption(DataMap[selectedDenom])} onClick={() => setIsOpenNetworkSelect(true)}
                         backgroundColor='#222'
                         color={'#FBFBFB'}
                         _hover={{
@@ -99,8 +93,9 @@ const StakingPannel = (props) => {
                         }}
                         padding={'1.5em 4em'}
                         boxShadow='0px 0px 5px 0px rgba(255, 255, 255, 0.50)'
+                        isLoading={connecting}
                     >
-                        {getDisplayDenom(getZoneLocal(chainId).base_denom)}
+                        {DataMap[selectedDenom]?.symbol}
                     </Button>
                 </Flex>
                 <Flex justify={'space-between'}>
@@ -110,7 +105,7 @@ const StakingPannel = (props) => {
                         </Text>
                         <InputGroup>
                             <InputLeftElement pointerEvents='none' w={100} h={'100%'}>
-                                {getInputPrefix()}
+                                {getInputPrefix(DataMap[selectedDenom]?.base_logo, DataMap[selectedDenom]?.symbol, '24px')}
                             </InputLeftElement>
                             <NumberInput
                                 defaultValue={0}
@@ -134,7 +129,7 @@ const StakingPannel = (props) => {
                         <div className={`${stakingStyles.amount_input_balance}`}>
                             <Center>
                                 <text>
-                                    BALANCE: {32423423432} ATOM
+                                    BALANCE: {32423423432} {DataMap[selectedDenom]?.symbol}
                                 </text>
                             </Center>
                             <ButtonGroup gap='1'>
@@ -174,7 +169,7 @@ const StakingPannel = (props) => {
                         </Text>
                         <InputGroup>
                             <InputLeftElement pointerEvents='none' w={100} h={'100%'}>
-                                {getInputPrefix()}
+                                {getInputPrefix(DataMap[selectedDenom]?.local_logo, `q${DataMap[selectedDenom]?.symbol}`, '24px')}
                             </InputLeftElement>
                             <NumberInput
                                 defaultValue={0}
@@ -198,7 +193,7 @@ const StakingPannel = (props) => {
                         <div className={`${stakingStyles.amount_input_balance}`}>
                             <Center>
                                 <text>
-                                    BALANCE: {32423423432} ATOM
+                                    BALANCE: {32423423432} {`q${DataMap[selectedDenom]?.symbol}`}
                                 </text>
                             </Center>
                         </div>
@@ -214,7 +209,7 @@ const StakingPannel = (props) => {
                                     Transaction Cost
                                 </text>
                                 <text className={`${stakingStyles.stat_info_value}`}>
-                                    14103.28 ATOM
+                                    14103.28 {getDisplayDenom(selectedDenom)}
                                 </text>
                             </Flex>
                             <Flex justify={'space-between'} className={`${stakingStyles.stat_info}`}>
@@ -222,7 +217,7 @@ const StakingPannel = (props) => {
                                     Redemption Rate
                                 </text>
                                 <text className={`${stakingStyles.stat_info_value}`}>
-                                    1 ATOM = 1.243 qATOM
+                                    {`1 ${getDisplayDenom(selectedDenom, false)} = 1.243 q${getDisplayDenom(selectedDenom, false)}`}
                                 </text>
                             </Flex>
                             <Flex justify={'space-between'} className={`${stakingStyles.stat_info}`}>
@@ -255,7 +250,7 @@ const StakingPannel = (props) => {
                     </Center>
                     <div className={`${stakingStyles.panel_container}`}>
                         <Text fontSize={'1.25em'}>
-                            About Atom on Quicksilver
+                            About {DataMap[selectedDenom]?.symbol} on Quicksilver
                         </Text>
                         <br />
                         <Flex justify={'space-between'} className={`${stakingStyles.stat_info}`} >
@@ -291,10 +286,10 @@ const StakingPannel = (props) => {
                         <Flex justify={'space-between'} className={`${stakingStyles.stat_info}`}>
                             <Center gap={2}>
                                 <Image src='/icons/icon4.svg' boxSize={'20px'} />
-                                <Text>Value of 1 qAtom</Text>
+                                <Text>Value of 1 {`q${getDisplayDenom(selectedDenom, false)}`}</Text>
                             </Center>
                             <text className={`${stakingStyles.in_color}`}>
-                                1qAtom = 1Atom
+                                {`1 ${getDisplayDenom(selectedDenom, false)} = 1.243 q${getDisplayDenom(selectedDenom, false)}`}
                             </text>
                         </Flex>
                         <Box
@@ -319,10 +314,10 @@ const StakingPannel = (props) => {
                                 <AccordionButton padding={'1em 0'} style={{ fontSize: '16px' }}>
                                     <Flex justify={'space-between'} w={'100%'}>
                                         <Box>
-                                            {getInputPrefix(undefined, 'Available to stake', '30px')}
+                                            {getInputPrefix(DataMap[selectedDenom]?.base_logo, 'Available to stake', '30px')}
                                         </Box>
                                         <Center className={`${stakingStyles.in_color}`}>
-                                            0.34 ATOM
+                                            0.34 {getDisplayDenom(selectedDenom, false)}
                                         </Center>
                                     </Flex>
                                     <AccordionIcon color={'#E77728'} />
@@ -331,10 +326,10 @@ const StakingPannel = (props) => {
                                 <AccordionPanel pb={3} padding={'0 20px 20px 30px'} fontSize={'16px'}>
                                     <Flex justify={'space-between'} w={'100%'}>
                                         <Box>
-                                            Cosmoshub
+                                            {DataMap[selectedDenom]?.network_name}
                                         </Box>
                                         <Center>
-                                            0.34 ATOM
+                                            0.34 {getDisplayDenom(selectedDenom, false)}
                                         </Center>
                                     </Flex>
                                 </AccordionPanel>
@@ -345,10 +340,10 @@ const StakingPannel = (props) => {
                                 <AccordionButton padding={'1em 0'} style={{ fontSize: '16px' }}>
                                     <Flex justify={'space-between'} w={'100%'}>
                                         <Box>
-                                            {getInputPrefix(undefined, 'Liquid staked', '30dpx')}
+                                            {getInputPrefix(DataMap[selectedDenom]?.local_logo, 'Liquid staked', '30px')}
                                         </Box>
                                         <Center className={`${stakingStyles.in_color}`}>
-                                            0.34 ATOM
+                                            0.34 {getDisplayDenom(selectedDenom, false)}
                                         </Center>
                                     </Flex>
                                     <AccordionIcon color={'#E77728'} />
@@ -360,7 +355,7 @@ const StakingPannel = (props) => {
                                             Stride
                                         </Box>
                                         <Center>
-                                            0.34 qATOM
+                                            0.34 {`q${getDisplayDenom(selectedDenom, false)}`}
                                         </Center>
                                     </Flex>
                                 </AccordionPanel>
@@ -374,8 +369,8 @@ const StakingPannel = (props) => {
                 <SelectNetwork
                     isShow={isOpenNetworkSelect}
                     setIsShow={setIsOpenNetworkSelect}
-                    zones={data.zones}
-                    setChainId={setChainId}
+                    zones={ProdZoneInfos}
+                    setChainId={handleSelectNetwork}
                 />
             </Box>
         </Center>
