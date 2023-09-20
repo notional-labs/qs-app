@@ -3,7 +3,7 @@ import { Navbar, NavbarBrand } from "reactstrap";
 import { Box, Image as ChakraImage, Flex } from "@chakra-ui/react";
 import Link from "next/link";
 import { Center } from "@chakra-ui/react";
-import { usePathname } from 'next/navigation'
+import { useRouter } from 'next/router';
 
 const navButton = [
     {
@@ -39,7 +39,8 @@ const navButton = [
 ];
 
 const SideBar = () => {
-    const currentPath = usePathname()
+    const router = useRouter();
+    const currentPath = router.pathname;
     const sidebar = React.createRef();
     const [width, setWidth] = useState(233);
     const [full, setFull] = useState(true);

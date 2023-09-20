@@ -5,7 +5,6 @@ import {
   Flex,
   Spacer,
   Button,
-  Text,
   Skeleton,
   SkeletonCircle,
   SkeletonText,
@@ -17,7 +16,6 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSingleProposal } from "@/state/proposals/thunks/connectProposal";
 import ProposalDetail from "@/components/governance/proposalDetail";
-import SkeletonButton from "antd/es/skeleton/Button";
 
 const ProposalPage = () => {
   const dispatch = useDispatch();

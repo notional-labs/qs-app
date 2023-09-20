@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { fetchProposal } from "@/state/proposals/thunks/connectProposal";
 import { Skeleton } from "@chakra-ui/react";
 import PageHead from "../layout/PageHead";
@@ -31,6 +31,8 @@ const GovernanceList = () => {
   useEffect(() => {
     dispatch(fetchProposal());
   }, [fetchProposal]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState("");
   return (
     <>
       <PageHead pageTitle="Governance | Quicksilver" />
@@ -63,6 +65,8 @@ const GovernanceList = () => {
                     placeholder="Search Proposal"
                     borderRadius={"20px"}
                     _focus={{ borderColor: "#E77728", boxShadow: "none" }}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </InputGroup>
               </>
@@ -81,10 +85,35 @@ const GovernanceList = () => {
                   >
                     Filter by Status
                   </MenuButton>
-                  <MenuList backgroundColor="inherit">
-                    <MenuItem backgroundColor="inherit">Voting</MenuItem>
-                    <MenuItem backgroundColor="inherit">Passed</MenuItem>
-                    <MenuItem backgroundColor="inherit">Rejected</MenuItem>
+                  <MenuList backgroundColor="rgb(42, 42, 42)">
+                    <MenuItem
+                      backgroundColor="inherit"
+                      onClick={() => setFilterStatus("")}
+                    >
+                      All
+                    </MenuItem>
+                    <MenuItem
+                      backgroundColor="inherit"
+                      onClick={() =>
+                        setFilterStatus("PROPOSAL_STATUS_VOTING_PERIOD")
+                      }
+                    >
+                      Voting
+                    </MenuItem>
+                    <MenuItem
+                      backgroundColor="inherit"
+                      onClick={() => setFilterStatus("PROPOSAL_STATUS_PASSED")}
+                    >
+                      Passed
+                    </MenuItem>
+                    <MenuItem
+                      backgroundColor="inherit"
+                      onClick={() =>
+                        setFilterStatus("PROPOSAL_STATUS_REJECTED")
+                      }
+                    >
+                      Rejected
+                    </MenuItem>
                   </MenuList>
                 </Menu>
               </>
@@ -141,19 +170,29 @@ const GovernanceList = () => {
                       <Skeleton height="16px" width="60%" mt={4} />
                     </Box>
                   ))
-              : proposals.map((proposal, index) => {
-                  return (
-                    <GovernanceItem
-                      proposalId={proposal.id}
-                      title={proposal.messages[0].content.title}
-                      vote={proposal.final_tally_result}
-                      startTime={proposal.voting_start_time}
-                      endTime={proposal.voting_end_time}
-                      index={index}
-                      // key={proposal.proposal_id}
-                    />
-                  );
-                })}
+              : proposals
+                  .filter((proposal) => {
+                    // Filter by search term
+                    const matchesSearch = proposal.messages[0].content.title
+                      .toLowerCase()
+                      .includes(searchTerm.toLowerCase());
+                    const matchesStatus =
+                      !filterStatus || proposal.status === filterStatus;
+                    return matchesSearch && matchesStatus;
+                  })
+                  .map((filteredProposal, index) => {
+                      return (
+                        <GovernanceItem
+                        proposalId={filteredProposal.id}
+                        title={filteredProposal.messages[0].content.title}
+                        vote={filteredProposal.final_tally_result}
+                        startTime={filteredProposal.voting_start_time}
+                        endTime={filteredProposal.voting_end_time}
+                        key={filteredProposal.proposal_id}
+                        index={index}
+                        />
+                        );
+                  })}
           </div>
         </Box>
       </Center>
