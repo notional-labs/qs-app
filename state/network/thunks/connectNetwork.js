@@ -8,8 +8,6 @@ const fetchNetworkDetails = async (windowWallet, offlineSigner, chainId) => {
     let bech32 = pubkey?.bech32Address;
     if (bech32) {
         let roBalance = await offlineSigner.getAllBalances(bech32);
-        console.log(bech32, roBalance)
-
         return { address: bech32, balance: roBalance, connected: true }
     }
     return { connected: false, address: "", balance: "" }

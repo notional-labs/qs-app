@@ -58,10 +58,12 @@ const getOption = (chainInfo) => {
 
 const StakingPannel = (props) => {
     const [nativeBalance, setNativeBalance] = useState()
+    const [qAsset, setQAsset] = useState()
     const [pannelMode, setPannelMode] = useState(0)
     const [isOpenNetworkSelect, setIsOpenNetworkSelect] = useState(false)
     const dispatch = useDispatch()
     const { selectedDenom, connecting, balance } = useSelector(state => state.network)
+    const walletState = useSelector(state => state.wallet)
     const { redemptionRate, stakeAmount, qAssetAmount } = useSelector(state => state.staking)
 
     const handleSelectNetwork = useCallback((denom) => {
@@ -75,14 +77,20 @@ const StakingPannel = (props) => {
     }, [connecting, selectedDenom, balance])
 
     useEffect(() => {
+        if (selectedDenom) {
+            setQAsset(getNativeTokenBalance(walletState.balance, DataMap[selectedDenom]?.zone.local_denom))
+        }
+    }, [selectedDenom, walletState.balance, walletState.connecting])
+
+    useEffect(() => {
         dispatch(fetchRemdemtionRate(DataMap[selectedDenom]?.network.chainId))
     }, [connecting, selectedDenom])
 
     const handlerInput = (amt, type) => {
         if (type === 'native') {
-            dispatch(inputAmount({stakeAmount: amt, qAssetAmount: amt * redemptionRate }))
+            dispatch(inputAmount({ stakeAmount: amt, qAssetAmount: amt / redemptionRate }))
         } else {
-            dispatch(inputAmount({stakeAmount: amt / redemptionRate, qAssetAmount: amt }))
+            dispatch(inputAmount({ stakeAmount: amt * redemptionRate, qAssetAmount: amt }))
         }
     }
 
@@ -251,7 +259,7 @@ const StakingPannel = (props) => {
                                     Redemption Rate
                                 </text>
                                 <text className={`${stakingStyles.stat_info_value}`}>
-                                    {`1 ${getDisplayDenom(selectedDenom, false)} = ${redemptionRate.toFixed(6)} q${getDisplayDenom(selectedDenom, false)}`}
+                                    {`1 q${getDisplayDenom(selectedDenom, false)} = ${redemptionRate.toFixed(6)} ${getDisplayDenom(selectedDenom, false)}`}
                                 </text>
                             </Flex>
                             <Flex justify={'space-between'} className={`${stakingStyles.stat_info}`}>
@@ -323,7 +331,7 @@ const StakingPannel = (props) => {
                                 <Text>Value of 1 {`q${getDisplayDenom(selectedDenom, false)}`}</Text>
                             </Center>
                             <text className={`${stakingStyles.in_color}`}>
-                                {`1 ${getDisplayDenom(selectedDenom, false)} =${redemptionRate.toFixed(6)} q${getDisplayDenom(selectedDenom, false)}`}
+                                {`1 q${getDisplayDenom(selectedDenom, false)} = ${redemptionRate.toFixed(6)} ${getDisplayDenom(selectedDenom, false)}`}
                             </text>
                         </Flex>
                         <Box
@@ -351,7 +359,7 @@ const StakingPannel = (props) => {
                                             {getInputPrefix(DataMap[selectedDenom]?.base_logo, 'Available to stake', '30px')}
                                         </Box>
                                         <Center className={`${stakingStyles.in_color}`}>
-                                            0.34 {getDisplayDenom(selectedDenom, false)}
+                                            {`${getAmountFromDenom(nativeBalance).toFixed(6)} ${getDisplayDenom(selectedDenom, false)}`}
                                         </Center>
                                     </Flex>
                                     <AccordionIcon color={'#E77728'} />
@@ -363,7 +371,7 @@ const StakingPannel = (props) => {
                                             {DataMap[selectedDenom]?.network_name}
                                         </Box>
                                         <Center>
-                                            0.34 {getDisplayDenom(selectedDenom, false)}
+                                            {`${getAmountFromDenom(nativeBalance).toFixed(6)} ${getDisplayDenom(selectedDenom, false)}`}
                                         </Center>
                                     </Flex>
                                 </AccordionPanel>
@@ -377,7 +385,7 @@ const StakingPannel = (props) => {
                                             {getInputPrefix(DataMap[selectedDenom]?.local_logo, 'Liquid staked', '30px')}
                                         </Box>
                                         <Center className={`${stakingStyles.in_color}`}>
-                                            0.34 {getDisplayDenom(selectedDenom, false)}
+                                            {`${getAmountFromDenom(qAsset).toFixed(6)} q${getDisplayDenom(selectedDenom, false)}`}
                                         </Center>
                                     </Flex>
                                     <AccordionIcon color={'#E77728'} />
@@ -386,10 +394,10 @@ const StakingPannel = (props) => {
                                 <AccordionPanel pb={3} padding={'0 20px 20px 30px'} fontSize={'16px'}>
                                     <Flex justify={'space-between'} w={'100%'}>
                                         <Box>
-                                            Stride
+                                            Quicksilver
                                         </Box>
                                         <Center>
-                                            0.34 {`q${getDisplayDenom(selectedDenom, false)}`}
+                                            {`${getAmountFromDenom(qAsset).toFixed(6)} q${getDisplayDenom(selectedDenom, false)}`}
                                         </Center>
                                     </Flex>
                                 </AccordionPanel>

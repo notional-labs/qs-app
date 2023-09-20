@@ -14,7 +14,6 @@ const ValidatorIntentCard = (props) => {
             justify={'space-between'}
         >
             <Center gap={'10px'}>
-                <Image src='/atom.svg' boxSize={'32px'} />
                 <Text className={`${stakingStyles.switch_network_modal_sub_text}`}>
                     {props.validator.moniker}
                 </Text>

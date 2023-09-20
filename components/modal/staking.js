@@ -115,7 +115,7 @@ const StakingModal = (props) => {
                                     Redemption Rate:
                                 </text>
                                 <text className={`${stakingStyles.stat_info_value}`}>
-                                    {`1 ${getDisplayDenom(selectedDenom)} = ${redemptionRate.toFixed(6)} q${getDisplayDenom(selectedDenom)}`}
+                                    {`1 q${getDisplayDenom(selectedDenom)} = ${redemptionRate.toFixed(6)} ${getDisplayDenom(selectedDenom)}`}
                                 </text>
                             </Flex>
                             <Flex justify={'space-between'} className={`${stakingStyles.stat_info}`}>
@@ -123,7 +123,7 @@ const StakingModal = (props) => {
                                     {`q${getDisplayDenom(selectedDenom)}`} Received:
                                 </text>
                                 <text className={`${stakingStyles.stat_info_value}`}>
-                                    {`${stakeAmount * redemptionRate} q${getDisplayDenom(selectedDenom)}`}
+                                    {`${stakeAmount / redemptionRate} q${getDisplayDenom(selectedDenom)}`}
                                 </text>
                             </Flex>
                         </div>

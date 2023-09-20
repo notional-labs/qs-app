@@ -12,7 +12,7 @@ export const getDisplayDenom = (str, isAllUpperCase = true) => {
 }
 
 export const getAmountFromDenom = (balance) => {
-    if (!balance) {
+    if (!balance || !balance.denom) {
         return 0
     }
     const exponent = balance.denom.substring(0,1)
