@@ -8,9 +8,23 @@ import {
 } from "@chakra-ui/react"
 import ValidatorIntentCard from "../card/validatorIntent"
 import { useSelector } from 'react-redux'
+import { useState } from "react"
 
 const ValidatorIntent = () => {
     const { validatorSelect } = useSelector(state => state.staking)
+    const [isEdit, setIsEdit] = useState(false)
+
+    const getIntentSum = () => {
+        let sum = 0
+        validatorSelect.map(val => {
+            sum += parseFloat(val.intent)
+        })
+        return sum
+    }
+
+    const checkIntent = () => {
+        return getIntentSum() !== 100
+    }
 
     return (
         <>
@@ -20,16 +34,37 @@ const ValidatorIntent = () => {
                         Validator List
                     </Text>
                 </Center>
-                <Button
-                    variant={'ghost'}
-                    color={'rgba(255, 133, 0, 1)'}
-                    _hover={{ backgroundColor: 'transparent' }}
-                    fontWeight={'400'}
-                    fontSize={'14px'}
-                >
-                    Edit Stake Allocation
-                </Button>
-            </Flex>
+                {
+                    isEdit ? (
+                        <Button
+                            variant={'ghost'}
+                            color={'rgba(255, 133, 0, 1)'}
+                            _hover={{ backgroundColor: 'transparent' }}
+                            fontWeight={'400'}
+                            fontSize={'14px'}
+                            onClick={() => {
+                                setIsEdit(false)
+                            }}
+                        >
+                            Finish
+                        </Button>
+
+                    ) : (
+                        <Button
+                            variant={'ghost'}
+                            color={'rgba(255, 133, 0, 1)'}
+                            _hover={{ backgroundColor: 'transparent' }}
+                            fontWeight={'400'}
+                            fontSize={'14px'}
+                            onClick={() => {
+                                setIsEdit(true)
+                            }}
+                        >
+                            Edit Stake Allocation
+                        </Button>
+                    )
+                }
+            </Flex >
             <VStack
                 margin={'0 2em 1em 2em'}
                 divider={<StackDivider height={'1px'} borderColor='rgba(255, 255, 255, 0.20)' />}
@@ -51,13 +86,21 @@ const ValidatorIntent = () => {
                 }}
             >
                 {
-                    validatorSelect.map((val) => {
+                    validatorSelect.map((val, i) => {
                         return (
-                            <ValidatorIntentCard validator={val}/>
+                            <ValidatorIntentCard validator={val} isEdit={isEdit} index={i} />
                         )
                     })
                 }
             </VStack>
+            {
+                checkIntent() &&
+                <Center margin={'1em 0'}>
+                    <Text color='#ff5242'>
+                        Total Intent sum not 100% please set the percentage of other validators
+                    </Text>
+                </Center>
+            }
         </>
     )
 }

@@ -42,10 +42,10 @@ const ValidatorCard = (props) => {
                 e.target.checked = false
                 return
             }
-            dispatch(addVals({valAddress: props.address, moniker: props.name}))
+            dispatch(addVals({ valAddress: props.address, moniker: props.name }))
         }
         else {
-            dispatch(removeVals({valAddress: props.address}))
+            dispatch(removeVals({ valAddress: props.address }))
         }
     }
 
@@ -68,7 +68,7 @@ const ValidatorCard = (props) => {
             >
                 <Flex>
                     <Center gap={'5px'} fontSize='15px'>
-                        <Checkbox colorScheme='orange' borderColor={'#E77728'} onChange={handleCheck} isChecked={isChecked()}/>
+                        <Checkbox colorScheme='orange' borderColor={'#E77728'} onChange={handleCheck} isChecked={isChecked()} />
                         <IconButton
                             variant='ghost'
                             colorScheme='teal'
@@ -80,10 +80,12 @@ const ValidatorCard = (props) => {
                                 backgroundClip: 'transparent'
                             }}
                         />
-                        <Text boxSize={'24px'}>
-                            {props.index}
-                        </Text>
-                        <Image src={logoUrl !== null ? logoUrl : '/icons/no_profile.svg'} boxSize={'24px'} borderRadius={'50%'} margin={'0 0px'}/>
+                        <Center boxSize={'30px'}>
+                            <Text>
+                                {props.index}
+                            </Text>
+                        </Center>
+                        <Image src={logoUrl !== null ? logoUrl : '/icons/no_profile.svg'} boxSize={'24px'} borderRadius={'50%'} margin={'0 5px'}/>
                         <Text>
                             {props.name}
                         </Text>

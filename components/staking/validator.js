@@ -76,7 +76,7 @@ const ValidatorPanel = (props) => {
             return
         }
         const fiterVals = validators.filter(val => {
-            return val.description.moniker.includes(e.target.value)
+            return val.description.moniker.toLowerCase().includes(e.target.value)
         })
         setFilterVals([...fiterVals])
     }
