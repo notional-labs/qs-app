@@ -10,3 +10,10 @@ export const getDisplayDenom = (str, isAllUpperCase = true) => {
 
     return newStr
 }
+
+export const getAmountFromDenom = (amount, denom) => {
+    const exponent = denom.substring(0,1)
+    if (exponent === 'u') {
+        return amount / Math.pow(10, 6)
+    }
+}

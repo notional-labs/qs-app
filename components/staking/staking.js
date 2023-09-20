@@ -21,9 +21,11 @@ import { ProdZoneInfos } from '@/state/chains/prod'
 import { useDispatch, useSelector } from 'react-redux'
 import connectToNetwork from '@/state/network/thunks/connectNetwork'
 import { DataMap } from '@/state/network/utils'
-import { getDisplayDenom } from '@/services/string'
+import { getAmountFromDenom, getDisplayDenom } from '@/services/string'
 import { getNativeTokenBalance } from '@/services/account'
 import { getRedemptionRate } from '@/services/zone'
+
+const marginAmount = 0.6
 
 const getInputPrefix = (logo = '/atom.svg', text = 'ATOM', imgSize = '100%') => {
     return (
@@ -81,9 +83,20 @@ const StakingPannel = (props) => {
         })()
     }, [connecting, selectedDenom])
 
+    useEffect(() => {
+        setqAssetAmount(amount * redemptionRate)
+    }, [amount])
+
+    useEffect(() => {
+        setAmount(qAssetAmount / redemptionRate)
+    }, [qAssetAmount])
+
     const handleAmountInput = (val) => {
         setAmount(val)
-        setqAssetAmount(val * redemptionRate)
+    }
+
+    const handleqAssetAmountInput = (val) => {
+        setqAssetAmount(val)
     }
 
     return (
@@ -136,6 +149,7 @@ const StakingPannel = (props) => {
                                 defaultValue={0}
                                 value={amount}
                                 min={0}
+                                max={getAmountFromDenom(nativeBalance.amount, nativeBalance.denom)}
                                 backgroundColor='#141414'
                                 w={'full'}
                                 borderRadius={10}
@@ -156,7 +170,7 @@ const StakingPannel = (props) => {
                         <div className={`${stakingStyles.amount_input_balance}`}>
                             <Center>
                                 <text>
-                                    BALANCE: {getNativeTokenBalance(balance, selectedDenom).amount} {DataMap[selectedDenom]?.symbol}
+                                    BALANCE: {getNativeTokenBalance(balance, selectedDenom).amount / Math.pow(10, 6)} {DataMap[selectedDenom]?.symbol}
                                 </text>
                             </Center>
                             <ButtonGroup gap='1'>
@@ -168,6 +182,9 @@ const StakingPannel = (props) => {
                                         backgroundColor: '#e77728'
                                     }}
                                     fontSize={'1em'}
+                                    onClick={() => {
+                                        setAmount(getAmountFromDenom(nativeBalance.amount, nativeBalance.denom) / 2)
+                                    }}
                                 >
                                     Half
                                 </Button>
@@ -179,6 +196,14 @@ const StakingPannel = (props) => {
                                         backgroundColor: '#e77728'
                                     }}
                                     fontSize={'1em'}
+                                    onClick={() => {
+                                        const newAmount = getAmountFromDenom(nativeBalance.amount, nativeBalance.denom) - marginAmount
+                                        if (newAmount < 0) {
+                                            setAmount(0)
+                                        } else {
+                                            setAmount(newAmount)
+                                        }
+                                    }}
                                 >
                                     Max
                                 </Button>
@@ -214,6 +239,7 @@ const StakingPannel = (props) => {
                                 }}
                                 variant={'flushed'}
                                 boxShadow={'0px 0px 5px 0px rgba(255, 255, 255, 0.50)'}
+                                onChange={handleqAssetAmountInput}
                             >
                                 <NumberInputField textAlign="right" />
                             </NumberInput>
