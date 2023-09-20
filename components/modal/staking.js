@@ -135,7 +135,7 @@ const StakingModal = (props) => {
                     >
                         {
                             <Collapse in={!isProcessing && !isFinished} unmountOnExit>
-                                <ValidatorIntent />
+                                <ValidatorIntent selectVals={props.selectVals} setSelectVals={props.setSelectVals}/>
                                 <Box padding={'1em 2em'}>
 
                                     <Text

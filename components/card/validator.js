@@ -1,14 +1,9 @@
-import { Inter } from 'next/font/google'
 import stakingStyles from '@/styles/Staking.module.css'
 import { useEffect, useState } from 'react'
 import {
-    Button, Grid,
+    Grid,
     Center,
     Flex,
-    InputGroup,
-    InputLeftElement,
-    Input,
-    Switch,
     Box,
     Checkbox,
     IconButton,
@@ -16,17 +11,14 @@ import {
     Image,
     Text,
 } from '@chakra-ui/react'
-import { ChevronLeftIcon, SearchIcon } from '@chakra-ui/icons'
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { getLogo } from '@/services/zone'
-import { useDispatch, useSelector } from 'react-redux'
-import { addVals, removeVals } from '@/state/staking/slice'
+import { useSelector } from 'react-redux'
 
 
 const ValidatorCard = (props) => {
     const [isStar, setIsStar] = useState(false)
     const [logoUrl, setLogoUrl] = useState(null)
-    const dispatch = useDispatch()
     const { validatorSelect } = useSelector(state => state.staking)
 
     useEffect(() => {
@@ -42,15 +34,22 @@ const ValidatorCard = (props) => {
                 e.target.checked = false
                 return
             }
-            dispatch(addVals({ valAddress: props.address, moniker: props.name }))
+            props.setSelectVals([...props.selectVals, {
+                address: props.address,
+                moniker: props.name,
+                intent: 0
+            }])
         }
         else {
-            dispatch(removeVals({ valAddress: props.address }))
+            const filter = props.selectVals.filter(val => {
+                return val.address !== props.address
+            })
+            props.setSelectVals([...filter])
         }
     }
 
     const isChecked = () => {
-        const filter = validatorSelect.filter(val => {
+        const filter = props.selectVals.filter(val => {
             return val.address === props.address
         })
         return filter.length > 0

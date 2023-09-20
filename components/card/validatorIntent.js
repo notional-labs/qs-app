@@ -14,9 +14,17 @@ import { useDispatch } from 'react-redux'
 import { editIntent } from '@/state/staking/slice'
 
 const ValidatorIntentCard = (props) => {
-    const dispatch = useDispatch()
-    const handleChangeIntent = (val) => {
-        dispatch(editIntent({ index: props.index, intent: parseFloat(val) }))
+    const handleChangeIntent = (value) => {
+        const newList = props.selectVals.map((val, i) => {
+            if (i === props.index) {
+                return {
+                    ...val,
+                    intent: parseFloat(value)
+                }
+            }
+            return val
+        })
+        props.setSelectVals([...newList])
     }
 
     return (

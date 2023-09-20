@@ -20,24 +20,24 @@ import StakingModal from '../modal/staking'
 import { useSelector, useDispatch } from 'react-redux'
 import { DataMap } from '@/state/network/utils'
 import { getNativeValidators } from '@/services/zone'
-import { prevStep, calculateIntent } from '@/state/staking/slice'
+import { prevStep } from '@/state/staking/slice'
 
 const statuses = [
     'active',
     'inactive'
 ]
 
-const ValidatorPanel = (props) => {
+const ValidatorPanel = () => {
     const [pannelMode, setPannelMode] = useState(0)
     const [show, setShow] = useState(false)
     const dispatch = useDispatch()
     const { selectedDenom, connecting } = useSelector(state => state.network)
-    const { validatorSelect } = useSelector(state => state.staking)
     const [validators, setValidators] = useState([])
     const [filterVals, setFilterVals] = useState([])
     const [totalSum, setTotalSum] = useState(0)
     const [status, setStatus] = useState(0)
     const [isLoading, setIsloading] = useState(false)
+    const [selectVals, setSelectVals] = useState([])
 
     useEffect(() => {
         (async () => {
@@ -81,6 +81,19 @@ const ValidatorPanel = (props) => {
         setFilterVals([...fiterVals])
     }
 
+    const calculateIntent = () => {
+        const equalDistributedIntent = selectVals.length > 0 ? 100 / selectVals.length : 100
+        const calculateIntent = 100 - (equalDistributedIntent * (selectVals.length - 1))
+        const newList = selectVals.map((val, i) => {
+            return {
+                address: val.address,
+                moniker: val.moniker,
+                intent: i === selectVals.length - 1 ? calculateIntent : equalDistributedIntent
+            }
+        })
+        setSelectVals([...newList])
+    }
+
     return (
         <Center w={'100%'} padding={'10vh'} minH={'100%'}>
             <Box className={`${stakingStyles.staking_container}`} w={'100%'} h={'100%'}>
@@ -122,7 +135,7 @@ const ValidatorPanel = (props) => {
                                 />
                             </InputGroup>
                             <Center gap={'10px'} >
-                                <Switch size={'lg'} colorScheme='orange' onChange={handleSwitch}/>
+                                <Switch size={'lg'} colorScheme='orange' onChange={handleSwitch} />
                                 <Text>
                                     Show inactive validators
                                 </Text>
@@ -164,9 +177,11 @@ const ValidatorPanel = (props) => {
                                                 name={val.description.moniker}
                                                 identity={val.description.identity}
                                                 votingPower={(parseInt(val.delegatorShares) / Math.pow(10, 24)).toFixed(0)}
-                                                votingPowerPercentage={`${totalSum > 0 ? parseFloat(((parseInt(val.delegatorShares) /Math.pow(10, 24))/ totalSum) * 100).toFixed(2) : 0} %`}
+                                                votingPowerPercentage={`${totalSum > 0 ? parseFloat(((parseInt(val.delegatorShares) / Math.pow(10, 24)) / totalSum) * 100).toFixed(2) : 0} %`}
                                                 commission={`${(parseFloat(val.commission.commissionRates.rate) / Math.pow(10, 16)).toFixed(2)} %`}
                                                 prScore={0}
+                                                selectVals={selectVals}
+                                                setSelectVals={setSelectVals}
                                             />
                                         )
                                     })
@@ -194,7 +209,7 @@ const ValidatorPanel = (props) => {
                                     <div className={`${stakingStyles.verticalLine}`} style={{ height: '100%', margin: '0 10px' }} />
                                     <Box>
                                         <Text className={`${stakingStyles.tableMainText}`}>
-                                            {validatorSelect.length} Validators Selected
+                                            {selectVals.length} Validators Selected
                                         </Text>
                                         <Text className={`${stakingStyles.tableSubText}`}>
                                             Select between 1 to 8 validators.
@@ -210,7 +225,7 @@ const ValidatorPanel = (props) => {
                                         backgroundColor: '#ba5c1a'
                                     }}
                                     onClick={() => {
-                                        dispatch(calculateIntent())
+                                        calculateIntent()
                                         setShow(true)
                                     }}
                                 >
@@ -225,6 +240,8 @@ const ValidatorPanel = (props) => {
             <StakingModal
                 isShow={show}
                 setIsShow={setShow}
+                selectVals={selectVals}
+                setSelectVals={setSelectVals}
             />
         </Center>
     )
