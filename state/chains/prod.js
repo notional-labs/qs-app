@@ -1,8 +1,8 @@
 export const ProdQuickSilverChainInfo = {
     chainId: "quicksilver-2",
     chainName: "Quicksilver Protocol",
-    rpc: "https://rpc.quicksilver.zone",
-    rest: "https://lcd.quicksilver.zone",
+    rpc: "https://rpc-quicksilver-ia.cosmosia.notional.ventures",
+    rest: "https://api-quicksilver-ia.cosmosia.notional.ventures",
     bip44: {
         coinType: 118,
     },
@@ -85,8 +85,8 @@ export const ProdChainInfos = [
     {
         chainId: "cosmoshub-4",
         chainName: "CosmosHub",
-        rpc: "https://rpc.cosmoshub-4.quicksilver.zone",
-        rest: "https://lcd.cosmoshub-4.quicksilver.zone",
+        rpc: "https://rpc-cosmoshub-ia.cosmosia.notional.ventures",
+        rest: "https://api-cosmoshub-ia.cosmosia.notional.ventures",
 
         bip44: {
             coinType: 118,
@@ -131,8 +131,8 @@ export const ProdChainInfos = [
     {
         chainId: "regen-1",
         chainName: "Regen Mainnet",
-        rpc: "https://rpc.regen-1.quicksilver.zone",
-        rest: "https://lcd.regen-1.quicksilver.zone",
+        rpc: "https://rpc-regen-ia.cosmosia.notional.ventures",
+        rest: "https://api-regen-ia.cosmosia.notional.ventures",
         bip44: {
             coinType: 118,
         },
@@ -176,8 +176,8 @@ export const ProdChainInfos = [
     {
         chainId: "osmosis-1",
         chainName: "Osmosis",
-        rpc: "https://rpc.osmosis-1.quicksilver.zone",
-        rest: "https://lcd.osmosis-1.quicksilver.zone",
+        rpc: "https://rpc-osmosis-ia.cosmosia.notional.ventures",
+        rest: "https://api-osmosis-ia.cosmosia.notional.ventures",
         bip44: {
             coinType: 118,
         },
@@ -267,8 +267,8 @@ export const ProdChainInfos = [
     {
         chainId: "juno-1",
         chainName: "Juno",
-        rpc: "https://rpc.juno-1.quicksilver.zone",
-        rest: "https://lcd.juno-1.quicksilver.zone",
+        rpc: "https://rpc-juno-ia.cosmosia.notional.ventures",
+        rest: "https://api-juno-ia.cosmosia.notional.ventures",
 
         bip44: {
             coinType: 118,
@@ -313,8 +313,8 @@ export const ProdChainInfos = [
     {
         chainId: "sommelier-3",
         chainName: "Sommelier",
-        rpc: "https://rpc.sommelier-3.quicksilver.zone",
-        rest: "https://lcd.sommelier-3.quicksilver.zone",
+        rpc: "https://sommelier-rpc.polkachu.com",
+        rest: "https://sommelier-api.polkachu.com",
 
         bip44: {
             coinType: 118,

@@ -1,6 +1,6 @@
 import { Inter } from 'next/font/google'
 import stakingStyles from '@/styles/Staking.module.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
     Button, Grid,
     Center,
@@ -18,10 +18,19 @@ import {
 } from '@chakra-ui/react'
 import { ChevronLeftIcon, SearchIcon } from '@chakra-ui/icons'
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import { getLogo } from '@/services/zone'
 
 
 const ValidatorCard = (props) => {
     const [isStar, setIsStar] = useState(false)
+    const [logoUrl, setLogoUrl] = useState(null)
+
+    useEffect(() => {
+        (async () => {
+            const url = await getLogo(props.identity)
+            setLogoUrl(url)
+        })()
+    }, [])
 
     const handleCheck = (e) => {
         if (e.target.checked) {
@@ -39,9 +48,13 @@ const ValidatorCard = (props) => {
         }
     }
 
+    const isChecked = () => {
+        return props.selectVals.indexOf(props.address) !== -1
+    }
+
     return (
         <Grid
-            templateColumns='40% 20% 20% 20%'
+            templateColumns='50% 15% 15% 20%'
             borderBottom={'solid 1px rgba(77, 77, 77, 1)'}
         >
             <Box
@@ -51,7 +64,7 @@ const ValidatorCard = (props) => {
             >
                 <Flex>
                     <Center gap={'5px'} fontSize='15px'>
-                        <Checkbox colorScheme='orange' borderColor={'#E77728'} onChange={handleCheck}/>
+                        <Checkbox colorScheme='orange' borderColor={'#E77728'} onChange={handleCheck} isChecked={isChecked()}/>
                         <IconButton
                             variant='ghost'
                             colorScheme='teal'
@@ -63,13 +76,13 @@ const ValidatorCard = (props) => {
                                 backgroundClip: 'transparent'
                             }}
                         />
-                        <text>
+                        <Text boxSize={'24px'}>
                             {props.index}
-                        </text>
-                        <Image src='/logo/qs_logo.svg' boxSize={'30px'} borderRadius={'50%'} />
-                        <text>
+                        </Text>
+                        <Image src={logoUrl !== null ? logoUrl : '/icons/no_profile.svg'} boxSize={'24px'} borderRadius={'50%'} margin={'0 0px'}/>
+                        <Text>
                             {props.name}
-                        </text>
+                        </Text>
                     </Center>
                 </Flex>
             </Box>

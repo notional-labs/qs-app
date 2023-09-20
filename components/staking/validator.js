@@ -1,6 +1,5 @@
-import { Inter } from 'next/font/google'
 import stakingStyles from '@/styles/Staking.module.css'
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import {
     Button, Grid,
     Center,
@@ -12,46 +11,73 @@ import {
     Switch,
     Box,
     Icon,
-    HStack,
-    VStack,
     Spinner
 } from '@chakra-ui/react'
 import { ChevronLeftIcon, SearchIcon } from '@chakra-ui/icons'
 import ValidatorCard from '@/components/card/validator'
 import { GoPencil } from "react-icons/go";
 import StakingModal from '../modal/staking'
-import { useDispatch, useSelector } from 'react-redux'
-import connectToNetwork from '@/state/network/thunks/connectNetwork'
+import { useSelector } from 'react-redux'
 import { DataMap } from '@/state/network/utils'
-import { getValidators } from '@/services/zone'
+import { getNativeValidators } from '@/services/zone'
+
+const statuses = [
+    'active',
+    'inactive'
+]
 
 const ValidatorPanel = (props) => {
     const [pannelMode, setPannelMode] = useState(0)
     const [show, setShow] = useState(false)
     const { selectedDenom, connecting } = useSelector(state => state.network)
     const [validators, setValidators] = useState([])
+    const [filterVals, setFilterVals] = useState([])
     const [totalSum, setTotalSum] = useState(0)
     const [selectVals, setSelectVals] = useState([])
+    const [status, setStatus] = useState(0)
+    const [isLoading, setIsloading] = useState(false)
 
     useEffect(() => {
         (async () => {
             try {
-                console.log(DataMap[selectedDenom]?.network)
-                const res = await getValidators(DataMap[selectedDenom]?.network.chainId)
+                setIsloading(true)
+                const res = await getNativeValidators(DataMap[selectedDenom]?.network.rpc, statuses[status])
                 setValidators([...res])
+                setFilterVals([...res])
+                setIsloading(false)
             } catch (e) {
+                setIsloading(false)
                 console.log(e.message)
             }
         })()
-    }, [connecting, selectedDenom])
+    }, [connecting, selectedDenom, status])
 
     useEffect(() => {
         let sum = 0
         validators.map(val => {
-            sum += parseInt(val.voting_power)
-        })  
+            sum += parseInt(val.delegatorShares) / Math.pow(10, 24)
+        })
         setTotalSum(sum)
     }, [validators])
+
+    const handleSwitch = (e) => {
+        if (e.target.checked) {
+            setStatus(1)
+        } else {
+            setStatus(0)
+        }
+    }
+
+    const handleSearch = (e) => {
+        if (e.target.value === '') {
+            setFilterVals([...validators])
+            return
+        }
+        const fiterVals = validators.filter(val => {
+            return val.description.moniker.includes(e.target.value)
+        })
+        setFilterVals([...fiterVals])
+    }
 
     return (
         <Center w={'100%'} padding={'10vh'} minH={'100%'}>
@@ -90,17 +116,18 @@ const ValidatorPanel = (props) => {
                                     placeholder='Search validator'
                                     borderRadius={'20px'}
                                     _focus={{ borderColor: '#E77728', boxShadow: 'none' }}
+                                    onChange={handleSearch}
                                 />
                             </InputGroup>
                             <Center gap={'10px'} >
-                                <Switch size={'lg'} colorScheme='orange' />
+                                <Switch size={'lg'} colorScheme='orange' onChange={handleSwitch}/>
                                 <Text>
                                     Show inactive validators
                                 </Text>
                             </Center>
                         </Flex>
                         <Box margin={'3em 0'} h={'100%'}>
-                            <Grid templateColumns='40% 20% 20% 20%' padding={'0 1em'} fontWeight='bold' fontSize={'14px'}>
+                            <Grid templateColumns='50% 15% 15% 20%' padding={'0 1em'} fontWeight='bold' fontSize={'14px'}>
                                 <Box>VALIDATOR</Box>
                                 <Box>VOTING POWER</Box>
                                 <Box>COMMISSION</Box>
@@ -125,18 +152,19 @@ const ValidatorPanel = (props) => {
                                 }}
                             >
                                 {
-                                    connecting ? <Center h={'100%'}>
+                                    isLoading ? <Center h={'100%'}>
                                         <Spinner color='white' boxSize={'4em'} />
-                                    </Center> : validators.map((val, i) => {
+                                    </Center> : filterVals.map((val, i) => {
                                         return (
                                             <ValidatorCard
                                                 index={i + 1}
-                                                address={val.valoper_address}
-                                                name={'Lavender.Five Nodes'}
-                                                votingPower={val.voting_power}
-                                                votingPowerPercentage={`${totalSum > 0 ? parseFloat((parseInt(val.voting_power) / totalSum) * 100).toFixed(2) : 0} %`}
-                                                commission={`${(parseFloat(val.commission_rate) * 100).toFixed(2)} %`}
-                                                prScore={parseInt(val.score)}
+                                                address={val.operatorAddress}
+                                                name={val.description.moniker}
+                                                identity={val.description.identity}
+                                                votingPower={(parseInt(val.delegatorShares) / Math.pow(10, 24)).toFixed(0)}
+                                                votingPowerPercentage={`${totalSum > 0 ? parseFloat(((parseInt(val.delegatorShares) /Math.pow(10, 24))/ totalSum) * 100).toFixed(2) : 0} %`}
+                                                commission={`${(parseFloat(val.commission.commissionRates.rate) / Math.pow(10, 16)).toFixed(2)} %`}
+                                                prScore={0}
                                                 selectVals={selectVals}
                                                 setSelectVals={setSelectVals}
                                             />

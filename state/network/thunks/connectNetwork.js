@@ -8,20 +8,22 @@ const fetchNetworkDetails = async (windowWallet, offlineSigner, chainId) => {
     let bech32 = pubkey?.bech32Address;
     if (bech32) {
         let roBalance = await offlineSigner.getAllBalances(bech32);
+        console.log(bech32, roBalance)
 
         return { address: bech32, balance: roBalance, connected: true }
     }
     return { connected: false, address: "", balance: "" }
 }
 
-const connectToNetwork = createAsyncThunk("network/connect", async (denom, { getState }) => {
+const connectToNetwork = createAsyncThunk("network/connect", async (denom) => {
     let result = { connected: false, address: "", balance: "" }
-    let walletType = (await getState()).wallet.typeWallet
+    let walletType = localStorage.getItem('WalletType') || 'keplr'
     const chainInfo = DataMap[denom].network
     try {
         if (walletType === 'keplr') {
             const keplr = await getKeplrFromWindow();
             if (keplr) {
+                console.log(denom)
                 await keplr.enable(chainInfo.chainId)
                 let signer = keplr.getOfflineSignerOnlyAmino(chainInfo.chainId);
                 let offlineSigner = await getSigningQuicksilverClient({ rpcEndpoint: chainInfo.rpc, signer: signer });
