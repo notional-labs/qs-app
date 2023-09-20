@@ -7,8 +7,11 @@ import {
     StackDivider,
 } from "@chakra-ui/react"
 import ValidatorIntentCard from "../card/validatorIntent"
+import { useSelector } from 'react-redux'
 
 const ValidatorIntent = () => {
+    const { validatorSelect } = useSelector(state => state.staking)
+
     return (
         <>
             <Flex justify={'space-between'} padding={'1em 2em'}>
@@ -47,13 +50,13 @@ const ValidatorIntent = () => {
                     },
                 }}
             >
-                <ValidatorIntentCard />
-                <ValidatorIntentCard />
-                <ValidatorIntentCard />
-                <ValidatorIntentCard />
-                <ValidatorIntentCard />
-                <ValidatorIntentCard />
-
+                {
+                    validatorSelect.map((val) => {
+                        return (
+                            <ValidatorIntentCard validator={val}/>
+                        )
+                    })
+                }
             </VStack>
         </>
     )

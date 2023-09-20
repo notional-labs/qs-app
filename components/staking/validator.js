@@ -17,9 +17,10 @@ import { ChevronLeftIcon, SearchIcon } from '@chakra-ui/icons'
 import ValidatorCard from '@/components/card/validator'
 import { GoPencil } from "react-icons/go";
 import StakingModal from '../modal/staking'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { DataMap } from '@/state/network/utils'
 import { getNativeValidators } from '@/services/zone'
+import { prevStep, calculateIntent } from '@/state/staking/slice'
 
 const statuses = [
     'active',
@@ -29,11 +30,12 @@ const statuses = [
 const ValidatorPanel = (props) => {
     const [pannelMode, setPannelMode] = useState(0)
     const [show, setShow] = useState(false)
+    const dispatch = useDispatch()
     const { selectedDenom, connecting } = useSelector(state => state.network)
+    const { validatorSelect } = useSelector(state => state.staking)
     const [validators, setValidators] = useState([])
     const [filterVals, setFilterVals] = useState([])
     const [totalSum, setTotalSum] = useState(0)
-    const [selectVals, setSelectVals] = useState([])
     const [status, setStatus] = useState(0)
     const [isLoading, setIsloading] = useState(false)
 
@@ -86,7 +88,7 @@ const ValidatorPanel = (props) => {
                     <Box h={'100%'}>
                         <Flex justify={'space-between'}>
                             <Flex justify={'start'}>
-                                <Button variant={'ghost'} padding={0} _hover={{ backgroundColor: 'Boxansparent' }} onClick={() => props.setStep(1)}>
+                                <Button variant={'ghost'} padding={0} _hover={{ backgroundColor: 'Boxansparent' }} onClick={() => dispatch(prevStep())}>
                                     <ChevronLeftIcon boxSize={'100%'} color={'#E77728'} />
                                 </Button>
                                 <button
@@ -165,8 +167,6 @@ const ValidatorPanel = (props) => {
                                                 votingPowerPercentage={`${totalSum > 0 ? parseFloat(((parseInt(val.delegatorShares) /Math.pow(10, 24))/ totalSum) * 100).toFixed(2) : 0} %`}
                                                 commission={`${(parseFloat(val.commission.commissionRates.rate) / Math.pow(10, 16)).toFixed(2)} %`}
                                                 prScore={0}
-                                                selectVals={selectVals}
-                                                setSelectVals={setSelectVals}
                                             />
                                         )
                                     })
@@ -194,7 +194,7 @@ const ValidatorPanel = (props) => {
                                     <div className={`${stakingStyles.verticalLine}`} style={{ height: '100%', margin: '0 10px' }} />
                                     <Box>
                                         <Text className={`${stakingStyles.tableMainText}`}>
-                                            {selectVals.length} Validators Selected
+                                            {validatorSelect.length} Validators Selected
                                         </Text>
                                         <Text className={`${stakingStyles.tableSubText}`}>
                                             Select between 1 to 8 validators.
@@ -209,7 +209,10 @@ const ValidatorPanel = (props) => {
                                     _hover={{
                                         backgroundColor: '#ba5c1a'
                                     }}
-                                    onClick={() => setShow(true)}
+                                    onClick={() => {
+                                        dispatch(calculateIntent())
+                                        setShow(true)
+                                    }}
                                 >
                                     Next
                                 </Button>

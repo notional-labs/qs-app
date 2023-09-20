@@ -9,29 +9,23 @@ import {
     Image,
     Text,
     Center,
-    Link,
     Box,
-    Grid,
-    Heading,
     Button,
     VStack,
-    StackDivider,
-    Container,
     Collapse,
 } from "@chakra-ui/react"
 import stakingStyles from '@/styles/Staking.module.css'
-import { useEffect, useState, useCallback } from "react"
+import { useState } from "react"
 import ValidatorIntent from "../list/validatorIntent"
 import OperationProgress from "../progress/operationProgress"
-import { useDispatch, useSelector } from 'react-redux'
-import connectToNetwork from '@/state/network/thunks/connectNetwork'
-import { DataMap } from '@/state/network/utils'
+import { useSelector } from 'react-redux'
 import { getDisplayDenom } from "@/services/string"
 
 const StakingModal = (props) => {
     const [isProcessing, setIsProcessing] = useState(false)
     const [isFinished, setIsFinished] = useState(false)
-    const { selectedDenom, connecting } = useSelector(state => state.network)
+    const { selectedDenom } = useSelector(state => state.network)
+    const { stakeAmount, redemptionRate } = useSelector(state => state.staking)
 
     const liquidStake = () => {
         setIsProcessing(true)
@@ -105,7 +99,7 @@ const StakingModal = (props) => {
                                     Total Stake:
                                 </text>
                                 <text className={`${stakingStyles.stat_info_value}`}>
-                                    14103.28 {getDisplayDenom(selectedDenom)}
+                                    {stakeAmount} {getDisplayDenom(selectedDenom)}
                                 </text>
                             </Flex>
                             <Flex justify={'space-between'} className={`${stakingStyles.stat_info}`}>
@@ -121,7 +115,7 @@ const StakingModal = (props) => {
                                     Redemption Rate:
                                 </text>
                                 <text className={`${stakingStyles.stat_info_value}`}>
-                                    {`1 ${getDisplayDenom(selectedDenom)} = 1.243 q${getDisplayDenom(selectedDenom)}`}
+                                    {`1 ${getDisplayDenom(selectedDenom)} = ${redemptionRate.toFixed(6)} q${getDisplayDenom(selectedDenom)}`}
                                 </text>
                             </Flex>
                             <Flex justify={'space-between'} className={`${stakingStyles.stat_info}`}>
@@ -129,7 +123,7 @@ const StakingModal = (props) => {
                                     {`q${getDisplayDenom(selectedDenom)}`} Received:
                                 </text>
                                 <text className={`${stakingStyles.stat_info_value}`}>
-                                    11.123123 {`q${getDisplayDenom(selectedDenom)}`}
+                                    {`${stakeAmount * redemptionRate} q${getDisplayDenom(selectedDenom)}`}
                                 </text>
                             </Flex>
                         </div>

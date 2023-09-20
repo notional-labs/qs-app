@@ -20,12 +20,14 @@ import SelectNetwork from '@/components/modal/selectNetwork'
 import { ProdZoneInfos } from '@/state/chains/prod'
 import { useDispatch, useSelector } from 'react-redux'
 import connectToNetwork from '@/state/network/thunks/connectNetwork'
+import { nextStep, inputAmount } from '@/state/staking/slice'
+import fetchRemdemtionRate from '@/state/staking/thunks/fetchRedemptionRate'
 import { DataMap } from '@/state/network/utils'
 import { getAmountFromDenom, getDisplayDenom } from '@/services/string'
 import { getNativeTokenBalance } from '@/services/account'
-import { getRedemptionRate } from '@/services/zone'
 
-const marginAmount = 0.6
+// Make sure user have enough for fee
+const marginAmount = 0.3
 
 const getInputPrefix = (logo = '/atom.svg', text = 'ATOM', imgSize = '100%') => {
     return (
@@ -60,9 +62,7 @@ const StakingPannel = (props) => {
     const [isOpenNetworkSelect, setIsOpenNetworkSelect] = useState(false)
     const dispatch = useDispatch()
     const { selectedDenom, connecting, balance } = useSelector(state => state.network)
-    const [amount, setAmount] = useState(0)
-    const [qAssetAmount, setqAssetAmount] = useState(0)
-    const [redemptionRate, setRedemptionRate] = useState(1)
+    const { redemptionRate, stakeAmount, qAssetAmount } = useSelector(state => state.staking)
 
     const handleSelectNetwork = useCallback((denom) => {
         dispatch(connectToNetwork(denom))
@@ -75,28 +75,15 @@ const StakingPannel = (props) => {
     }, [connecting, selectedDenom, balance])
 
     useEffect(() => {
-        (async () => {
-            if (selectedDenom) {
-                const rate = await getRedemptionRate(DataMap[selectedDenom]?.network.chainId)
-                setRedemptionRate(parseFloat(rate))
-            }
-        })()
+        dispatch(fetchRemdemtionRate(DataMap[selectedDenom]?.network.chainId))
     }, [connecting, selectedDenom])
 
-    useEffect(() => {
-        setqAssetAmount(amount * redemptionRate)
-    }, [amount])
-
-    useEffect(() => {
-        setAmount(qAssetAmount / redemptionRate)
-    }, [qAssetAmount])
-
-    const handleAmountInput = (val) => {
-        setAmount(val)
-    }
-
-    const handleqAssetAmountInput = (val) => {
-        setqAssetAmount(val)
+    const handlerInput = (amt, type) => {
+        if (type === 'native') {
+            dispatch(inputAmount({stakeAmount: amt, qAssetAmount: amt * redemptionRate }))
+        } else {
+            dispatch(inputAmount({stakeAmount: amt / redemptionRate, qAssetAmount: amt }))
+        }
     }
 
     return (
@@ -147,9 +134,9 @@ const StakingPannel = (props) => {
                             </InputLeftElement>
                             <NumberInput
                                 defaultValue={0}
-                                value={amount}
+                                value={stakeAmount}
                                 min={0}
-                                max={getAmountFromDenom(nativeBalance.amount, nativeBalance.denom)}
+                                max={getAmountFromDenom(nativeBalance)}
                                 backgroundColor='#141414'
                                 w={'full'}
                                 borderRadius={10}
@@ -160,7 +147,7 @@ const StakingPannel = (props) => {
                                 _focus={{
                                     borderColor: 'transparent'
                                 }}
-                                onChange={handleAmountInput}
+                                onChange={(val) => handlerInput(val, 'native')}
                                 variant={'flushed'}
                                 boxShadow={'0px 0px 5px 0px rgba(255, 255, 255, 0.50)'}
                             >
@@ -183,7 +170,7 @@ const StakingPannel = (props) => {
                                     }}
                                     fontSize={'1em'}
                                     onClick={() => {
-                                        setAmount(getAmountFromDenom(nativeBalance.amount, nativeBalance.denom) / 2)
+                                        handlerInput(getAmountFromDenom(nativeBalance) / 2, 'native')
                                     }}
                                 >
                                     Half
@@ -197,11 +184,11 @@ const StakingPannel = (props) => {
                                     }}
                                     fontSize={'1em'}
                                     onClick={() => {
-                                        const newAmount = getAmountFromDenom(nativeBalance.amount, nativeBalance.denom) - marginAmount
+                                        const newAmount = getAmountFromDenom(nativeBalance) - marginAmount
                                         if (newAmount < 0) {
-                                            setAmount(0)
+                                            handlerInput(0, 'native')
                                         } else {
-                                            setAmount(newAmount)
+                                            handlerInput(newAmount, 'native')
                                         }
                                     }}
                                 >
@@ -239,7 +226,7 @@ const StakingPannel = (props) => {
                                 }}
                                 variant={'flushed'}
                                 boxShadow={'0px 0px 5px 0px rgba(255, 255, 255, 0.50)'}
-                                onChange={handleqAssetAmountInput}
+                                onChange={(val) => handlerInput(val, 'qAsset')}
                             >
                                 <NumberInputField textAlign="right" />
                             </NumberInput>
@@ -256,7 +243,7 @@ const StakingPannel = (props) => {
                                     Transaction Cost
                                 </text>
                                 <text className={`${stakingStyles.stat_info_value}`}>
-                                    {`${amount} ${getDisplayDenom(selectedDenom)}`}
+                                    {`${stakeAmount} ${getDisplayDenom(selectedDenom)}`}
                                 </text>
                             </Flex>
                             <Flex justify={'space-between'} className={`${stakingStyles.stat_info}`}>
@@ -287,7 +274,7 @@ const StakingPannel = (props) => {
                             _hover={{
                                 backgroundColor: '#ba5c1a'
                             }}
-                            onClick={() => props.setStep(2)}
+                            onClick={() => dispatch(nextStep())}
                         >
                             Liquid Stake
                         </Button>
@@ -336,7 +323,7 @@ const StakingPannel = (props) => {
                                 <Text>Value of 1 {`q${getDisplayDenom(selectedDenom, false)}`}</Text>
                             </Center>
                             <text className={`${stakingStyles.in_color}`}>
-                                {`1 ${getDisplayDenom(selectedDenom, false)} = ${redemptionRate.toFixed(6)} q${getDisplayDenom(selectedDenom, false)}`}
+                                {`1 ${getDisplayDenom(selectedDenom, false)} =${redemptionRate.toFixed(6)} q${getDisplayDenom(selectedDenom, false)}`}
                             </text>
                         </Flex>
                         <Box

@@ -11,9 +11,12 @@ export const getDisplayDenom = (str, isAllUpperCase = true) => {
     return newStr
 }
 
-export const getAmountFromDenom = (amount, denom) => {
-    const exponent = denom.substring(0,1)
+export const getAmountFromDenom = (balance) => {
+    if (!balance) {
+        return 0
+    }
+    const exponent = balance.denom.substring(0,1)
     if (exponent === 'u') {
-        return amount / Math.pow(10, 6)
+        return balance.amount / Math.pow(10, 6)
     }
 }

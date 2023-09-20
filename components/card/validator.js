@@ -19,11 +19,15 @@ import {
 import { ChevronLeftIcon, SearchIcon } from '@chakra-ui/icons'
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { getLogo } from '@/services/zone'
+import { useDispatch, useSelector } from 'react-redux'
+import { addVals, removeVals } from '@/state/staking/slice'
 
 
 const ValidatorCard = (props) => {
     const [isStar, setIsStar] = useState(false)
     const [logoUrl, setLogoUrl] = useState(null)
+    const dispatch = useDispatch()
+    const { validatorSelect } = useSelector(state => state.staking)
 
     useEffect(() => {
         (async () => {
@@ -34,22 +38,22 @@ const ValidatorCard = (props) => {
 
     const handleCheck = (e) => {
         if (e.target.checked) {
-            if (props.selectVals.length >= 8) {
+            if (validatorSelect.length >= 8) {
                 e.target.checked = false
                 return
             }
-            props.setSelectVals([...props.selectVals, props.address])
+            dispatch(addVals({valAddress: props.address, moniker: props.name}))
         }
         else {
-            const filter = props.selectVals.filter(address => {
-                return address !== props.address
-            })
-            props.setSelectVals([...filter])
+            dispatch(removeVals({valAddress: props.address}))
         }
     }
 
     const isChecked = () => {
-        return props.selectVals.indexOf(props.address) !== -1
+        const filter = validatorSelect.filter(val => {
+            return val.address === props.address
+        })
+        return filter.length > 0
     }
 
     return (

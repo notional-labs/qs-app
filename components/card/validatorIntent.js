@@ -14,14 +14,14 @@ const ValidatorIntentCard = (props) => {
             justify={'space-between'}
         >
             <Center gap={'10px'}>
-                <Image src='/atom.svg' boxSize={'100%'} />
+                <Image src='/atom.svg' boxSize={'32px'} />
                 <Text className={`${stakingStyles.switch_network_modal_sub_text}`}>
-                    ATOM
+                    {props.validator.moniker}
                 </Text>
             </Center>
             <Box>
                 <Text className={`${stakingStyles.tableMainText}`}>
-                    12.5 %
+                    {props.validator.intent.toFixed(3)} %
                 </Text>
             </Box>
         </Flex>
