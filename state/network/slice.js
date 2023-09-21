@@ -7,6 +7,7 @@ const initialState = {
     selectedDenom: "",
     address: "",
     balance: "",
+    signer: {},
     zoneData: {}
 }
 
@@ -25,6 +26,7 @@ export const slice = createSlice({
             state.balance = action.payload.balance
             state.selectedDenom = action.payload.denom
             state.connected = action.payload.connected
+            state.signer = action.payload.signer
         })
     }
 })
