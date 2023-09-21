@@ -10,10 +10,22 @@ import {
     InputRightAddon,
 } from '@chakra-ui/react'
 import stakingStyles from '@/styles/Staking.module.css'
-import { useDispatch } from 'react-redux'
-import { editIntent } from '@/state/staking/slice'
+import { useSelector } from 'react-redux'
+import { useState, useEffect } from 'react'
+import { getLogo } from '@/services/zone'
+import { DataMap } from '@/state/network/utils'
 
 const ValidatorIntentCard = (props) => {
+    const [logoUrl, setLogoUrl] = useState(null)
+    const { selectedDenom, connecting } = useSelector(state => state.network)
+
+    useEffect(() => {
+        if (selectedDenom) {
+            const url = getLogo(props.validator.address, DataMap[selectedDenom]?.network_name?.toLowerCase())
+            setLogoUrl(url)
+        }
+    }, [selectedDenom, connecting])
+
     const handleChangeIntent = (value) => {
         const newList = props.selectVals.map((val, i) => {
             if (i === props.index) {
@@ -34,6 +46,7 @@ const ValidatorIntentCard = (props) => {
             w={'100%'}
         >
             <Center gap={'10px'}>
+                <Image src={logoUrl} fallbackSrc='/icons/no_profile.svg' boxSize={'24px'} borderRadius={'50%'}/>
                 <Text className={`${stakingStyles.switch_network_modal_sub_text}`}>
                     {props.validator.moniker}
                 </Text>
@@ -41,11 +54,10 @@ const ValidatorIntentCard = (props) => {
             <Flex justify={'end'}>
                 {
                     props.isEdit ?
-                        <InputGroup size={'sm'} alignSelf={'right'} w={'50%'}>
+                        <InputGroup size={'sm'} alignSelf={'right'} w={'100%'}>
                             <NumberInput
                                 value={props.validator.intent}
                                 onChange={handleChangeIntent}
-                                defaultValue={props.validator.intent}
                                 min={0}
                                 max={100}
                                 backgroundColor='white'

@@ -104,14 +104,6 @@ const StakingModal = (props) => {
                             </Flex>
                             <Flex justify={'space-between'} className={`${stakingStyles.stat_info}`}>
                                 <text className={`${stakingStyles.modal_stat_key}`}>
-                                    Quicksilver APY:
-                                </text>
-                                <text className={`${stakingStyles.stat_info_value}`}>
-                                    12.24%
-                                </text>
-                            </Flex>
-                            <Flex justify={'space-between'} className={`${stakingStyles.stat_info}`}>
-                                <text className={`${stakingStyles.modal_stat_key}`}>
                                     Redemption Rate:
                                 </text>
                                 <text className={`${stakingStyles.stat_info_value}`}>

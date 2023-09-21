@@ -86,7 +86,13 @@ const ValidatorIntent = (props) => {
                 {
                     props.selectVals.map((val, i) => {
                         return (
-                            <ValidatorIntentCard validator={val} isEdit={isEdit} index={i} selectVals={props.selectVals} setSelectVals={props.setSelectVals}/>
+                            <ValidatorIntentCard 
+                                validator={val} 
+                                isEdit={isEdit} 
+                                index={i} 
+                                selectVals={props.selectVals} 
+                                setSelectVals={props.setSelectVals} 
+                            />
                         )
                     })
                 }

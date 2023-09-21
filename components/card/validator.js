@@ -22,11 +22,9 @@ const ValidatorCard = (props) => {
     const { validatorSelect } = useSelector(state => state.staking)
 
     useEffect(() => {
-        (async () => {
-            const url = await getLogo(props.identity)
-            setLogoUrl(url)
-        })()
-    }, [])
+        const url = getLogo(props.address, props.chainName)
+        setLogoUrl(url)
+    }, [props.address])
 
     const handleCheck = (e) => {
         if (e.target.checked) {
@@ -84,7 +82,7 @@ const ValidatorCard = (props) => {
                                 {props.index}
                             </Text>
                         </Center>
-                        <Image src={logoUrl !== null ? logoUrl : '/icons/no_profile.svg'} boxSize={'24px'} borderRadius={'50%'} margin={'0 5px'}/>
+                        <Image src={logoUrl} boxSize={'24px'} borderRadius={'50%'} margin={'0 5px'} fallbackSrc='/icons/no_profile.svg' />
                         <Text>
                             {props.name}
                         </Text>

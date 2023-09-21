@@ -11,7 +11,9 @@ import {
     Switch,
     Box,
     Icon,
-    Spinner
+    Spinner,
+    InputRightAddon,
+    InputRightElement
 } from '@chakra-ui/react'
 import { ChevronLeftIcon, SearchIcon } from '@chakra-ui/icons'
 import ValidatorCard from '@/components/card/validator'
@@ -19,8 +21,9 @@ import { GoPencil } from "react-icons/go";
 import StakingModal from '../modal/staking'
 import { useSelector, useDispatch } from 'react-redux'
 import { DataMap } from '@/state/network/utils'
-import { getNativeValidators } from '@/services/zone'
+import { getNativeValidators, getValidatorsFromAPI } from '@/services/zone'
 import { prevStep } from '@/state/staking/slice'
+import { getAmountFromDenom } from '@/services/string'
 
 const statuses = [
     'active',
@@ -32,19 +35,26 @@ const ValidatorPanel = () => {
     const [show, setShow] = useState(false)
     const dispatch = useDispatch()
     const { selectedDenom, connecting } = useSelector(state => state.network)
+    const { stakeAmount } = useSelector(state => state.staking)
     const [validators, setValidators] = useState([])
     const [filterVals, setFilterVals] = useState([])
     const [totalSum, setTotalSum] = useState(0)
     const [status, setStatus] = useState(0)
     const [isLoading, setIsloading] = useState(false)
     const [selectVals, setSelectVals] = useState([])
+    const [search, setSearch] = useState('')
 
     useEffect(() => {
         (async () => {
             try {
                 setIsloading(true)
-                const res = await getNativeValidators(DataMap[selectedDenom]?.network.rpc, statuses[status])
+                let res = await getValidatorsFromAPI(DataMap[selectedDenom]?.zone.chain_id)
                 setValidators([...res])
+                if (status === 0) {
+                    res = res.filter(val => {
+                        return val.status === 'BOND_STATUS_BONDED'
+                    })
+                }
                 setFilterVals([...res])
                 setIsloading(false)
             } catch (e) {
@@ -57,7 +67,7 @@ const ValidatorPanel = () => {
     useEffect(() => {
         let sum = 0
         validators.map(val => {
-            sum += parseInt(val.delegatorShares) / Math.pow(10, 24)
+            sum += parseInt(val.delegator_shares)
         })
         setTotalSum(sum)
     }, [validators])
@@ -70,13 +80,17 @@ const ValidatorPanel = () => {
         }
     }
 
-    const handleSearch = (e) => {
-        if (e.target.value === '') {
+    const handleInput = (e) => {
+        setSearch(e.target.value)
+    }
+
+    const handleSearch = () => {
+        if (search === '') {
             setFilterVals([...validators])
             return
         }
         const fiterVals = validators.filter(val => {
-            return val.description.moniker.toLowerCase().includes(e.target.value)
+            return val.description.moniker.toLowerCase().includes(search)
         })
         setFilterVals([...fiterVals])
     }
@@ -131,11 +145,24 @@ const ValidatorPanel = () => {
                                     placeholder='Search validator'
                                     borderRadius={'20px'}
                                     _focus={{ borderColor: '#E77728', boxShadow: 'none' }}
-                                    onChange={handleSearch}
+                                    onChange={handleInput}
                                 />
+                                <InputRightElement width={'70px'} >
+                                    <Button
+                                        borderRadius={'20px'}
+                                        onClick={handleSearch}
+                                        bg='#E77728'
+                                        border={'solid 1px white'}
+                                        _hover={{
+                                            backgroundColor: '#ba5c1a'
+                                        }}
+                                    >
+                                        Search
+                                    </Button>
+                                </InputRightElement>
                             </InputGroup>
                             <Center gap={'10px'} >
-                                <Switch size={'lg'} colorScheme='orange' onChange={handleSwitch} />
+                                <Switch size={'lg'} colorScheme='orange' onChange={handleSwitch} isLoading={isLoading} />
                                 <Text>
                                     Show inactive validators
                                 </Text>
@@ -173,13 +200,13 @@ const ValidatorPanel = () => {
                                         return (
                                             <ValidatorCard
                                                 index={i + 1}
-                                                address={val.operatorAddress}
+                                                address={val.operator_address}
                                                 name={val.description.moniker}
-                                                identity={val.description.identity}
-                                                votingPower={(parseInt(val.delegatorShares) / Math.pow(10, 24)).toFixed(0)}
-                                                votingPowerPercentage={`${totalSum > 0 ? parseFloat(((parseInt(val.delegatorShares) / Math.pow(10, 24)) / totalSum) * 100).toFixed(2) : 0} %`}
-                                                commission={`${(parseFloat(val.commission.commissionRates.rate) / Math.pow(10, 16)).toFixed(2)} %`}
+                                                votingPower={(parseInt(val.delegator_shares)).toFixed(0)}
+                                                votingPowerPercentage={`${totalSum > 0 ? parseFloat(((parseInt(val.delegator_shares)) / totalSum) * 100).toFixed(2) : 0} %`}
+                                                commission={`${(parseFloat(val.commission.commission_rates.rate)).toFixed(2)} %`}
                                                 prScore={0}
+                                                chainName={DataMap[selectedDenom]?.network_name?.toLowerCase()}
                                                 selectVals={selectVals}
                                                 setSelectVals={setSelectVals}
                                             />
@@ -201,7 +228,7 @@ const ValidatorPanel = () => {
                             <Flex justify={'space-between'}>
                                 <Center gap={'10px'}>
                                     <Text className={`${stakingStyles.tableMainText}`} fontSize={'20px'}>
-                                        10.123123 {DataMap[selectedDenom]?.symbol}
+                                        {stakeAmount} {DataMap[selectedDenom]?.symbol}
                                     </Text>
                                     <Center>
                                         <Icon as={GoPencil} color={'#E77728'} boxSize={'19px'} />

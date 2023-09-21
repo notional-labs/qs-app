@@ -12,11 +12,23 @@ import { getDisplayDenom } from '@/services/string'
 import { useDispatch, useSelector } from 'react-redux'
 import connectToNetwork from '@/state/network/thunks/connectNetwork'
 import { DataMap } from '@/state/network/utils'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { getAPY } from '@/services/zone'
 
 const NetworkCard = (props) => {
     const dispatch = useDispatch()
-    const { selectedDenom } = useSelector(state => state.network)
+    const [apy, setApy] = useState(0)
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const res = await getAPY(props.zone.chain_id)
+                setApy(res)
+            } catch (e) {
+                console.log(e.message)
+            }
+        })()
+    }, [])
 
     const handleSelectNetwork = useCallback((denom) => {
         dispatch(connectToNetwork(denom))
@@ -32,6 +44,7 @@ const NetworkCard = (props) => {
                 handleSelectNetwork(props.zone.base_denom)
                 props.setIsShow(false)
             }}
+            cursor={'pointer'}
         >
             <Center gap={'10px'}>
                 <Image src={props.zone.base_logo} boxSize={'40px'} />
@@ -46,9 +59,9 @@ const NetworkCard = (props) => {
             </Center>
             <Box>
                 <Heading as='h6' size={'md'}>
-                    25%
+                    {`${(apy * 100).toFixed(2)} %`}
                 </Heading>
-                <Text className={`${stakingStyles.switch_network_modal_sub_text}`}>
+                <Text className={`${stakingStyles.switch_network_modal_sub_text}`} textAlign={'end'}>
                     APY
                 </Text>
             </Box>
