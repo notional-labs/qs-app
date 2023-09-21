@@ -54,7 +54,7 @@ const ValidatorIntentCard = (props) => {
             <Flex justify={'end'}>
                 {
                     props.isEdit ?
-                        <InputGroup size={'sm'} alignSelf={'right'} w={'100%'}>
+                        <InputGroup size={'sm'} alignSelf={'right'} w={'50%'}>
                             <NumberInput
                                 value={props.validator.intent}
                                 onChange={handleChangeIntent}
