@@ -112,7 +112,7 @@ export default function WalletModal() {
                                 <Button
                                     onClick={() => handleConnectWallet(item)}
                                     isDisabled={connecting}
-                                    key={item}
+                                    key={"wallet" + item}
                                     w='full'
                                     size='lg'
                                     justifyContent='left'

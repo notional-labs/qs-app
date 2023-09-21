@@ -115,7 +115,7 @@ const SideBar = () => {
                                     return (
                                         <Link
                                             href={button.path}
-                                            key={index}
+                                            key={"sidebar" + index}
                                             onMouseEnter={() => {
                                                 handleMouseEnter(button, index);
                                             }}
@@ -131,7 +131,7 @@ const SideBar = () => {
                                             <ChakraImage src={button.img} boxSize={'80%'} />
                                             <p style={{
                                                 color: 'rgba(255, 255, 255, 1)',
-                                                display: !full && 'none',
+                                                display: !full ? 'none' : "inline-block",
                                                 color: currentPath.includes(button.path)? 'rgba(14, 14, 14, 1)' : 'rgba(255, 255, 255, 1)'
                                             }}
                                             >

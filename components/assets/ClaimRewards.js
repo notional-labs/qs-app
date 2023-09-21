@@ -49,6 +49,7 @@ export default function ClaimRewards() {
                 onClick={onOpen}
                 px={4}
                 size='sm'
+                isDisabled={true}
                 fontWeight={400}
                 bgColor={'#FF850096'}
                 _hover={{
@@ -56,7 +57,7 @@ export default function ClaimRewards() {
                 }}
                 color='white'
                 borderRadius={4}>
-                Claim Rewards
+                Comming soon {/* Claim Rewards */}
             </Button>
             <RewardModal isOpen={isOpen} onClose={onClose} />
         </Flex>

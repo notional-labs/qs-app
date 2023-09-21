@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     Modal,
     ModalOverlay,
@@ -19,8 +19,12 @@ import {
     Avatar
 } from "@chakra-ui/react";
 import { InfoIcon } from "@chakra-ui/icons";
-
-export default function IntentModal({ isOpen, onClose }) {
+import { useSelector } from "react-redux";
+import ValidatorIntent from "./ValidatorIntent";
+export default function IntentModal({ isOpen, onClose, intents }) {
+    const { selectedDenom } = useSelector(state => state.network)
+    const [selectedIntents, setSelectedIntents] = useState(intents)
+    const [openListValidator, setOpenListValidator] = useState(false)
     return (
         <Modal
             isOpen={isOpen}
@@ -53,33 +57,29 @@ export default function IntentModal({ isOpen, onClose }) {
                     />
                 </ModalHeader>
                 <ModalBody px={8}>
-                    <Text fontSize={'24px'} fontWeight={700} mt={4} mb={2}>
-                        VALIDATOR LIST
-                    </Text>
+                    <HStack w='full' justifyContent={'space-between'}>
+                        <Text fontSize={'24px'} fontWeight={700} mt={4} mb={2}>
+                            VALIDATOR LIST
+                        </Text>
+                        <Button onClick={() => setOpenListValidator(true)} color='#FF8500' p={0} h={'min'} variant='ghost' fontSize={'14px'}
+                            _hover={{ textDecoration: 'underline' }}
+                        >
+                            Edit / Set Intent
+                        </Button>
+                    </HStack>
+
                     <VStack w='full' border='1px gray solid' borderRadius={'12px'} gap={2} py={2}>
-                        <Flex w='full' justifyContent='space-between' p={2}>
-                            <HStack px={2}>
-                                <Avatar src='/assets/Cosmos.png' size='xs' />
-                                <Text fontSize={'16px'} color='#CDCDCD'>Osmosis</Text>
-                            </HStack>
-                            <Text>12.5%</Text>
-                        </Flex>
-                        <Divider />
-                        <Flex w='full' justifyContent='space-between' p={2}>
-                            <HStack px={2}>
-                                <Avatar src='/assets/Cosmos.png' size='xs' />
-                                <Text fontSize={'16px'} color='#CDCDCD'>Osmosis</Text>
-                            </HStack>
-                            <Text>12.5%</Text>
-                        </Flex>
-                        <Divider />
-                        <Flex w='full' justifyContent='space-between' p={2}>
-                            <HStack px={2}>
-                                <Avatar src='/assets/Cosmos.png' size='xs' />
-                                <Text fontSize={'16px'} color='#CDCDCD'>Osmosis</Text>
-                            </HStack>
-                            <Text>12.5%</Text>
-                        </Flex>
+                        {selectedIntents.length ? selectedIntents.map((item, index) =>
+                            <>
+                                <ValidatorIntent key={"intent-select" + index} valoperAddress={item.valoperAddress} weight={item.weight} />
+                                {index != (selectedIntents.length - 1) && <Divider />}
+                            </>
+                        ) : <Center p='20px' textAlign={'center'}>
+                            <Text color='#FBFBFB' fontSize={'16px'} >
+                                You have not set the intent yet. Please click on the button to 'Set Intent'
+                            </Text>
+                        </Center>
+                        }
                     </VStack>
                     <Text fontSize={'16px'} color='#CDCDCD' mt={2}>
                         Aggregate staking intent for all stakers is calculated at the end of each epoch. Given limitations in concurrent redelegations, redelegation to the new intent may take up to 21 days.
@@ -95,13 +95,14 @@ export default function IntentModal({ isOpen, onClose }) {
 
                     <Button w='full'
                         my={4}
+                        isDisabled={selectedIntents.length == 0}
                         fontWeight={400}
                         bgColor={'#FF8500'}
                         _hover={{
                             bgColor: '#FF850096'
                         }}
                         color='black'>
-                            Confirm Your Staking Intent
+                        Confirm Your Staking Intent
                     </Button>
                 </ModalBody>
             </ModalContent>

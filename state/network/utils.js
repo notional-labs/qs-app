@@ -23,6 +23,8 @@ const DataMaps = {
     "dev": DevDataMap,
 }
 
-export const ChainInfos = Chains[process.env.NEXT_PUBLIC_CHAIN_ENV] 
-export const ZoneInfos = Zones[process.env.NEXT_PUBLIC_CHAIN_ENV]
+export const ChainInfos = Chains[process.env.NEXT_PUBLIC_CHAIN_ENV].filter(item => process.env.NEXT_PUBLIC_WHITELISTED_ZONES.includes(item.chainId))
+export const ZoneInfos = Zones[process.env.NEXT_PUBLIC_CHAIN_ENV].filter(item => process.env.NEXT_PUBLIC_WHITELISTED_ZONES.includes(item.chain_id))
 export const DataMap = DataMaps[process.env.NEXT_PUBLIC_CHAIN_ENV]
+
+export const AssetList = Object.entries(DataMap).filter(([key, _]) => process.env.NEXT_PUBLIC_WHITELISTED_DENOM.includes(key))

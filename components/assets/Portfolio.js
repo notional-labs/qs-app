@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
     VStack,
     Flex,
@@ -8,8 +8,22 @@ import {
     Progress,
     Avatar,
 } from "@chakra-ui/react";
+import { useSelector } from "react-redux";
+import { Dec } from "@keplr-wallet/unit";
+import PortfolioItem from "./PortfolioItem";
+export default function Portfolio({assets}) {
+    const [total, setTotal] = useState(0);
 
-export default function Portfolio() {
+    useEffect(() => {
+        let preTotal = 0
+        assets.forEach(item => {
+            let decBalance = new Dec(item.balance, item.decimals).toString()
+            preTotal += parseFloat(decBalance) * parseFloat(item.price)
+        })
+        setTotal(preTotal)
+    }, [assets])
+
+
     return (
         <VStack
             alignItems={'start'}
@@ -20,12 +34,12 @@ export default function Portfolio() {
             <Flex w='full' justifyContent={'space-between'}>
                 <VStack alignItems={'start'}>
                     <Text fontSize={'12px'}>TOTAL</Text>
-                    <Text fontSize={'12px'}>----</Text>
+                    <Text fontSize={'12px'}>$ {total.toFixed(2)}</Text>
                 </VStack>
-                <VStack alignItems={'end'}>
+                {/* <VStack alignItems={'end'}>
                     <Text fontSize={'12px'}>AVG APY: ----</Text>
                     <Text fontSize={'12px'}>Yearly Yield: ----</Text>
-                </VStack>
+                </VStack> */}
             </Flex>
             <Divider />
             <VStack w='full' maxH='180px' overflowY={'scroll'} pr={2} gap={3}
@@ -41,66 +55,9 @@ export default function Portfolio() {
                     },
                 }}
             >
-                <Flex w='full' justifyContent={'space-between'}>
-                    <HStack>
-                        <Avatar src={"/assets/qOsmo.svg"} w='36px' h='36px' />
-                        <Text fontSize={'14px'} color='#CDCDCD'>qOSMO</Text>
-                    </HStack>
-                    <HStack>
-                        <Progress w='120px' h='8px' colorScheme={'orange'} bgColor="#FF984D33" value={20} borderRadius='20px' />
-                        <Text fontSize={'12px'} fontWeight={700}>20.00%</Text>
-                    </HStack>
-                </Flex>
-                <Flex w='full' justifyContent={'space-between'}>
-                    <HStack>
-                        <Avatar src={"/assets/qOsmo.svg"} w='36px' h='36px' />
-                        <Text fontSize={'14px'} color='#CDCDCD'>qOSMO</Text>
-                    </HStack>
-                    <HStack>
-                        <Progress w='120px' h='8px' colorScheme={'orange'} bgColor="#FF984D33" value={20} borderRadius='20px' />
-                        <Text fontSize={'12px'} fontWeight={700}>20.00%</Text>
-                    </HStack>
-                </Flex>
-                <Flex w='full' justifyContent={'space-between'}>
-                    <HStack>
-                        <Avatar src={"/assets/qOsmo.svg"} w='36px' h='36px' />
-                        <Text fontSize={'14px'} color='#CDCDCD'>qOSMO</Text>
-                    </HStack>
-                    <HStack>
-                        <Progress w='120px' h='8px' colorScheme={'orange'} bgColor="#FF984D33" value={20} borderRadius='20px' />
-                        <Text fontSize={'12px'} fontWeight={700}>20.00%</Text>
-                    </HStack>
-                </Flex>
-                <Flex w='full' justifyContent={'space-between'}>
-                    <HStack>
-                        <Avatar src={"/assets/qOsmo.svg"} w='36px' h='36px' />
-                        <Text fontSize={'14px'} color='#CDCDCD'>qOSMO</Text>
-                    </HStack>
-                    <HStack>
-                        <Progress w='120px' h='8px' colorScheme={'orange'} bgColor="#FF984D33" value={20} borderRadius='20px' />
-                        <Text fontSize={'12px'} fontWeight={700}>20.00%</Text>
-                    </HStack>
-                </Flex>
-                <Flex w='full' justifyContent={'space-between'}>
-                    <HStack>
-                        <Avatar src={"/assets/qOsmo.svg"} w='36px' h='36px' />
-                        <Text fontSize={'14px'} color='#CDCDCD'>qOSMO</Text>
-                    </HStack>
-                    <HStack>
-                        <Progress w='120px' h='8px' colorScheme={'orange'} bgColor="#FF984D33" value={20} borderRadius='20px' />
-                        <Text fontSize={'12px'} fontWeight={700}>20.00%</Text>
-                    </HStack>
-                </Flex>
-                <Flex w='full' justifyContent={'space-between'}>
-                    <HStack>
-                        <Avatar src={"/assets/qOsmo.svg"} w='36px' h='36px' />
-                        <Text fontSize={'14px'} color='#CDCDCD'>qOSMO</Text>
-                    </HStack>
-                    <HStack>
-                        <Progress w='120px' h='8px' colorScheme={'orange'} bgColor="#FF984D33" value={20} borderRadius='20px' />
-                        <Text fontSize={'12px'} fontWeight={700}>20.00%</Text>
-                    </HStack>
-                </Flex>
+                {assets.map((item, index) =>  
+                    <PortfolioItem key={"portfolio"+index} data={item} total={total}/>
+                )}
             </VStack>
         </VStack>
     );

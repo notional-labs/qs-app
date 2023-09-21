@@ -1,5 +1,4 @@
-import Layout from "@/components/layout";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
     Center,
     VStack,
@@ -22,8 +21,61 @@ import StakeIntent from "@/components/assets/StakeIntent";
 import QAssets from "@/components/assets/QAssets";
 import UnbondingAssets from "@/components/assets/UnbondingAssets";
 import PageHead from "@/components/layout/PageHead";
-
+import { AssetList } from "@/state/network/utils";
+import { useSelector } from "react-redux";
+import { QuickSilverChainInfo } from "@/state/wallet/utils";
+import { Int } from "@keplr-wallet/unit";
 function Assets() {
+    const { address } = useSelector(state => state.wallet)
+    const [assetList, setAssetList] = useState([])
+    const [aprList, setAprList] = useState([])
+
+    const handleFetchBalance = useCallback(async (addr) => {
+        try {
+            if (addr) {
+                let promises = []
+                AssetList.forEach(([key, value]) => {
+                    promises.push(fetch(`${process.env.NEXT_PUBLIC_QUICKSILVER_API}/cosmos/bank/v1beta1/balances/${addr}/by_denom?denom=${value.zone.local_denom}`))
+                    promises.push(fetch(`${process.env.NEXT_PUBLIC_OSMOSIS_API}/tokens/v2/${value.base_symbol.toLowerCase()}`, {
+                        headers: {
+                            'Access-Control-Allow-Origin': '*'
+                        }
+                    }))
+                })
+                let apiRes = await Promise.all(promises)
+                let apiResJson = await Promise.all(apiRes.map(item => item.json()))
+    
+                let assetResult = []
+                for (let i = 0; i < AssetList.length; i++) {
+                    assetResult.push({ ...AssetList[i][1], balance: apiResJson[2 * i].balance.amount, price: apiResJson[2 * i + 1][0].price })
+                }
+                setAssetList(assetResult)
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }, [])
+
+    const handleFetchApr = useCallback(async () => {
+        try {
+            let aprListRes = await fetch("https://data.quicksilver.zone/apr")
+            let aprListJson = await aprListRes.json()
+            setAprList(aprListJson.chains)
+
+        } catch (e) {
+            console.log(e)
+        }
+    }, [])
+
+
+    useEffect(() => {
+        handleFetchBalance(address)
+    }, [address])
+
+    useEffect(() => {
+        handleFetchApr()
+    }, [])
+
     return (
         <>
             <PageHead pageTitle="Assets | Quicksilver" />
@@ -44,14 +96,14 @@ function Assets() {
                         </Flex>
                         <GradientDivider />
                         <Flex w='full' gap={4} justifyContent={'space-between'} alignItems={'stretch'}>
-                            <StakingInfo />
+                            <StakingInfo aprInfo={aprList.find(item => item.chain_id === QuickSilverChainInfo.chainId)}/>
                             <GradientDivider orientation="vertical" />
-                            <Portfolio />
+                            <Portfolio assets={assetList.filter(item => !(new Int(item.balance).isZero()))} />
                             <GradientDivider orientation="vertical" />
                             <StakeIntent />
                         </Flex>
                         <GradientDivider />
-                        <QAssets />
+                        <QAssets assets={assetList} aprList={aprList}/>
                     </VStack>
                 </Center>
                 <Center
@@ -65,10 +117,6 @@ function Assets() {
                     <UnbondingAssets />
                 </Center>
             </Box></>
-
-
-
-
     );
 }
 

@@ -10,11 +10,9 @@ import {
     VStack,
     Image
 } from '@chakra-ui/react'
-import { DataMap } from '@/state/network/utils'
+import { AssetList, DataMap } from '@/state/network/utils'
 import { useDispatch, useSelector } from 'react-redux'
 import connectToNetwork from '@/state/network/thunks/connectNetwork'
-
-const networkArr = Object.entries(DataMap)
 
 export default function NetworkSelect() {
     const dispatch = useDispatch()
@@ -48,13 +46,13 @@ export default function NetworkSelect() {
                     isLoading={connecting}
                     leftIcon={<Image src={DataMap[selectedDenom]?.base_logo} w='32px' h='32px' />}
                 >
-                    {DataMap[selectedDenom]?.symbol}
+                    {DataMap[selectedDenom]?.base_symbol}
                 </Button>
             </PopoverTrigger>
             <PopoverContent bgColor={'#202020'} w='full'>
                 <PopoverBody bg='rgba(0, 0, 0, 0.36)' px={0}>
                     <VStack gap={0} w='full' >
-                        {networkArr.map(([key, value]) =>
+                        {AssetList.map(([key, value]) =>
                             <Button
                                 w='full'
                                 key={`network-${key}`}
@@ -71,7 +69,7 @@ export default function NetworkSelect() {
                                 onClick={() => handleSelectNetwork(key)}
                                 leftIcon={<Image src={value.base_logo} w='32px' h='32px' />}
                             >
-                                {value.symbol}
+                                {value.base_symbol}
                             </Button>
                         )}
                     </VStack>
