@@ -1,7 +1,6 @@
-import { Inter } from 'next/font/google'
 import stakingStyles from '@/styles/Staking.module.css'
 import {
-    Button, ButtonGroup, Image, Box, Checkbox, 
+    Button, ButtonGroup, Image, Box, Checkbox,
     Center,
     Flex,
     NumberInput,
@@ -16,10 +15,19 @@ import {
     AccordionPanel,
     AccordionIcon,
 } from '@chakra-ui/react'
-import { useState } from 'react'
+import { useState, useCallback, useEffect, useMemo } from 'react'
 import SelectNetwork from '@/components/modal/selectNetwork'
+import { ProdZoneInfos } from '@/state/chains/prod'
+import { useDispatch, useSelector } from 'react-redux'
+import connectToNetwork from '@/state/network/thunks/connectNetwork'
+import { nextStep, inputAmount } from '@/state/staking/slice'
+import fetchRemdemtionRate from '@/state/staking/thunks/fetchRedemptionRate'
+import { DataMap } from '@/state/network/utils'
+import { getAmountFromDenom, getDisplayDenom } from '@/services/string'
+import { getNativeTokenBalance } from '@/services/account'
 
-const inter = Inter({ subsets: ['latin'] })
+// Make sure user have enough for fee
+const marginAmount = 0.3
 
 const getInputPrefix = (logo = '/atom.svg', text = 'ATOM', imgSize = '100%') => {
     return (
@@ -40,17 +48,51 @@ const getOption = (chainInfo) => {
     return (
         <div className={`${stakingStyles.input_prefix}`}>
             <Image
-                src='/atom.svg'
+                src={chainInfo?.base_logo}
                 alt='native token logo'
+                boxSize={'32px'}
             />
         </div>
     )
 }
 
 const StakingPannel = (props) => {
+    const [nativeBalance, setNativeBalance] = useState()
+    const [qAsset, setQAsset] = useState()
     const [pannelMode, setPannelMode] = useState(0)
-    const [balances, setBalances] = useState([])
     const [isOpenNetworkSelect, setIsOpenNetworkSelect] = useState(false)
+    const dispatch = useDispatch()
+    const { selectedDenom, connecting, balance } = useSelector(state => state.network)
+    const walletState = useSelector(state => state.wallet)
+    const { redemptionRate, stakeAmount, qAssetAmount } = useSelector(state => state.staking)
+
+    const handleSelectNetwork = useCallback((denom) => {
+        dispatch(connectToNetwork(denom))
+    }, [])
+
+    useEffect(() => {
+        if (selectedDenom) {
+            setNativeBalance(getNativeTokenBalance(balance, selectedDenom))
+        }
+    }, [connecting, selectedDenom, balance])
+
+    useEffect(() => {
+        if (selectedDenom) {
+            setQAsset(getNativeTokenBalance(walletState.balance, DataMap[selectedDenom]?.zone.local_denom))
+        }
+    }, [selectedDenom, walletState.balance, walletState.connecting])
+
+    useEffect(() => {
+        dispatch(fetchRemdemtionRate(DataMap[selectedDenom]?.network.chainId))
+    }, [connecting, selectedDenom])
+
+    const handlerInput = (amt, type) => {
+        if (type === 'native') {
+            dispatch(inputAmount({ stakeAmount: amt, qAssetAmount: amt / redemptionRate }))
+        } else {
+            dispatch(inputAmount({ stakeAmount: amt * redemptionRate, qAssetAmount: amt }))
+        }
+    }
 
     return (
         <Center w={'100%'} margin={'10vh'}>
@@ -76,7 +118,7 @@ const StakingPannel = (props) => {
                         </button>
                     </Flex>
                     <Button
-                        leftIcon={getOption()} onClick={() => setIsOpenNetworkSelect(true)}
+                        leftIcon={getOption(DataMap[selectedDenom])} onClick={() => setIsOpenNetworkSelect(true)}
                         backgroundColor='#222'
                         color={'#FBFBFB'}
                         _hover={{
@@ -84,8 +126,9 @@ const StakingPannel = (props) => {
                         }}
                         padding={'1.5em 4em'}
                         boxShadow='0px 0px 5px 0px rgba(255, 255, 255, 0.50)'
+                        isLoading={connecting}
                     >
-                        ATOM
+                        {DataMap[selectedDenom]?.symbol}
                     </Button>
                 </Flex>
                 <Flex justify={'space-between'}>
@@ -95,11 +138,13 @@ const StakingPannel = (props) => {
                         </Text>
                         <InputGroup>
                             <InputLeftElement pointerEvents='none' w={100} h={'100%'}>
-                                {getInputPrefix()}
+                                {getInputPrefix(DataMap[selectedDenom]?.base_logo, DataMap[selectedDenom]?.symbol, '24px')}
                             </InputLeftElement>
                             <NumberInput
                                 defaultValue={0}
+                                value={stakeAmount}
                                 min={0}
+                                max={getAmountFromDenom(nativeBalance)}
                                 backgroundColor='#141414'
                                 w={'full'}
                                 borderRadius={10}
@@ -110,6 +155,7 @@ const StakingPannel = (props) => {
                                 _focus={{
                                     borderColor: 'transparent'
                                 }}
+                                onChange={(val) => handlerInput(val, 'native')}
                                 variant={'flushed'}
                                 boxShadow={'0px 0px 5px 0px rgba(255, 255, 255, 0.50)'}
                             >
@@ -119,7 +165,7 @@ const StakingPannel = (props) => {
                         <div className={`${stakingStyles.amount_input_balance}`}>
                             <Center>
                                 <text>
-                                    BALANCE: {32423423432} ATOM
+                                    BALANCE: {getNativeTokenBalance(balance, selectedDenom).amount / Math.pow(10, 6)} {DataMap[selectedDenom]?.symbol}
                                 </text>
                             </Center>
                             <ButtonGroup gap='1'>
@@ -131,6 +177,9 @@ const StakingPannel = (props) => {
                                         backgroundColor: '#e77728'
                                     }}
                                     fontSize={'1em'}
+                                    onClick={() => {
+                                        handlerInput(getAmountFromDenom(nativeBalance) / 2, 'native')
+                                    }}
                                 >
                                     Half
                                 </Button>
@@ -142,6 +191,14 @@ const StakingPannel = (props) => {
                                         backgroundColor: '#e77728'
                                     }}
                                     fontSize={'1em'}
+                                    onClick={() => {
+                                        const newAmount = getAmountFromDenom(nativeBalance) - marginAmount
+                                        if (newAmount < 0) {
+                                            handlerInput(0, 'native')
+                                        } else {
+                                            handlerInput(newAmount, 'native')
+                                        }
+                                    }}
                                 >
                                     Max
                                 </Button>
@@ -159,10 +216,11 @@ const StakingPannel = (props) => {
                         </Text>
                         <InputGroup>
                             <InputLeftElement pointerEvents='none' w={100} h={'100%'}>
-                                {getInputPrefix()}
+                                {getInputPrefix(DataMap[selectedDenom]?.local_logo, `q${DataMap[selectedDenom]?.symbol}`, '24px')}
                             </InputLeftElement>
                             <NumberInput
                                 defaultValue={0}
+                                value={qAssetAmount}
                                 min={0}
                                 backgroundColor='#141414'
                                 w={'full'}
@@ -176,17 +234,11 @@ const StakingPannel = (props) => {
                                 }}
                                 variant={'flushed'}
                                 boxShadow={'0px 0px 5px 0px rgba(255, 255, 255, 0.50)'}
+                                onChange={(val) => handlerInput(val, 'qAsset')}
                             >
                                 <NumberInputField textAlign="right" />
                             </NumberInput>
                         </InputGroup>
-                        <div className={`${stakingStyles.amount_input_balance}`}>
-                            <Center>
-                                <text>
-                                    BALANCE: {32423423432} ATOM
-                                </text>
-                            </Center>
-                        </div>
                         <div className={`${stakingStyles.horizontalLine}`} style={{ margin: '2em 0' }} />
                         <div
                             style={{
@@ -199,7 +251,7 @@ const StakingPannel = (props) => {
                                     Transaction Cost
                                 </text>
                                 <text className={`${stakingStyles.stat_info_value}`}>
-                                    14103.28 ATOM
+                                    {`${stakeAmount} ${getDisplayDenom(selectedDenom)}`}
                                 </text>
                             </Flex>
                             <Flex justify={'space-between'} className={`${stakingStyles.stat_info}`}>
@@ -207,7 +259,7 @@ const StakingPannel = (props) => {
                                     Redemption Rate
                                 </text>
                                 <text className={`${stakingStyles.stat_info_value}`}>
-                                    1 ATOM = 1.243 qATOM
+                                    {`1 q${getDisplayDenom(selectedDenom, false)} = ${redemptionRate.toFixed(6)} ${getDisplayDenom(selectedDenom, false)}`}
                                 </text>
                             </Flex>
                             <Flex justify={'space-between'} className={`${stakingStyles.stat_info}`}>
@@ -230,7 +282,7 @@ const StakingPannel = (props) => {
                             _hover={{
                                 backgroundColor: '#ba5c1a'
                             }}
-                            onClick={() => props.setStep(2)}
+                            onClick={() => dispatch(nextStep())}
                         >
                             Liquid Stake
                         </Button>
@@ -240,7 +292,7 @@ const StakingPannel = (props) => {
                     </Center>
                     <div className={`${stakingStyles.panel_container}`}>
                         <Text fontSize={'1.25em'}>
-                            About Atom on Quicksilver
+                            About {DataMap[selectedDenom]?.symbol} on Quicksilver
                         </Text>
                         <br />
                         <Flex justify={'space-between'} className={`${stakingStyles.stat_info}`} >
@@ -276,10 +328,10 @@ const StakingPannel = (props) => {
                         <Flex justify={'space-between'} className={`${stakingStyles.stat_info}`}>
                             <Center gap={2}>
                                 <Image src='/icons/icon4.svg' boxSize={'20px'} />
-                                <Text>Value of 1 qAtom</Text>
+                                <Text>Value of 1 {`q${getDisplayDenom(selectedDenom, false)}`}</Text>
                             </Center>
                             <text className={`${stakingStyles.in_color}`}>
-                                1qAtom = 1Atom
+                                {`1 q${getDisplayDenom(selectedDenom, false)} = ${redemptionRate.toFixed(6)} ${getDisplayDenom(selectedDenom, false)}`}
                             </text>
                         </Flex>
                         <Box
@@ -304,10 +356,10 @@ const StakingPannel = (props) => {
                                 <AccordionButton padding={'1em 0'} style={{ fontSize: '16px' }}>
                                     <Flex justify={'space-between'} w={'100%'}>
                                         <Box>
-                                            {getInputPrefix(undefined, 'Available to stake', '30px')}
+                                            {getInputPrefix(DataMap[selectedDenom]?.base_logo, 'Available to stake', '30px')}
                                         </Box>
                                         <Center className={`${stakingStyles.in_color}`}>
-                                            0.34 ATOM
+                                            {`${getAmountFromDenom(nativeBalance).toFixed(6)} ${getDisplayDenom(selectedDenom, false)}`}
                                         </Center>
                                     </Flex>
                                     <AccordionIcon color={'#E77728'} />
@@ -316,10 +368,10 @@ const StakingPannel = (props) => {
                                 <AccordionPanel pb={3} padding={'0 20px 20px 30px'} fontSize={'16px'}>
                                     <Flex justify={'space-between'} w={'100%'}>
                                         <Box>
-                                            Cosmoshub
+                                            {DataMap[selectedDenom]?.network_name}
                                         </Box>
                                         <Center>
-                                            0.34 ATOM
+                                            {`${getAmountFromDenom(nativeBalance).toFixed(6)} ${getDisplayDenom(selectedDenom, false)}`}
                                         </Center>
                                     </Flex>
                                 </AccordionPanel>
@@ -330,10 +382,10 @@ const StakingPannel = (props) => {
                                 <AccordionButton padding={'1em 0'} style={{ fontSize: '16px' }}>
                                     <Flex justify={'space-between'} w={'100%'}>
                                         <Box>
-                                            {getInputPrefix(undefined, 'Liquid staked', '30dpx')}
+                                            {getInputPrefix(DataMap[selectedDenom]?.local_logo, 'Liquid staked', '30px')}
                                         </Box>
                                         <Center className={`${stakingStyles.in_color}`}>
-                                            0.34 ATOM
+                                            {`${getAmountFromDenom(qAsset).toFixed(6)} q${getDisplayDenom(selectedDenom, false)}`}
                                         </Center>
                                     </Flex>
                                     <AccordionIcon color={'#E77728'} />
@@ -342,10 +394,10 @@ const StakingPannel = (props) => {
                                 <AccordionPanel pb={3} padding={'0 20px 20px 30px'} fontSize={'16px'}>
                                     <Flex justify={'space-between'} w={'100%'}>
                                         <Box>
-                                            Stride
+                                            Quicksilver
                                         </Box>
                                         <Center>
-                                            0.34 qATOM
+                                            {`${getAmountFromDenom(qAsset).toFixed(6)} q${getDisplayDenom(selectedDenom, false)}`}
                                         </Center>
                                     </Flex>
                                 </AccordionPanel>
@@ -359,6 +411,8 @@ const StakingPannel = (props) => {
                 <SelectNetwork
                     isShow={isOpenNetworkSelect}
                     setIsShow={setIsOpenNetworkSelect}
+                    zones={ProdZoneInfos}
+                    setChainId={handleSelectNetwork}
                 />
             </Box>
         </Center>

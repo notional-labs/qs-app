@@ -80,23 +80,14 @@ const SelectNetwork = (props) => {
                                     borderRadius: '20px',
                                 },
                             }}
-                        >
-                            <NetworkCard />
-                            <NetworkCard />
-                            <NetworkCard />
-                            <NetworkCard />
-                            <NetworkCard />
-                            <NetworkCard />
-                            <NetworkCard />
-                            <NetworkCard />
-                            <NetworkCard />
-                            <NetworkCard />
-                            <NetworkCard />
-                            <NetworkCard />
-                            <NetworkCard />
-                            <NetworkCard />
-                            <NetworkCard />
-                            <NetworkCard />
+                        > 
+                            {
+                                props.zones.map(zone => {
+                                    return (
+                                        <NetworkCard zone={zone} setChainId={props.setChainId} setIsShow={props.setIsShow}/>
+                                    )
+                                })
+                            }
                         </Grid>
                     </Box>
                 </ModalBody>

@@ -90,7 +90,7 @@ const SideBar = () => {
     };
 
     return (
-        <Box mx={'20px'} my={'12vh'} zIndex={1}>
+        <Box mx={'20px'} my={'10vh'} zIndex={1}>
             <div className={full ? `sidebar` : `sidebar minimal-size`} ref={sidebar}>
                 <Center>
                     <Navbar

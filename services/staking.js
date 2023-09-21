@@ -7,5 +7,5 @@ export const staking = (zone, sender) => {
         toAddress: zone.depositAddress,
         amount: new Coin()
     })
-}
+} 
 
