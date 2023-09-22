@@ -34,14 +34,12 @@ const StakingModal = (props) => {
         setIsProcessing(true)
         try {
             const result = await staking(DataMap[selectedDenom], address, stakeAmount, props.selectVals, signer)
-            console.log(result)
             if (result.code === 0) {
                 setIsFinished(true)
                 setTxHash(result.transactionHash)
             } else {
                 throw new Error(`Transaction failed, log: ${result.rawLog}`)
             }
-            props.setIsShow(false)
         } catch (e) {
             setIsFinished(false)
             setIsProcessing(false)
