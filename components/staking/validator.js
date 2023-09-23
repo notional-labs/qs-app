@@ -11,19 +11,16 @@ import {
     Switch,
     Box,
     Icon,
-    Spinner,
-    InputRightAddon,
-    InputRightElement
-} from '@chakra-ui/react'
+    Spinner} from '@chakra-ui/react'
 import { ChevronLeftIcon, SearchIcon } from '@chakra-ui/icons'
 import ValidatorCard from '@/components/card/validator'
 import { GoPencil } from "react-icons/go";
 import StakingModal from '../modal/staking'
 import { useSelector, useDispatch } from 'react-redux'
 import { DataMap } from '@/state/network/utils'
-import { getNativeValidators, getValidatorsFromAPI } from '@/services/zone'
+import { getValidatorsFromAPI } from '@/services/zone'
 import { prevStep } from '@/state/staking/slice'
-import { getAmountFromDenom } from '@/services/string'
+import ButtonList from '../list/pagination'
 
 const statuses = [
     'active',
@@ -38,11 +35,16 @@ const ValidatorPanel = () => {
     const { stakeAmount } = useSelector(state => state.staking)
     const [validators, setValidators] = useState([])
     const [filterVals, setFilterVals] = useState([])
+    const [viewVals, setViewVals] = useState([])
     const [totalSum, setTotalSum] = useState(0)
     const [status, setStatus] = useState(0)
     const [isLoading, setIsloading] = useState(false)
     const [selectVals, setSelectVals] = useState([])
-    const [search, setSearch] = useState('')
+    const [params, setParams] = useState({
+        page: 1,
+        limit: 10,
+        total: 0,
+    })
 
     useEffect(() => {
         (async () => {
@@ -56,6 +58,11 @@ const ValidatorPanel = () => {
                     })
                 }
                 setFilterVals([...res])
+                setParams({
+                    ...params,
+                    total: res.length,
+                    page: 1
+                })
                 setIsloading(false)
             } catch (e) {
                 setIsloading(false)
@@ -65,12 +72,31 @@ const ValidatorPanel = () => {
     }, [connecting, selectedDenom, status])
 
     useEffect(() => {
+        const pagingList = filterVals.slice((params.page - 1) * params.limit, params.page * params.limit)
+        setViewVals([...pagingList])
+    }, [params])
+
+    useEffect(() => {
+        const pagingList = filterVals.slice((params.page - 1) * params.limit, params.page * params.limit)
+        setViewVals([...pagingList])
+        setParams({
+            ...params,
+            total: filterVals.length,
+            page: 1
+        })
+    }, [filterVals])
+
+    useEffect(() => {
         let sum = 0
         validators.map(val => {
             sum += parseInt(val.delegator_shares)
         })
         setTotalSum(sum)
     }, [validators])
+
+    const wrapSetParams = (index) => {
+        setParams({ ...params, page: index })
+    }
 
     const handleSwitch = (e) => {
         if (e.target.checked) {
@@ -80,17 +106,13 @@ const ValidatorPanel = () => {
         }
     }
 
-    const handleInput = (e) => {
-        setSearch(e.target.value)
-    }
-
-    const handleSearch = () => {
-        if (search === '') {
+    const handleSearch = (e) => {
+        if (e.target.value === '') {
             setFilterVals([...validators])
             return
         }
         const fiterVals = validators.filter(val => {
-            return val.description.moniker.toLowerCase().includes(search)
+            return val.description.moniker.toLowerCase().includes(e.target.value)
         })
         setFilterVals([...fiterVals])
     }
@@ -145,21 +167,8 @@ const ValidatorPanel = () => {
                                     placeholder='Search validator'
                                     borderRadius={'20px'}
                                     _focus={{ borderColor: '#E77728', boxShadow: 'none' }}
-                                    onChange={handleInput}
+                                    onChange={handleSearch}
                                 />
-                                <InputRightElement width={'70px'} >
-                                    <Button
-                                        borderRadius={'20px'}
-                                        onClick={handleSearch}
-                                        bg='#E77728'
-                                        border={'solid 1px white'}
-                                        _hover={{
-                                            backgroundColor: '#ba5c1a'
-                                        }}
-                                    >
-                                        Search
-                                    </Button>
-                                </InputRightElement>
                             </InputGroup>
                             <Center gap={'10px'} >
                                 <Switch size={'lg'} colorScheme='orange' onChange={handleSwitch} isLoading={isLoading} />
@@ -196,10 +205,10 @@ const ValidatorPanel = () => {
                                 {
                                     isLoading ? <Center h={'100%'}>
                                         <Spinner color='white' boxSize={'4em'} />
-                                    </Center> : filterVals.map((val, i) => {
+                                    </Center> : viewVals.map((val, i) => {
                                         return (
                                             <ValidatorCard
-                                                index={i + 1}
+                                                index={params.limit * ( params.page - 1 ) + i  + 1}
                                                 address={val.operator_address}
                                                 name={val.description.moniker}
                                                 votingPower={(parseInt(val.delegator_shares)).toFixed(0)}
@@ -214,6 +223,15 @@ const ValidatorPanel = () => {
                                     })
                                 }
                             </Box>
+                            {
+                                params.total > 10 && (
+                                    <ButtonList
+                                        currentPage={params.page}
+                                        total={Math.ceil(params.total / params.limit)}
+                                        wrapSetParams={wrapSetParams}
+                                    />
+                                )
+                            }
                         </Box>
                     </Box>
                     <Center w={'100%'}>

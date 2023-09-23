@@ -78,6 +78,7 @@ export const getNativeValidators = async (rpc, status) => {
                 }
             }
         }
+        console.log(validators)
         return validators
     }
     catch (e) {
@@ -120,11 +121,11 @@ export const getLogo = (address, chainName) => {
 
 export const getRedemptionRate = async (chainId) => {
     try {
-        if (!chainId) {
-
+        if (chainId) {
+            const zone = await getZoneWithChainId(chainId)
+            return zone.redemption_rate
         }
-        const zone = await getZoneWithChainId(chainId)
-        return zone.redemption_rate
+        return 1
     }
     catch (e) {
         throw e
