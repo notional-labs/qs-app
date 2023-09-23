@@ -11,19 +11,15 @@ import {
     Switch,
     Box,
     Icon,
-    Spinner,
-    InputRightAddon,
-    InputRightElement
-} from '@chakra-ui/react'
+    Spinner} from '@chakra-ui/react'
 import { ChevronLeftIcon, SearchIcon } from '@chakra-ui/icons'
 import ValidatorCard from '@/components/card/validator'
 import { GoPencil } from "react-icons/go";
 import StakingModal from '../modal/staking'
 import { useSelector, useDispatch } from 'react-redux'
 import { DataMap } from '@/state/network/utils'
-import { getNativeValidators, getValidatorsFromAPI } from '@/services/zone'
+import { getValidatorsFromAPI } from '@/services/zone'
 import { prevStep } from '@/state/staking/slice'
-import { getAmountFromDenom } from '@/services/string'
 import ButtonList from '../list/pagination'
 
 const statuses = [
@@ -78,12 +74,17 @@ const ValidatorPanel = () => {
     useEffect(() => {
         const pagingList = filterVals.slice((params.page - 1) * params.limit, params.page * params.limit)
         setViewVals([...pagingList])
+    }, [params])
+
+    useEffect(() => {
+        const pagingList = filterVals.slice((params.page - 1) * params.limit, params.page * params.limit)
+        setViewVals([...pagingList])
         setParams({
             ...params,
             total: filterVals.length,
             page: 1
         })
-    }, [params, filterVals])
+    }, [filterVals])
 
     useEffect(() => {
         let sum = 0
@@ -207,7 +208,7 @@ const ValidatorPanel = () => {
                                     </Center> : viewVals.map((val, i) => {
                                         return (
                                             <ValidatorCard
-                                                index={i + 1}
+                                                index={params.limit * ( params.page - 1 ) + i  + 1}
                                                 address={val.operator_address}
                                                 name={val.description.moniker}
                                                 votingPower={(parseInt(val.delegator_shares)).toFixed(0)}

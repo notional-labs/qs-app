@@ -40,6 +40,7 @@ const StakingModal = (props) => {
             } else {
                 throw new Error(`Transaction failed, log: ${result.rawLog}`)
             }
+            props.setSelectVals([])
         } catch (e) {
             setIsFinished(false)
             setIsProcessing(false)
