@@ -7,6 +7,7 @@ const initialState = {
     stakeAmount: 0,
     redemptionRate: 1,
     qAssetAmount: 0,
+    apr: {},
     validatorSelect: []
 }
 
@@ -60,6 +61,9 @@ export const slice = createSlice({
                 ...validator,
                 intent: action.payload.intent
             }
+        },
+        setApr: (state, action) => {
+            state.apr = action.payload.apr
         }
     },
     extraReducers(builder) {
@@ -81,5 +85,6 @@ export const {
     removeVals,
     calculateIntent,
     editIntent,
+    setApr,
 } = slice.actions;
 export default slice.reducer;

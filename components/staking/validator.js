@@ -21,11 +21,7 @@ import { DataMap } from '@/state/network/utils'
 import { getValidatorsFromAPI } from '@/services/zone'
 import { prevStep } from '@/state/staking/slice'
 import ButtonList from '../list/pagination'
-
-const statuses = [
-    'active',
-    'inactive'
-]
+import { notify } from '../progress/notiofication'
 
 const ValidatorPanel = () => {
     const [pannelMode, setPannelMode] = useState(0)
@@ -65,6 +61,7 @@ const ValidatorPanel = () => {
                 })
                 setIsloading(false)
             } catch (e) {
+                notify('Failed to fetch validtor', 'error')
                 setIsloading(false)
                 console.log(e.message)
             }

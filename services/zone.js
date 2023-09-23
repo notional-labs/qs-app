@@ -115,6 +115,23 @@ export const getAPY = async (chainId) => {
     }
 }
 
+export const getAPYs = async () => {
+    try {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_QUICKSILVER_DATA_API}/apr`)
+        const { chains } = res.data
+        if (!chains) {
+            return {}
+        }
+        let apr = {}
+        chains.forEach(chain => {
+            apr[chain.chain_id] = chain.apr
+        })
+        return apr
+    } catch (e) {
+        throw e
+    }
+}
+
 export const getLogo = (address, chainName) => {
     return `https://raw.githubusercontent.com/cosmostation/chainlist/master/chain/${chainName}/moniker/${address}.png`
 }

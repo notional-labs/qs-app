@@ -283,6 +283,7 @@ const StakingPannel = (props) => {
                                 backgroundColor: '#ba5c1a'
                             }}
                             onClick={() => dispatch(nextStep())}
+                            disabled={() => { return stakeAmount === 0}}
                         >
                             Liquid Stake
                         </Button>

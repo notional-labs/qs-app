@@ -22,6 +22,7 @@ import { useSelector } from 'react-redux'
 import { getDisplayDenom } from "@/services/string"
 import { staking } from "@/services/staking"
 import { DataMap } from "@/state/network/utils"
+import { notify } from "../progress/notiofication"
 
 const StakingModal = (props) => {
     const [isProcessing, setIsProcessing] = useState(false)
@@ -42,6 +43,7 @@ const StakingModal = (props) => {
             }
             props.setSelectVals([])
         } catch (e) {
+            notify(`Fail to execute transaction: ${e.message}`, 'error')
             setIsFinished(false)
             setIsProcessing(false)
             console.log(e)
