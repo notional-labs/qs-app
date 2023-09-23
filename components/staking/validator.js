@@ -11,7 +11,9 @@ import {
     Switch,
     Box,
     Icon,
-    Spinner} from '@chakra-ui/react'
+    Spinner,
+    useToast
+} from '@chakra-ui/react'
 import { ChevronLeftIcon, SearchIcon } from '@chakra-ui/icons'
 import ValidatorCard from '@/components/card/validator'
 import { GoPencil } from "react-icons/go";
@@ -21,7 +23,6 @@ import { DataMap } from '@/state/network/utils'
 import { getValidatorsFromAPI } from '@/services/zone'
 import { prevStep } from '@/state/staking/slice'
 import ButtonList from '../list/pagination'
-import { notify } from '../progress/notiofication'
 
 const ValidatorPanel = () => {
     const [pannelMode, setPannelMode] = useState(0)
@@ -41,6 +42,7 @@ const ValidatorPanel = () => {
         limit: 10,
         total: 0,
     })
+    const toast = useToast()
 
     useEffect(() => {
         (async () => {
@@ -61,7 +63,13 @@ const ValidatorPanel = () => {
                 })
                 setIsloading(false)
             } catch (e) {
-                notify('Failed to fetch validtor', 'error')
+                toast({
+                    position: 'top',
+                    status: 'error',
+                    isClosable: true,
+                    duration: 9000,
+                    title: `Failed to fetch validtor`
+                })
                 setIsloading(false)
                 console.log(e.message)
             }

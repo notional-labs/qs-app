@@ -13,6 +13,7 @@ import {
     Button,
     VStack,
     Collapse,
+    useToast,
 } from "@chakra-ui/react"
 import stakingStyles from '@/styles/Staking.module.css'
 import { useState } from "react"
@@ -22,7 +23,6 @@ import { useSelector } from 'react-redux'
 import { getDisplayDenom } from "@/services/string"
 import { staking } from "@/services/staking"
 import { DataMap } from "@/state/network/utils"
-import { notify } from "../progress/notiofication"
 
 const StakingModal = (props) => {
     const [isProcessing, setIsProcessing] = useState(false)
@@ -30,6 +30,7 @@ const StakingModal = (props) => {
     const { selectedDenom, address, signer } = useSelector(state => state.network)
     const { stakeAmount, redemptionRate } = useSelector(state => state.staking)
     const [txHash, setTxHash] = useState('')
+    const toast = useToast()
 
     const liquidStake = async () => {
         setIsProcessing(true)
@@ -43,7 +44,13 @@ const StakingModal = (props) => {
             }
             props.setSelectVals([])
         } catch (e) {
-            notify(`Fail to execute transaction: ${e.message}`, 'error')
+            toast({
+                position: 'top',
+                status: 'error',
+                isClosable: true,
+                duration: 9000,
+                title: `Fail to execute transaction: ${e.message}`
+            })
             setIsFinished(false)
             setIsProcessing(false)
             console.log(e)
