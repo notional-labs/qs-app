@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
     Modal,
     ModalOverlay,
@@ -8,7 +8,6 @@ import {
     ModalCloseButton,
     Center,
     Button,
-    Flex,
     Image,
     Text,
     Tooltip,
@@ -16,15 +15,47 @@ import {
     Divider,
     HStack,
     VStack,
-    Avatar
+    Spinner
 } from "@chakra-ui/react";
 import { InfoIcon } from "@chakra-ui/icons";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ValidatorIntent from "./ValidatorIntent";
-export default function IntentModal({ isOpen, onClose, intents }) {
-    const { selectedDenom } = useSelector(state => state.network)
-    const [selectedIntents, setSelectedIntents] = useState(intents)
+import ValidatorList from "./ValidatorList";
+import { calculateIntent } from "@/state/assets/slice";
+
+export default function IntentModal({ isOpen, onClose, completedFetch }) {
+    const dispatch = useDispatch()
+    const { valArr, isFetching } = useSelector(state => state.network)
+    const { intentOptions } = useSelector(state => state.assets)
+
     const [openListValidator, setOpenListValidator] = useState(false)
+
+    const totalSum = useMemo(() => {
+        let sum = 0
+        valArr.forEach(val => {
+            sum += parseInt(val.delegatorShares) / Math.pow(10, 24)
+        })
+        return sum
+    }, [valArr])
+
+    const getIntentSum = () => {
+        let sum = 0
+        intentOptions.map(val => {
+            sum += parseFloat(val.weight)
+        })
+        return sum
+    }
+
+    const checkIntent = () => {
+        return getIntentSum() !== 100
+    }
+
+    useEffect(() => {
+        if(!openListValidator) {
+            dispatch(calculateIntent())
+        }
+    }, [openListValidator])
+
     return (
         <Modal
             isOpen={isOpen}
@@ -61,26 +92,38 @@ export default function IntentModal({ isOpen, onClose, intents }) {
                         <Text fontSize={'24px'} fontWeight={700} mt={4} mb={2}>
                             VALIDATOR LIST
                         </Text>
-                        <Button onClick={() => setOpenListValidator(true)} color='#FF8500' p={0} h={'min'} variant='ghost' fontSize={'14px'}
+                        <Button onClick={() => setOpenListValidator(open => !open)} color='#FF8500' p={0} h={'min'} variant='ghost' fontSize={'14px'}
                             _hover={{ textDecoration: 'underline' }}
                         >
-                            Edit / Set Intent
+                            {openListValidator ? "Finish Editing" : "Edit / Set Intent"}
                         </Button>
                     </HStack>
-
-                    <VStack w='full' border='1px gray solid' borderRadius={'12px'} gap={2} py={2}>
-                        {selectedIntents.length ? selectedIntents.map((item, index) =>
-                            <>
-                                <ValidatorIntent key={"intent-select" + index} valoperAddress={item.valoperAddress} weight={item.weight} />
-                                {index != (selectedIntents.length - 1) && <Divider />}
-                            </>
-                        ) : <Center p='20px' textAlign={'center'}>
-                            <Text color='#FBFBFB' fontSize={'16px'} >
-                                You have not set the intent yet. Please click on the button to 'Set Intent'
+                    {isFetching || !completedFetch ? <Center w='full' py={8} boxShadow={"0px 0px 5px 0px rgba(255, 255, 255, 0.6)"} border='1px gray solid' borderRadius={'12px'} gap={2}>
+                        <Spinner color='white' boxSize={'4em'} />
+                    </Center>
+                        : openListValidator ? <ValidatorList totalSum={totalSum} /> :
+                            <VStack w='full' boxShadow={"0px 0px 5px 0px rgba(255, 255, 255, 0.6)"} border='1px gray solid' borderRadius={'12px'} gap={2} py={2}>
+                                {intentOptions.length ? intentOptions.map((item, index) =>
+                                    <>
+                                        <ValidatorIntent key={"intent-select" + index} index={index} valoperAddress={item.valoperAddress} weight={item.weight} />
+                                        {index != (intentOptions.length - 1) && <Divider />}
+                                    </>
+                                ) : <Center p='20px' textAlign={'center'}>
+                                    <Text color='#FBFBFB' fontSize={'16px'} >
+                                        You have not set the intent yet. Please click on the button to 'Set Intent'
+                                    </Text>
+                                </Center>
+                                }
+                            </VStack>
+                    }
+                    {
+                        checkIntent() &&
+                        <Center margin={'1em 0'} w='full'>
+                            <Text color='#ff5242'>
+                                Total Intent sum not 100% please set the percentage of other validators
                             </Text>
                         </Center>
-                        }
-                    </VStack>
+                    }
                     <Text fontSize={'16px'} color='#CDCDCD' mt={2}>
                         Aggregate staking intent for all stakers is calculated at the end of each epoch. Given limitations in concurrent redelegations, redelegation to the new intent may take up to 21 days.
                     </Text>
@@ -95,7 +138,7 @@ export default function IntentModal({ isOpen, onClose, intents }) {
 
                     <Button w='full'
                         my={4}
-                        isDisabled={selectedIntents.length == 0}
+                        isDisabled={intentOptions.length == 0}
                         fontWeight={400}
                         bgColor={'#FF8500'}
                         _hover={{

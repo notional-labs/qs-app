@@ -28,3 +28,4 @@ export const ZoneInfos = Zones[process.env.NEXT_PUBLIC_CHAIN_ENV].filter(item =>
 export const DataMap = DataMaps[process.env.NEXT_PUBLIC_CHAIN_ENV]
 
 export const AssetList = Object.entries(DataMap).filter(([key, _]) => process.env.NEXT_PUBLIC_WHITELISTED_DENOM.includes(key))
+export const BaseLogoUrl = "https://raw.githubusercontent.com/cosmostation/chainlist/main/chain"

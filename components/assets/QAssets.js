@@ -2,11 +2,8 @@ import React from "react";
 import {
     Box,
     Text,
-    Flex,
-    HStack,
     SimpleGrid,
 } from "@chakra-ui/react";
-import { ChevronRightIcon } from "@chakra-ui/icons";
 import QAssetCard from "./QAssetCard";
 
 export default function QAssets({assets, aprList}) {

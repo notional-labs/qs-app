@@ -76,7 +76,7 @@ export default function QAssetCard({ data, aprInfo }) {
                     <Text>{data.local_symbol}</Text>
                 </HStack>
                 <VStack alignItems={'end'}>
-                    <Text>{(aprInfo.apr * 100).toFixed(2)} %</Text>
+                    <Text>{(aprInfo?.apr * 100).toFixed(2)} %</Text>
                     <Text fontSize={'12px'}>APR</Text>
                 </VStack>
             </Flex>

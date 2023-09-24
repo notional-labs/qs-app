@@ -588,6 +588,7 @@ export const ProdDataMap = {
         local_symbol: "qATOM",
         base_symbol: "ATOM",
         pool_id: "944",
+        chainlist_prefix: "cosmos",
         decimals: 6,
         zone: {
             connection_id: "connection-1",
@@ -676,6 +677,7 @@ export const ProdDataMap = {
         local_symbol: "qOSMO",
         base_symbol: "OSMO",
         pool_id: "956",
+        chainlist_prefix: "osmosis",
         decimals: 6,
         zone: {
             connection_id: "connection-2",
@@ -765,6 +767,7 @@ export const ProdDataMap = {
         local_symbol: "qJUNO",
         base_symbol: "JUNO",
         pool_id: "",
+        chainlist_prefix: "juno",
         decimals: 6,
         zone: {
             connection_id: "connection-50",
@@ -852,6 +855,7 @@ export const ProdDataMap = {
         local_symbol: "qREGEN",
         base_symbol: "REGEN",
         pool_id: "948",
+        chainlist_prefix: "regen",
         decimals: 6,
         zone: {
             connection_id: "connection-9",
@@ -942,6 +946,7 @@ export const ProdDataMap = {
         local_symbol: "qSOMM",
         base_symbol: "SOMM",
         pool_id: "1087",
+        chainlist_prefix: "sommelier",
         decimals: 6,
         zone: {
             connection_id: "connection-54",
@@ -1033,6 +1038,7 @@ export const ProdDataMap = {
         network_name: "Stargaze",
         local_symbol: "qSTARS",
         base_symbol: "STARS",
+        chainlist_prefix: "stargaze",
         pool_id: "903",
         decimals: 6,
         zone: {

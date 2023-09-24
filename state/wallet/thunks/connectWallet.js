@@ -7,7 +7,7 @@ import { Dec } from "@keplr-wallet/unit";
 
 const fetchWalletDetails = async (windowWallet, offlineSigner, walletType) => {
     let pubkey = await windowWallet?.getKey(QuickSilverChainInfo.chainId);
-    let bech32 = "quick1qptp2hntwecfcyjwxyr8cngmjl9fmfc6e2gm25" //pubkey?.bech32Address;
+    let bech32 = pubkey?.bech32Address;
     if (bech32) {
         let roBalance = await offlineSigner.getBalance(bech32, "uqck");
         localStorage.setItem('WalletType', walletType);

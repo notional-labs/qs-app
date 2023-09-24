@@ -4,13 +4,7 @@ import {
     VStack,
     Flex,
     Box,
-    Text,
-    Button,
-    Link,
-    Checkbox,
-    Tooltip,
-    Divider,
-    HStack
+    Spinner,
 } from "@chakra-ui/react";
 import GradientDivider from "@/components/layout/GradientDivider";
 import ClaimRewards from "@/components/assets/ClaimRewards";
@@ -25,10 +19,19 @@ import { AssetList } from "@/state/network/utils";
 import { useSelector } from "react-redux";
 import { QuickSilverChainInfo } from "@/state/wallet/utils";
 import { Int } from "@keplr-wallet/unit";
+
+function LoadingBox() {
+    return (
+        <Center w='full' py={8} gap={2}>
+            <Spinner color='white' boxSize={'4em'} />
+        </Center>
+    )
+}
 function Assets() {
     const { address } = useSelector(state => state.wallet)
     const [assetList, setAssetList] = useState([])
     const [aprList, setAprList] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
 
     const handleFetchBalance = useCallback(async (addr) => {
         try {
@@ -44,15 +47,17 @@ function Assets() {
                 })
                 let apiRes = await Promise.all(promises)
                 let apiResJson = await Promise.all(apiRes.map(item => item.json()))
-    
+
                 let assetResult = []
                 for (let i = 0; i < AssetList.length; i++) {
                     assetResult.push({ ...AssetList[i][1], balance: apiResJson[2 * i].balance.amount, price: apiResJson[2 * i + 1][0].price })
                 }
                 setAssetList(assetResult)
+                setIsLoading(false)
             }
         } catch (e) {
             console.log(e)
+            setIsLoading(false)
         }
     }, [])
 
@@ -96,14 +101,14 @@ function Assets() {
                         </Flex>
                         <GradientDivider />
                         <Flex w='full' gap={4} justifyContent={'space-between'} alignItems={'stretch'}>
-                            <StakingInfo aprInfo={aprList.find(item => item.chain_id === QuickSilverChainInfo.chainId)}/>
+                            <StakingInfo aprInfo={aprList.find(item => item.chain_id === QuickSilverChainInfo.chainId)} />
                             <GradientDivider orientation="vertical" />
-                            <Portfolio assets={assetList.filter(item => !(new Int(item.balance).isZero()))} />
+                            {isLoading ? <Box w='35%'><LoadingBox /></Box> : <Portfolio assets={assetList.filter(item => !(new Int(item.balance).isZero()))} />}
                             <GradientDivider orientation="vertical" />
                             <StakeIntent />
                         </Flex>
                         <GradientDivider />
-                        <QAssets assets={assetList} aprList={aprList}/>
+                        {isLoading ? <LoadingBox /> : <QAssets assets={assetList} aprList={aprList} />}
                     </VStack>
                 </Center>
                 <Center

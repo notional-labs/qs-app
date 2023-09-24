@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import {
     VStack,
     Flex,
@@ -13,15 +13,13 @@ import { useSelector } from "react-redux";
 import RewardModal from "./RewardModal";
 
 export default function ClaimRewards() {
-    const { client, address} = useSelector(state => state.wallet)
+    const { client, address } = useSelector(state => state.wallet)
 
     const [availableRewards, setAvailableRewards] = useState(0)
-    const {isOpen, onClose, onOpen} = useDisclosure()
+    const { isOpen, onClose, onOpen } = useDisclosure()
     useEffect(() => {
-        if (client) {client.cosmos.auth.v1beta1.account({
-            address: "quick1n8g3upr3f5mldctpmyjnzng6j2gv3y29pf34th"
-          })
-            // client.cosmos.distribution.v1beta1.delegationTotalRewards({delegator_address: "quick1n8g3upr3f5mldctpmyjnzng6j2gv3y29pf34th"}).then(res => console.log(res))
+        if (client) {
+            // client.cosmos.distribution.v1beta1.delegationTotalRewards({delegator_address: address}).then(res => console.log(res))
         }
 
     }, [client, address])

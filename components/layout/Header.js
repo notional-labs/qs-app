@@ -8,10 +8,11 @@ import connectToWallet from '@/state/wallet/thunks/connectWallet';
 import { SupportedWallets } from '@/state/config';
 import connectToClient from '@/state/wallet/thunks/connectClient';
 import connectToNetwork from '@/state/network/thunks/connectNetwork';
+import fetchValidators from '@/state/network/thunks/fetchValidators';
 export default function Header() {
     const dispatch = useDispatch()
     const {connected, connecting} = useSelector(state => state.wallet)
-    const {connected: networkConnected, connecting: networkConnecting} = useSelector(state => state.network)
+    const {connected: networkConnected, connecting: networkConnecting, selectedDenom} = useSelector(state => state.network)
 
     useEffect(() => {
         if (window && !connected && !connecting) {
@@ -37,6 +38,12 @@ export default function Header() {
         dispatch(connectToClient())
     }, [])
     
+    useEffect(() => {
+        if (selectedDenom && networkConnected && !networkConnecting) {
+            dispatch(fetchValidators())
+        }
+    }, [selectedDenom])
+
     return (
         <Box position={'fixed'} top={10} right={10} zIndex={10}>
             {connected ? <WalletPopover /> :

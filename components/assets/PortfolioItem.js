@@ -6,7 +6,7 @@ import {
     Progress,
     Avatar,
 } from "@chakra-ui/react";
-import { Dec, Int } from "@keplr-wallet/unit";
+import { Dec } from "@keplr-wallet/unit";
 
 export default function PortfolioItem({ data, total }) {
     const percentAsset = useMemo(() => {

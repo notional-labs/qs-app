@@ -1,36 +1,41 @@
 import React, { useEffect, useState } from "react";
 import {
     VStack,
-    Flex,
     Text,
     HStack,
     Divider,
     useDisclosure,
-    Avatar,
     Button,
     Center,
 } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import NetworkSelect from "./NetworkSelect";
 import IntentModal from "./IntentModal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { DataMap } from "@/state/network/utils";
-import ValidatorIntent from "./ValidatorIntent";
+import { setIntOpts } from "@/state/assets/slice";
+import ValidatorIntentDisplay from "./ValidatorIntentDisplay";
 
 export default function StakeIntent() {
-    const { isOpen, onClose, onOpen } = useDisclosure()
+    const dispatch = useDispatch()
     const { client } = useSelector(state => state.wallet)
     const { selectedDenom, address } = useSelector(state => state.network)
 
-    const [intents, setIntents] = useState([])
+    const [completedFetch, setCompletedFetch] = useState(false)
+    const [originIntents, setOriginIntents] = useState([])
+
+    const { isOpen, onClose, onOpen } = useDisclosure()
 
     useEffect(() => {
         if (client && address) {
-            client.quicksilver.interchainstaking.v1.delegatorIntent({ chain_id: DataMap[selectedDenom].zone.chain_id, delegator_address: "cosmos1st3fng2vjcpz5lhg46un94zg0vn3nj658wc0chc57z29hx8zqeys6mvxdd" })
+            client.quicksilver.interchainstaking.v1.delegatorIntent({ chain_id: DataMap[selectedDenom].zone.chain_id, delegator_address: address })
                 .then(res => {
-                    setIntents(res.intent.intents)
+                    dispatch(setIntOpts(res.intent.intents))
+                    setOriginIntents(res.intent.intents)
+                    setCompletedFetch(true)
                 })
                 .catch(e => {
+                    setCompletedFetch(true)
                     console.log(e)
                 })
         }
@@ -65,8 +70,8 @@ export default function StakeIntent() {
                     },
                 }}
             >
-                {intents.length ? intents.map((item, index) =>
-                    <ValidatorIntent key={"intent" + index} valoperAddress={item.valoperAddress} weight={item.weight} />
+                {originIntents.length ? originIntents.map((item, index) =>
+                    <ValidatorIntentDisplay key={"intent-display" + index} valoperAddress={item.valoperAddress} weight={item.weight} />
                 ) : <Center p='20px' textAlign={'center'}>
                     <Text color='#FBFBFB' fontSize={'16px'} >
                         You have not set the intent yet. Please click on the button to 'Set Intent'
@@ -74,7 +79,7 @@ export default function StakeIntent() {
                 </Center>
                 }
             </VStack>
-            <IntentModal isOpen={isOpen} onClose={onClose} intents={intents} />
+            <IntentModal completedFetch={completedFetch} isOpen={isOpen} onClose={onClose} />
         </VStack>
     );
 }
