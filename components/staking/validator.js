@@ -259,7 +259,7 @@ const ValidatorPanel = () => {
                             >
                                 {
                                     isLoading ? <Center h={'100%'}>
-                                        <Image src='/icons/loading.gif' boxSize={'30%'}/>
+                                        <Image src='/icons/loading.gif' h={'25%'}/>
                                     </Center> : viewVals.map((val, i) => {
                                         return (
                                             <ValidatorCard
