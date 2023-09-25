@@ -95,7 +95,7 @@ const StakingPannel = (props) => {
     }
 
     return (
-        <Center w={'100%'} margin={'10vh'}>
+        <Center w={'100%'}>
             <Box className={`${stakingStyles.staking_container}`}>
                 <Flex justify={'space-between'} padding={'.5em 2em'}>
                     <Flex justify={'start'}>
