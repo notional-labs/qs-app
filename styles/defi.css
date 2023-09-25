@@ -7,7 +7,6 @@
     background-color: #2a2a2a80;
     top: 15%;
     max-height: 70%;
-    overflow: scroll;
     position: absolute;
     box-shadow: 0px 0px 5px 0px rgba(255, 255, 255, 0.60);
 }
@@ -27,7 +26,7 @@
 }
 
 .category-filter {
-    font-size: 30px;
+    font-size: 20px;
 }
 
 .defi-table {
@@ -38,15 +37,16 @@
 .defi-table thead tr {
     height: 20px;
     font-size: 20px;
+    font-weight: 800;
 }
 
 
 .defi-table tbody {
-    background-color: #141414;
     box-shadow: 0px 0px 5px 0px rgba(255, 255, 255, 0.50);
-    max-height: 100px;
+    max-height: 500px;
     overflow: scroll;
     border-radius: 20px;
+    backdrop-filter: blur(15px);
 }
 
 .defi-table tbody tr {
@@ -59,10 +59,9 @@
 }
 
 .provider img {
-    width: 100px;
-    height: 100px;
-    background-size: contain;
-    margin-right: 20px;
+    width: 50px;
+    object-fit: contain;
+    margin-right: 50px;
 }
 
 .provider a {
@@ -72,4 +71,10 @@
     width: 170px;
     text-align: center;
     font-size: 20px;
+    border-radius: 10px;
+    line-height: 60px;
+}
+
+.provider a:hover {
+    background-color: #ff850080;
 }

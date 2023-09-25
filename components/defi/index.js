@@ -114,11 +114,34 @@ const DefiDashboard = () => {
                     <p>Use your qAssets to earn extra yield in DeFi.</p>
                 </div>
                 <div className="category-filter">
-                    <Tabs selectedKey={category} onSelectionChange={setCategory}>
-                        <Tab key="All" title="All" />
-                        <Tab key="Vault" title="Vault" />
-                        <Tab key="Liquidity Provides" title="Liquidity Provides" />
-                        <Tab key="Lending & Borrowing" title="Lending & Borrowing" />
+                    <Tabs selectedKey={category} onSelectionChange={setCategory} color="primary" variant="solid">
+                        <Tab key="All" title="All" style={{
+                            textAlign: "center",
+                            borderRight: "1px solid grey",
+                            padding: "0px 50px",
+                            width: "unset"
+                        }}
+                        />
+                        <Tab key="Vault" title="Vault" style={{
+                            textAlign: "center",
+                            borderRight: "1px solid grey",
+                            padding: "0px 50px",
+                            width: "unset"
+                        }}
+                        />
+                        <Tab key="Liquidity Provides" title="Liquidity Provides" style={{
+                            textAlign: "center",
+                            borderRight: "1px solid grey",
+                            padding: "0px 50px",
+                            width: "unset"
+                        }}
+                        />
+                        <Tab key="Lending & Borrowing" title="Lending & Borrowing" style={{
+                            textAlign: "center",
+                            padding: "0px 50px",
+                            width: "unset"
+                        }}
+                        />
                     </Tabs>
                 </div>
                 <Table className="defi-table">
@@ -134,6 +157,7 @@ const DefiDashboard = () => {
                                 <TableRow key={item.key}>
                                     <TableCell style={{
                                         fontSize: "30px",
+                                        paddingLeft: "20px"
                                     }}
                                     >
                                         {item.name}
@@ -142,15 +166,16 @@ const DefiDashboard = () => {
                                         fontSize: "30px",
                                         fontWeight: "700",
                                     }}
-                                    >{item.APY * 100}%</TableCell>
+                                    >{item.APY * 100}%
+                                    </TableCell>
                                     <TableCell style={{
                                         fontSize: "30px",
                                         fontWeight: "700",
                                     }}
-                                    >${item.TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</TableCell>
-                                    <TableCell className="provider flex" style={{
-
-                                    }}>
+                                    >
+                                        ${item.TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                    </TableCell>
+                                    <TableCell className="provider flex">
                                         {
                                             item.provider === "Osmosis" ? (
                                                 <>
