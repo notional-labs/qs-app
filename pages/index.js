@@ -4,15 +4,17 @@ import Layout from '@/components/layout'
 import Link from 'next/link'
 
 import styles from '@/styles/Home.module.css'
+import PageHead from '@/components/layout/PageHead'
+import { useSelector } from 'react-redux'
+import { useEffect } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
-  return (
-    <Layout pageTitle="Quicksilver DApp">
-      <main className={`${styles.main} ${inter.className}`}>
-        sdfsdfdsf
-      </main>
-    </Layout>
+    return (
+    <>
+      <PageHead pageTitle="Quicksilver DApp" />
+      <div>heloo</div>
+    </>
   )
 }

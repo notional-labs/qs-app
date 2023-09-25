@@ -1,10 +1,9 @@
 .dashboard .sidebar {
     width: 233px;
-    margin: 12px;
     position: relative;
     font-weight: 200;
     transition: width .5s;
-    z-index: 1;
+    z-index: 2;
 }
 
 .minimal-size {
@@ -17,7 +16,7 @@
 }
 
 .sidebar .menu {
-    height: 98vh;
+    width: 15em;
     padding: 20px;
     background: rgba(255, 255, 255, 0.06);
     border-radius: 20px;
@@ -25,29 +24,27 @@
 }
 
 .sidebar .resize-btn {
-    background: rgba(255, 255, 255, 0.237);
-    top: 30px;
-    left: 217px;
+    background: rgba(231, 119, 40, 1);
     width: 2em;
     height: 2em;
     border: 1px solid rgba(86, 86, 86, 0.736);
     margin: 1em auto;
     cursor: pointer;
     display: block;
+    position: relative;
     padding: 1em;
-    position: absolute;
     border-radius: 100px;
     transition: left .5s;
 }
 
 .resize-btn .up-arrow {
-    top: 9px;
-    left: 7px;
+    top: -5px;
+    left: 8px;
     width: 15px;
     float: right;
     height: 4px;
     display: block;
-    position: absolute;
+    position: relative;
     transform: rotate(145deg);
     border-radius: 2px;
     background-color: transparent;
@@ -66,13 +63,13 @@
 }
 
 .resize-btn .down-arrow {
-    top: 17px;
-    left: 7px;
+    top: 3px;
+    left: 8px;
     width: 15px;
     float: right;
     height: 4px;
     display: block;
-    position: absolute;
+    position: relative;
     transform: rotate(35deg);
     border-radius: 2px;
     background-color: transparent;
@@ -88,10 +85,6 @@
     transition: all 0.5s cubic-bezier(0.25, 1.7, 0.35, 0.8);
     border-radius: 10px;
     background-color: white;
-}
-
-.minimal-btn {
-    left: 85px !important;
 }
 
 .minimal-btn .down-arrow,
@@ -115,7 +108,7 @@
 }
 
 .menu .menu-bar {
-    min-height: calc(98vh - 40px - 80px - 120px - 10px);
+    min-height: calc(90vh - 40px - 80px - 120px - 10px);
     margin-bottom: 0px;
 }
 
@@ -151,8 +144,6 @@ box-shadow:  20px 20px 60px #1c1c1c,
 
 .menu-bar>a:hover {
     background: linear-gradient(145deg, #3f3f3f, #2d2d2d);
-    box-shadow: 7px 7px 22px #242424,
-        -7px -7px 22px #383838;
 }
 
 .dropdown li:hover {
@@ -165,7 +156,6 @@ box-shadow:  20px 20px 60px #1c1c1c,
 }
 
 .menu .menu-down {
-    height: 120px;
     display: flex;
     flex-direction: column;
 }
