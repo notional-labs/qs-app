@@ -62,6 +62,7 @@ const ValidatorIntentCard = (props) => {
                                 max={100}
                                 backgroundColor='white'
                                 color='black'
+                                fontWeight={'bold'}
                                 borderRadius={'5px 0 0 5px'}
                                 focusBorderColor={'transparent'}
                                 borderColor={'transparent'}
@@ -70,7 +71,13 @@ const ValidatorIntentCard = (props) => {
                             >
                                 <NumberInputField textAlign="end" padding={'0 5px 0 5px'}/>
                             </NumberInput>
-                            <InputRightAddon children='%' color='black' backgroundColor={'#E77728'} borderRadius={'0 5px 5px 0'} />
+                            <InputRightAddon 
+                                children='%' 
+                                fontWeight={'bold'} 
+                                color='black' 
+                                backgroundColor={'#E77728'} 
+                                borderRadius={'0 5px 5px 0'} 
+                            />
                         </InputGroup> : <Text className={`${stakingStyles.tableMainText}`}>
                             {props.validator.intent.toFixed(3)} %
                         </Text>
