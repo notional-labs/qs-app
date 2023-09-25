@@ -78,6 +78,7 @@ export const getNativeValidators = async (rpc, status) => {
                 }
             }
         }
+        console.log(validators)
         return validators
     }
     catch (e) {
@@ -85,25 +86,46 @@ export const getNativeValidators = async (rpc, status) => {
     }
 }
 
-export const getLogo = async (identity) => {
+export const getValidatorsFromAPI = async (chainId) => {
     try {
-        const res = await axios.get(`https://keybase.io/_/api/1.0/user/lookup.json?key_suffix=${identity}&fields=pictures`)
-        if (res.status === 200 && res.data.status.code === 0 && res.data.them[0] && res.data.them[0].pictures) {
-            return res.data.them[0].pictures.primary.url
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_QUICKSILVER_DATA_API}/validatorList/${chainId}`)
+        const { validators } = res.data
+        if (!validators) {
+            return []
         }
-        return null
+        return validators
     } catch (e) {
-        return null
+        throw e
     }
+}
+
+export const getAPY = async (chainId) => {
+    try {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_QUICKSILVER_DATA_API}/apr`)
+        const { chains } = res.data
+        if (!chains) {
+            return 0
+        }
+        const chainInfo = chains.filter(chain => {
+            return chain.chain_id === chainId
+        })
+        return chainInfo.length > 0 ? chainInfo[0].apr : 0
+    } catch (e) {
+        throw e
+    }
+}
+
+export const getLogo = (address, chainName) => {
+    return `https://raw.githubusercontent.com/cosmostation/chainlist/master/chain/${chainName}/moniker/${address}.png`
 }
 
 export const getRedemptionRate = async (chainId) => {
     try {
-        if (!chainId) {
-
+        if (chainId) {
+            const zone = await getZoneWithChainId(chainId)
+            return zone.redemption_rate
         }
-        const zone = await getZoneWithChainId(chainId)
-        return zone.redemption_rate
+        return 1
     }
     catch (e) {
         throw e

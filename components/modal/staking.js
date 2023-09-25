@@ -20,24 +20,32 @@ import ValidatorIntent from "../list/validatorIntent"
 import OperationProgress from "../progress/operationProgress"
 import { useSelector } from 'react-redux'
 import { getDisplayDenom } from "@/services/string"
+import { staking } from "@/services/staking"
+import { DataMap } from "@/state/network/utils"
 
 const StakingModal = (props) => {
     const [isProcessing, setIsProcessing] = useState(false)
     const [isFinished, setIsFinished] = useState(false)
-    const { selectedDenom } = useSelector(state => state.network)
+    const { selectedDenom, address, signer } = useSelector(state => state.network)
     const { stakeAmount, redemptionRate } = useSelector(state => state.staking)
+    const [txHash, setTxHash] = useState('')
 
-    const liquidStake = () => {
+    const liquidStake = async () => {
         setIsProcessing(true)
         try {
-            setTimeout(() => {
-                setIsProcessing(false)
+            const result = await staking(DataMap[selectedDenom], address, stakeAmount, props.selectVals, signer)
+            if (result.code === 0) {
                 setIsFinished(true)
-            }, 5000)
+                setTxHash(result.transactionHash)
+            } else {
+                throw new Error(`Transaction failed, log: ${result.rawLog}`)
+            }
+            props.setSelectVals([])
         } catch (e) {
             setIsFinished(false)
             setIsProcessing(false)
             console.log(e)
+            props.setIsShow(false)
         }
     }
 
@@ -104,14 +112,6 @@ const StakingModal = (props) => {
                             </Flex>
                             <Flex justify={'space-between'} className={`${stakingStyles.stat_info}`}>
                                 <text className={`${stakingStyles.modal_stat_key}`}>
-                                    Quicksilver APY:
-                                </text>
-                                <text className={`${stakingStyles.stat_info_value}`}>
-                                    12.24%
-                                </text>
-                            </Flex>
-                            <Flex justify={'space-between'} className={`${stakingStyles.stat_info}`}>
-                                <text className={`${stakingStyles.modal_stat_key}`}>
                                     Redemption Rate:
                                 </text>
                                 <text className={`${stakingStyles.stat_info_value}`}>
@@ -135,7 +135,7 @@ const StakingModal = (props) => {
                     >
                         {
                             <Collapse in={!isProcessing && !isFinished} unmountOnExit>
-                                <ValidatorIntent />
+                                <ValidatorIntent selectVals={props.selectVals} setSelectVals={props.setSelectVals}/>
                                 <Box padding={'1em 2em'}>
 
                                     <Text
@@ -156,7 +156,7 @@ const StakingModal = (props) => {
                                 isFinished ? <OperationProgress
                                     mainText={'Transaction Successful'}
                                     subText={'The updated qAsset balance will be reflected in your Quicksilver wallet in approximately 10 minutes. This dialogue will auto-refresh.'}
-                                    txHash={'7C543C4...2F31'}
+                                    txHash={txHash}
                                     isFinished={isFinished}
                                 /> : isProcessing ? <OperationProgress
                                     mainText={'Approving Transaction'}

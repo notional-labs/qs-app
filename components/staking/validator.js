@@ -11,41 +11,58 @@ import {
     Switch,
     Box,
     Icon,
-    Spinner
-} from '@chakra-ui/react'
+    Spinner} from '@chakra-ui/react'
 import { ChevronLeftIcon, SearchIcon } from '@chakra-ui/icons'
 import ValidatorCard from '@/components/card/validator'
 import { GoPencil } from "react-icons/go";
 import StakingModal from '../modal/staking'
 import { useSelector, useDispatch } from 'react-redux'
 import { DataMap } from '@/state/network/utils'
-import { getNativeValidators } from '@/services/zone'
-import { prevStep, calculateIntent } from '@/state/staking/slice'
+import { getValidatorsFromAPI } from '@/services/zone'
+import { prevStep } from '@/state/staking/slice'
+import ButtonList from '../list/pagination'
 
 const statuses = [
     'active',
     'inactive'
 ]
 
-const ValidatorPanel = (props) => {
+const ValidatorPanel = () => {
     const [pannelMode, setPannelMode] = useState(0)
     const [show, setShow] = useState(false)
     const dispatch = useDispatch()
     const { selectedDenom, connecting } = useSelector(state => state.network)
-    const { validatorSelect } = useSelector(state => state.staking)
+    const { stakeAmount } = useSelector(state => state.staking)
     const [validators, setValidators] = useState([])
     const [filterVals, setFilterVals] = useState([])
+    const [viewVals, setViewVals] = useState([])
     const [totalSum, setTotalSum] = useState(0)
     const [status, setStatus] = useState(0)
     const [isLoading, setIsloading] = useState(false)
+    const [selectVals, setSelectVals] = useState([])
+    const [params, setParams] = useState({
+        page: 1,
+        limit: 10,
+        total: 0,
+    })
 
     useEffect(() => {
         (async () => {
             try {
                 setIsloading(true)
-                const res = await getNativeValidators(DataMap[selectedDenom]?.network.rpc, statuses[status])
+                let res = await getValidatorsFromAPI(DataMap[selectedDenom]?.zone.chain_id)
                 setValidators([...res])
+                if (status === 0) {
+                    res = res.filter(val => {
+                        return val.status === 'BOND_STATUS_BONDED'
+                    })
+                }
                 setFilterVals([...res])
+                setParams({
+                    ...params,
+                    total: res.length,
+                    page: 1
+                })
                 setIsloading(false)
             } catch (e) {
                 setIsloading(false)
@@ -55,12 +72,31 @@ const ValidatorPanel = (props) => {
     }, [connecting, selectedDenom, status])
 
     useEffect(() => {
+        const pagingList = filterVals.slice((params.page - 1) * params.limit, params.page * params.limit)
+        setViewVals([...pagingList])
+    }, [params])
+
+    useEffect(() => {
+        const pagingList = filterVals.slice((params.page - 1) * params.limit, params.page * params.limit)
+        setViewVals([...pagingList])
+        setParams({
+            ...params,
+            total: filterVals.length,
+            page: 1
+        })
+    }, [filterVals])
+
+    useEffect(() => {
         let sum = 0
         validators.map(val => {
-            sum += parseInt(val.delegatorShares) / Math.pow(10, 24)
+            sum += parseInt(val.delegator_shares)
         })
         setTotalSum(sum)
     }, [validators])
+
+    const wrapSetParams = (index) => {
+        setParams({ ...params, page: index })
+    }
 
     const handleSwitch = (e) => {
         if (e.target.checked) {
@@ -79,6 +115,19 @@ const ValidatorPanel = (props) => {
             return val.description.moniker.toLowerCase().includes(e.target.value)
         })
         setFilterVals([...fiterVals])
+    }
+
+    const calculateIntent = () => {
+        const equalDistributedIntent = selectVals.length > 0 ? 100 / selectVals.length : 100
+        const calculateIntent = 100 - (equalDistributedIntent * (selectVals.length - 1))
+        const newList = selectVals.map((val, i) => {
+            return {
+                address: val.address,
+                moniker: val.moniker,
+                intent: i === selectVals.length - 1 ? calculateIntent : equalDistributedIntent
+            }
+        })
+        setSelectVals([...newList])
     }
 
     return (
@@ -122,7 +171,7 @@ const ValidatorPanel = (props) => {
                                 />
                             </InputGroup>
                             <Center gap={'10px'} >
-                                <Switch size={'lg'} colorScheme='orange' onChange={handleSwitch}/>
+                                <Switch size={'lg'} colorScheme='orange' onChange={handleSwitch} isLoading={isLoading} />
                                 <Text>
                                     Show inactive validators
                                 </Text>
@@ -156,22 +205,33 @@ const ValidatorPanel = (props) => {
                                 {
                                     isLoading ? <Center h={'100%'}>
                                         <Spinner color='white' boxSize={'4em'} />
-                                    </Center> : filterVals.map((val, i) => {
+                                    </Center> : viewVals.map((val, i) => {
                                         return (
                                             <ValidatorCard
-                                                index={i + 1}
-                                                address={val.operatorAddress}
+                                                index={params.limit * ( params.page - 1 ) + i  + 1}
+                                                address={val.operator_address}
                                                 name={val.description.moniker}
-                                                identity={val.description.identity}
-                                                votingPower={(parseInt(val.delegatorShares) / Math.pow(10, 24)).toFixed(0)}
-                                                votingPowerPercentage={`${totalSum > 0 ? parseFloat(((parseInt(val.delegatorShares) /Math.pow(10, 24))/ totalSum) * 100).toFixed(2) : 0} %`}
-                                                commission={`${(parseFloat(val.commission.commissionRates.rate) / Math.pow(10, 16)).toFixed(2)} %`}
+                                                votingPower={(parseInt(val.delegator_shares)).toFixed(0)}
+                                                votingPowerPercentage={`${totalSum > 0 ? parseFloat(((parseInt(val.delegator_shares)) / totalSum) * 100).toFixed(2) : 0} %`}
+                                                commission={`${(parseFloat(val.commission.commission_rates.rate)).toFixed(2)} %`}
                                                 prScore={0}
+                                                chainName={DataMap[selectedDenom]?.network_name?.toLowerCase()}
+                                                selectVals={selectVals}
+                                                setSelectVals={setSelectVals}
                                             />
                                         )
                                     })
                                 }
                             </Box>
+                            {
+                                params.total > 10 && (
+                                    <ButtonList
+                                        currentPage={params.page}
+                                        total={Math.ceil(params.total / params.limit)}
+                                        wrapSetParams={wrapSetParams}
+                                    />
+                                )
+                            }
                         </Box>
                     </Box>
                     <Center w={'100%'}>
@@ -186,7 +246,7 @@ const ValidatorPanel = (props) => {
                             <Flex justify={'space-between'}>
                                 <Center gap={'10px'}>
                                     <Text className={`${stakingStyles.tableMainText}`} fontSize={'20px'}>
-                                        10.123123 {DataMap[selectedDenom]?.symbol}
+                                        {stakeAmount} {DataMap[selectedDenom]?.symbol}
                                     </Text>
                                     <Center>
                                         <Icon as={GoPencil} color={'#E77728'} boxSize={'19px'} />
@@ -194,7 +254,7 @@ const ValidatorPanel = (props) => {
                                     <div className={`${stakingStyles.verticalLine}`} style={{ height: '100%', margin: '0 10px' }} />
                                     <Box>
                                         <Text className={`${stakingStyles.tableMainText}`}>
-                                            {validatorSelect.length} Validators Selected
+                                            {selectVals.length} Validators Selected
                                         </Text>
                                         <Text className={`${stakingStyles.tableSubText}`}>
                                             Select between 1 to 8 validators.
@@ -210,7 +270,7 @@ const ValidatorPanel = (props) => {
                                         backgroundColor: '#ba5c1a'
                                     }}
                                     onClick={() => {
-                                        dispatch(calculateIntent())
+                                        calculateIntent()
                                         setShow(true)
                                     }}
                                 >
@@ -225,6 +285,8 @@ const ValidatorPanel = (props) => {
             <StakingModal
                 isShow={show}
                 setIsShow={setShow}
+                selectVals={selectVals}
+                setSelectVals={setSelectVals}
             />
         </Center>
     )

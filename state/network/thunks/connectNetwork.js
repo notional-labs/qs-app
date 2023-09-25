@@ -3,14 +3,14 @@ import { getKeplrFromWindow } from '@keplr-wallet/stores';
 import { getSigningQuicksilverClient } from "quicksilverjs";
 import { DataMap } from "@/state/network/utils";
 
-const fetchNetworkDetails = async (windowWallet, offlineSigner, chainId) => {
+const fetchNetworkDetails = async (windowWallet, qsClient, offlineSigner , chainId) => {
     let pubkey = await windowWallet?.getKey(chainId);
     let bech32 = pubkey?.bech32Address;
     if (bech32) {
-        let roBalance = await offlineSigner.getAllBalances(bech32);
-        return { address: bech32, balance: roBalance, connected: true }
+        let roBalance = await qsClient.getAllBalances(bech32);
+        return { address: bech32, balance: roBalance, connected: true, signer: offlineSigner }
     }
-    return { connected: false, address: "", balance: "" }
+    return { connected: false, address: "", balance: "", signer: offlineSigner }
 }
 
 const connectToNetwork = createAsyncThunk("network/connect", async (denom) => {
@@ -23,15 +23,15 @@ const connectToNetwork = createAsyncThunk("network/connect", async (denom) => {
             if (keplr) {
                 console.log(denom)
                 await keplr.enable(chainInfo.chainId)
-                let signer = keplr.getOfflineSignerOnlyAmino(chainInfo.chainId);
+                let signer = keplr.getOfflineSigner(chainInfo.chainId);
                 let offlineSigner = await getSigningQuicksilverClient({ rpcEndpoint: chainInfo.rpc, signer: signer });
                 localStorage.setItem('ChainId', JSON.stringify(chainInfo.chainId));
                 console.log("Enabled for chainid " + chainInfo.chainId)
 
                 await keplr.experimentalSuggestChain(chainInfo)
-                let signer1 = keplr.getOfflineSignerOnlyAmino(chainInfo.chainId);
+                let signer1 = keplr.getOfflineSigner(chainInfo.chainId);
                 let offlineSigner1 = await getSigningQuicksilverClient({ rpcEndpoint: chainInfo.rpc, signer: signer1 });
-                result = await fetchNetworkDetails(keplr, offlineSigner1, chainInfo.chainId)
+                result = await fetchNetworkDetails(keplr, offlineSigner1, signer1, chainInfo.chainId)
                 localStorage.setItem('ChainId', JSON.stringify(chainInfo.chainId));
                 console.log("Added to Keplr for chainid " + chainInfo.chainId)
             }

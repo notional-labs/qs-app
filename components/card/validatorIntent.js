@@ -10,13 +10,33 @@ import {
     InputRightAddon,
 } from '@chakra-ui/react'
 import stakingStyles from '@/styles/Staking.module.css'
-import { useDispatch } from 'react-redux'
-import { editIntent } from '@/state/staking/slice'
+import { useSelector } from 'react-redux'
+import { useState, useEffect } from 'react'
+import { getLogo } from '@/services/zone'
+import { DataMap } from '@/state/network/utils'
 
 const ValidatorIntentCard = (props) => {
-    const dispatch = useDispatch()
-    const handleChangeIntent = (val) => {
-        dispatch(editIntent({ index: props.index, intent: parseFloat(val) }))
+    const [logoUrl, setLogoUrl] = useState(null)
+    const { selectedDenom, connecting } = useSelector(state => state.network)
+
+    useEffect(() => {
+        if (selectedDenom) {
+            const url = getLogo(props.validator.address, DataMap[selectedDenom]?.network_name?.toLowerCase())
+            setLogoUrl(url)
+        }
+    }, [selectedDenom, connecting])
+
+    const handleChangeIntent = (value) => {
+        const newList = props.selectVals.map((val, i) => {
+            if (i === props.index) {
+                return {
+                    ...val,
+                    intent: parseFloat(value)
+                }
+            }
+            return val
+        })
+        props.setSelectVals([...newList])
     }
 
     return (
@@ -26,6 +46,7 @@ const ValidatorIntentCard = (props) => {
             w={'100%'}
         >
             <Center gap={'10px'}>
+                <Image src={logoUrl} fallbackSrc='/icons/no_profile.svg' boxSize={'24px'} borderRadius={'50%'}/>
                 <Text className={`${stakingStyles.switch_network_modal_sub_text}`}>
                     {props.validator.moniker}
                 </Text>
@@ -37,7 +58,6 @@ const ValidatorIntentCard = (props) => {
                             <NumberInput
                                 value={props.validator.intent}
                                 onChange={handleChangeIntent}
-                                defaultValue={props.validator.intent}
                                 min={0}
                                 max={100}
                                 backgroundColor='white'

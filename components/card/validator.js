@@ -1,14 +1,9 @@
-import { Inter } from 'next/font/google'
 import stakingStyles from '@/styles/Staking.module.css'
 import { useEffect, useState } from 'react'
 import {
-    Button, Grid,
+    Grid,
     Center,
     Flex,
-    InputGroup,
-    InputLeftElement,
-    Input,
-    Switch,
     Box,
     Checkbox,
     IconButton,
@@ -16,25 +11,20 @@ import {
     Image,
     Text,
 } from '@chakra-ui/react'
-import { ChevronLeftIcon, SearchIcon } from '@chakra-ui/icons'
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { getLogo } from '@/services/zone'
-import { useDispatch, useSelector } from 'react-redux'
-import { addVals, removeVals } from '@/state/staking/slice'
+import { useSelector } from 'react-redux'
 
 
 const ValidatorCard = (props) => {
     const [isStar, setIsStar] = useState(false)
     const [logoUrl, setLogoUrl] = useState(null)
-    const dispatch = useDispatch()
     const { validatorSelect } = useSelector(state => state.staking)
 
     useEffect(() => {
-        (async () => {
-            const url = await getLogo(props.identity)
-            setLogoUrl(url)
-        })()
-    }, [])
+        const url = getLogo(props.address, props.chainName)
+        setLogoUrl(url)
+    }, [props.address])
 
     const handleCheck = (e) => {
         if (e.target.checked) {
@@ -42,15 +32,22 @@ const ValidatorCard = (props) => {
                 e.target.checked = false
                 return
             }
-            dispatch(addVals({ valAddress: props.address, moniker: props.name }))
+            props.setSelectVals([...props.selectVals, {
+                address: props.address,
+                moniker: props.name,
+                intent: 0
+            }])
         }
         else {
-            dispatch(removeVals({ valAddress: props.address }))
+            const filter = props.selectVals.filter(val => {
+                return val.address !== props.address
+            })
+            props.setSelectVals([...filter])
         }
     }
 
     const isChecked = () => {
-        const filter = validatorSelect.filter(val => {
+        const filter = props.selectVals.filter(val => {
             return val.address === props.address
         })
         return filter.length > 0
@@ -85,7 +82,7 @@ const ValidatorCard = (props) => {
                                 {props.index}
                             </Text>
                         </Center>
-                        <Image src={logoUrl !== null ? logoUrl : '/icons/no_profile.svg'} boxSize={'24px'} borderRadius={'50%'} margin={'0 5px'}/>
+                        <Image src={logoUrl} boxSize={'24px'} borderRadius={'50%'} margin={'0 5px'} fallbackSrc='/icons/no_profile.svg' />
                         <Text>
                             {props.name}
                         </Text>

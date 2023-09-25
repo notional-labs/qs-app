@@ -7,16 +7,14 @@ import {
     StackDivider,
 } from "@chakra-ui/react"
 import ValidatorIntentCard from "../card/validatorIntent"
-import { useSelector } from 'react-redux'
 import { useState } from "react"
 
-const ValidatorIntent = () => {
-    const { validatorSelect } = useSelector(state => state.staking)
+const ValidatorIntent = (props) => {
     const [isEdit, setIsEdit] = useState(false)
 
     const getIntentSum = () => {
         let sum = 0
-        validatorSelect.map(val => {
+        props.selectVals.map(val => {
             sum += parseFloat(val.intent)
         })
         return sum
@@ -86,9 +84,15 @@ const ValidatorIntent = () => {
                 }}
             >
                 {
-                    validatorSelect.map((val, i) => {
+                    props.selectVals.map((val, i) => {
                         return (
-                            <ValidatorIntentCard validator={val} isEdit={isEdit} index={i} />
+                            <ValidatorIntentCard 
+                                validator={val} 
+                                isEdit={isEdit} 
+                                index={i} 
+                                selectVals={props.selectVals} 
+                                setSelectVals={props.setSelectVals} 
+                            />
                         )
                     })
                 }

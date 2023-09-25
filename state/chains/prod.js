@@ -584,12 +584,13 @@ export const ProdDataMap = {
     uatom: {
         local_logo: "/assets/qAtom.svg",
         base_logo: "/assets/Cosmos.png",
-        network_name: "Cosmos Hub",
         local_symbol: "qATOM",
         base_symbol: "ATOM",
         pool_id: "944",
         chainlist_prefix: "cosmos",
         decimals: 6,
+        network_name: "Cosmos",
+        symbol: "ATOM",
         zone: {
             connection_id: "connection-1",
             chain_id: "cosmoshub-4",
