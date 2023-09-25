@@ -230,7 +230,7 @@
 
 .img_background {
   min-height: 100vh;
-  background: url("/imgs/background.svg") lightgray 0% 0% / 100px 100px;
+  background: url("../public/imgs/background.svg") lightgray 0% 0% / 100px 100px;
   background-repeat: no-repeat;
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -247,6 +247,7 @@
   width: 200%; 
   height: 200%;
 }
+
 .bg img {
   position: absolute; 
   top: 0; 
@@ -257,4 +258,3 @@
   min-width: 50%;
   min-height: 50%;
 }
-

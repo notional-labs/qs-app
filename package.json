@@ -26,15 +26,19 @@
     "@reduxjs/toolkit": "^1.9.5",
     "antd": "^5.9.0",
     "axios": "^1.5.0",
+    "chart.js": "^4.4.0",
     "framer-motion": "^10.16.4",
     "lottie-react": "^2.4.0",
     "next": "13.4.19",
     "quicksilverjs": "^0.8.0",
     "react": "18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.11.0",
+    "react-markdown": "^8.0.7",
     "react-redux": "^8.1.2",
-    "reactstrap": "^9.2.0"
+    "reactstrap": "^9.2.0",
+    "remark-gfm": "^4.0.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.15",

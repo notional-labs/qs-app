@@ -9,7 +9,7 @@ const Layout = (props) => {
         <title>{props.pageTitle}</title>
       </Head>
       <div class={`${style.bg}`}>
-        <img src="/imgs/background.jpg" alt="" />
+        <img src="/imgs/background.svg" alt="" />
       </div>
       <div>
         {props.children}
@@ -18,4 +18,3 @@ const Layout = (props) => {
   );
 };
 export default Layout;
-
