@@ -3,6 +3,7 @@ import {
     Avatar,
     Text,
     Center,
+    HStack,
 } from '@chakra-ui/react'
 import stakingStyles from '@/styles/Staking.module.css'
 import { useSelector } from 'react-redux';
@@ -12,7 +13,7 @@ const ValidatorIntentDisplay = ({ valoperAddress, weight }) => {
     const { valMap, selectedDenom } = useSelector(state => state.network)
 
     return (
-        <Flex
+        <HStack
             gap={4}
             justify={'space-between'}
             w={'100%'}
@@ -20,7 +21,7 @@ const ValidatorIntentDisplay = ({ valoperAddress, weight }) => {
             <Center gap={'10px'}>
                 <Avatar src={`${BaseLogoUrl}/${DataMap[selectedDenom].chainlist_prefix}/moniker/${valoperAddress}.png`} boxSize={'32px'} borderRadius={'50%'} margin={'0 5px'} />
                 <Text className={`${stakingStyles.switch_network_modal_sub_text}`}>
-                    {valMap[valoperAddress].description.moniker}
+                    {valMap[valoperAddress]?.description.moniker}
                 </Text>
             </Center>
             <Flex justify={'end'}>
@@ -28,7 +29,7 @@ const ValidatorIntentDisplay = ({ valoperAddress, weight }) => {
                     {parseFloat(weight).toFixed(2)} %
                 </Text>
             </Flex>
-        </Flex>
+        </HStack>
     )
 }
 

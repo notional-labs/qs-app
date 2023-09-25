@@ -23,7 +23,7 @@ import { signalIntent } from "@/services/intent";
 import OperationProgress from "../progress/operationProgress";
 import { DataMap } from "@/state/network/utils";
 
-export default function IntentModal({ isOpen, onClose, completedFetch }) {
+export default function IntentModal({ isOpen, onClose, completedFetch, isFinished, setIsFinished }) {
     const dispatch = useDispatch()
     const { valArr, isFetching, selectedDenom } = useSelector(state => state.network)
     const { address, signer } = useSelector(state => state.wallet)
@@ -32,7 +32,6 @@ export default function IntentModal({ isOpen, onClose, completedFetch }) {
 
     const [openListValidator, setOpenListValidator] = useState(false)
     const [isProcessing, setIsProcessing] = useState(false)
-    const [isFinished, setIsFinished] = useState(false)
     const [txHash, setTxHash] = useState('')
 
     const totalSum = useMemo(() => {
@@ -151,7 +150,6 @@ export default function IntentModal({ isOpen, onClose, completedFetch }) {
                         {
                             isFinished ? <OperationProgress
                                 mainText={'Transaction Successful'}
-                                subText={'The updated qAsset balance will be reflected in your Quicksilver wallet in approximately 10 minutes. This dialogue will auto-refresh.'}
                                 txHash={txHash}
                                 isFinished={isFinished}
                             /> : isProcessing ? <OperationProgress

@@ -30,7 +30,7 @@ const ValidatorIntent = ({index, valoperAddress, weight}) => {
             <Center gap={'10px'}>
                 <Avatar src={`${BaseLogoUrl}/${DataMap[selectedDenom].chainlist_prefix}/moniker/${valoperAddress}.png`} boxSize={'32px'} borderRadius={'50%'} margin={'0 5px'} />
                 <Text className={`${stakingStyles.switch_network_modal_sub_text}`}>
-                    {valMap[valoperAddress].description.moniker}
+                    {valMap[valoperAddress]?.description.moniker}
                 </Text>
             </Center>
             <Flex justify={'end'}>

@@ -46,6 +46,7 @@ export const signalIntent = async (zone, sender, intents, signer) => {
             [msgAny],
             {
                 "gas": "250000",
+                "amount": coins("2000", zone.local_denom)
             },
             "",
         );

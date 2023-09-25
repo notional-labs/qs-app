@@ -19,19 +19,27 @@ import ValidatorIntentDisplay from "./ValidatorIntentDisplay";
 export default function StakeIntent() {
     const dispatch = useDispatch()
     const { client } = useSelector(state => state.wallet)
-    const { selectedDenom, address } = useSelector(state => state.network)
+    const { selectedDenom } = useSelector(state => state.network)
+    const { address } = useSelector(state => state.wallet)
 
     const [completedFetch, setCompletedFetch] = useState(false)
     const [originIntents, setOriginIntents] = useState([])
+    const [isFinished, setIsFinished] = useState(false)
 
     const { isOpen, onClose, onOpen } = useDisclosure()
 
+    const handleCloseModal = () => {
+        setIsFinished(false)
+        onClose()
+    }
+
     useEffect(() => {
         if (client && address) {
-            client.quicksilver.interchainstaking.v1.delegatorIntent({ chain_id: DataMap[selectedDenom].zone.chain_id, delegator_address: address })
+            client.quicksilver.interchainstaking.v1.delegatorIntent({ chain_id: DataMap[selectedDenom]?.zone.chain_id, delegator_address: address })
                 .then(res => {
-                    dispatch(setIntOpts(res.intent.intents))
-                    setOriginIntents(res.intent.intents)
+                    let intentArr = res.intent.intents.map(item => ({valoperAddress: item.valoper_address, weight: item.weight * 100}))
+                    dispatch(setIntOpts(intentArr))
+                    setOriginIntents(intentArr)
                     setCompletedFetch(true)
                 })
                 .catch(e => {
@@ -39,7 +47,23 @@ export default function StakeIntent() {
                     console.log(e)
                 })
         }
-    }, [client, address])
+    }, [client, address, selectedDenom])
+
+    useEffect(() => {
+        if (isFinished) {
+            client.quicksilver.interchainstaking.v1.delegatorIntent({ chain_id: DataMap[selectedDenom].zone.chain_id, delegator_address: address })
+                .then(res => {
+                    let intentArr = res.intent.intents.map(item => ({valoperAddress: item.valoper_address, weight: item.weight * 100}))
+                    dispatch(setIntOpts(intentArr))
+                    setOriginIntents(intentArr)
+                    setCompletedFetch(true)
+                })
+                .catch(e => {
+                    setCompletedFetch(true)
+                    console.log(e)
+                })
+        }
+    }, [isFinished])
 
     return (
         <VStack
@@ -79,7 +103,7 @@ export default function StakeIntent() {
                 </Center>
                 }
             </VStack>
-            <IntentModal completedFetch={completedFetch} isOpen={isOpen} onClose={onClose} />
+            <IntentModal isFinished={isFinished} setIsFinished={setIsFinished} completedFetch={completedFetch} isOpen={isOpen} onClose={handleCloseModal} />
         </VStack>
     );
 }
