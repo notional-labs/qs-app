@@ -328,6 +328,7 @@ const ValidatorPanel = () => {
                                         calculateIntent()
                                         setShow(true)
                                     }}
+                                    isDisabled={selectVals.length === 0}
                                 >
                                     Next
                                 </Button>

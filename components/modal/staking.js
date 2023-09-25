@@ -53,7 +53,6 @@ const StakingModal = (props) => {
             })
             setIsFinished(false)
             setIsProcessing(false)
-            console.log(e)
             props.setIsShow(false)
         }
     }
