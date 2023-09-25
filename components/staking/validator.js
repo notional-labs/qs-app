@@ -11,7 +11,7 @@ import {
     Switch,
     Box,
     Icon,
-    Spinner,
+    Image,
     useToast
 } from '@chakra-ui/react'
 import { ChevronLeftIcon, SearchIcon } from '@chakra-ui/icons'
@@ -71,15 +71,27 @@ const ValidatorPanel = () => {
                     title: `Failed to fetch validtor`
                 })
                 setIsloading(false)
-                console.log(e.message)
             }
         })()
-    }, [connecting, selectedDenom, status])
+    }, [connecting, selectedDenom])
 
     useEffect(() => {
         const pagingList = filterVals.slice((params.page - 1) * params.limit, params.page * params.limit)
         setViewVals([...pagingList])
     }, [params])
+
+    useEffect(() => {
+        let vals = []
+        if (status === 0) {
+            vals = validators.filter(val => {
+                return val.status === 'BOND_STATUS_BONDED'
+            })
+        }
+        else {
+            vals = [...validators]
+        }
+        setFilterVals([...vals])
+    }, [status])
 
     useEffect(() => {
         const pagingList = filterVals.slice((params.page - 1) * params.limit, params.page * params.limit)
@@ -98,6 +110,35 @@ const ValidatorPanel = () => {
         })
         setTotalSum(sum)
     }, [validators])
+
+    useEffect(() => {
+        let vals = []
+        if (pannelMode === 1) {
+            const favouritesList = localStorage.getItem('favourites')
+            let currentList
+            if (favouritesList) {
+                try {
+                    currentList = JSON.parse(favouritesList)
+                } catch {
+                    vals = []
+                }
+                vals = filterVals.filter(val => {
+                    return currentList.indexOf(val.operator_address) !== -1
+                })
+            }
+            else {
+                setFilterVals([])
+            }
+        } else {
+            vals = [...validators]
+            if (status === 0) {
+                vals = validators.filter(val => {
+                    return val.status === 'BOND_STATUS_BONDED'
+                })
+            }
+        }
+        setFilterVals([...vals])
+    }, [pannelMode])
 
     const wrapSetParams = (index) => {
         setParams({ ...params, page: index })
@@ -209,11 +250,11 @@ const ValidatorPanel = () => {
                             >
                                 {
                                     isLoading ? <Center h={'100%'}>
-                                        <Spinner color='white' boxSize={'4em'} />
+                                        <Image src='/icons/loading.gif'/>
                                     </Center> : viewVals.map((val, i) => {
                                         return (
                                             <ValidatorCard
-                                                index={params.limit * ( params.page - 1 ) + i  + 1}
+                                                index={params.limit * (params.page - 1) + i + 1}
                                                 address={val.operator_address}
                                                 name={val.description.moniker}
                                                 votingPower={(parseInt(val.delegator_shares)).toFixed(0)}

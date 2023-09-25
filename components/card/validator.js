@@ -10,6 +10,7 @@ import {
     Icon,
     Image,
     Text,
+    useToast,
 } from '@chakra-ui/react'
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
 import { getLogo } from '@/services/zone'
@@ -20,16 +21,53 @@ const ValidatorCard = (props) => {
     const [isStar, setIsStar] = useState(false)
     const [logoUrl, setLogoUrl] = useState(null)
     const { validatorSelect } = useSelector(state => state.staking)
+    const toast = useToast()
 
     useEffect(() => {
         const url = getLogo(props.address, props.chainName)
         setLogoUrl(url)
+
+        const favouritesList = localStorage.getItem('favourites')
+        if (favouritesList) {
+            setIsStar(JSON.parse(favouritesList).indexOf(props.address) !== -1)
+        }
     }, [props.address])
+
+    const handleFavourite = () => {
+        const dataStr = localStorage.getItem('favourites')
+        let currentList
+        if (!dataStr) {
+            currentList = []
+        } else {
+            try {
+                currentList = JSON.parse(dataStr)
+            } catch {
+                currentList = []
+            }
+        }
+        const index = currentList.indexOf(props.address)
+        if (index !== -1) {
+            setIsStar(false)
+            currentList.splice(index, 1)
+            localStorage.setItem('favourites', JSON.stringify([...currentList]))
+        }
+        else {
+            setIsStar(true)
+            localStorage.setItem('favourites', JSON.stringify([...currentList, props.address]))
+        }
+    } 
 
     const handleCheck = (e) => {
         if (e.target.checked) {
-            if (validatorSelect.length >= 8) {
+            if (props.selectVals.length >= 8) {
                 e.target.checked = false
+                toast({
+                    position: 'top',
+                    status: 'error',
+                    isClosable: true,
+                    duration: 9000,
+                    title: `Please select between 1 and 8 validators only`
+                })
                 return
             }
             props.setSelectVals([...props.selectVals, {
@@ -72,7 +110,7 @@ const ValidatorCard = (props) => {
                             aria-label='Done'
                             fontSize='20px'
                             icon={isStar ? <Icon as={AiFillStar} /> : <Icon as={AiOutlineStar} />}
-                            onClick={() => setIsStar(!isStar)}
+                            onClick={handleFavourite}
                             _hover={{
                                 backgroundClip: 'transparent'
                             }}
