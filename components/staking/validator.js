@@ -116,7 +116,6 @@ const ValidatorPanel = () => {
                 try {
                     currentList = JSON.parse(favouritesList)
                 } catch {
-                    alert('hmmmm')
                     return newVals
                 }
                 newVals = vals.filter(val => {
