@@ -1,5 +1,6 @@
 import '@/styles/globals.css';
 import "@/styles/menu.css";
+import "@/styles/defi.css";
 import "@/styles/dashboard.css";
 import {nexa, quicksand} from '@/assets/fonts/fonts';
 

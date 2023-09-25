@@ -1,0 +1,9 @@
+
+.defi-table {
+    border: 1px solid white;
+}
+
+.defi-table tbody {
+    max-height: 100px;
+    overflow: scroll;
+}
