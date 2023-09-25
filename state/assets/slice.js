@@ -46,7 +46,6 @@ export const slice = createSlice({
             })
         },
         editIntent: (state, action) => {
-            console.log(action.payload.intent)
             let validator = state.intentOptions[action.payload.index]
             state.intentOptions[action.payload.index] = {
                 ...validator,

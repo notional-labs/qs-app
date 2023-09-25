@@ -55,7 +55,7 @@ export default function ClaimRewards() {
                 }}
                 color='white'
                 borderRadius={4}>
-                Comming soon {/* Claim Rewards */}
+                Coming soon {/* Claim Rewards */}
             </Button>
             <RewardModal isOpen={isOpen} onClose={onClose} />
         </Flex>
