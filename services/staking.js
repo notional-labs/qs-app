@@ -5,7 +5,6 @@ import { SigningStargateClient } from "@cosmjs/stargate";
 
 export const staking = async (zone, sender, stakingAmount, validatorsSelect, signer) => {
     try {
-        console.log(signer)
         let out = ''
         validatorsSelect.map((val) => {
             out = out.concat(addValidator(val.address, val.intent / 100));

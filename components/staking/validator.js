@@ -42,6 +42,7 @@ const ValidatorPanel = () => {
         limit: 10,
         total: 0,
     })
+    const [search, setSearch] = useState('')
     const toast = useToast()
 
     useEffect(() => {
@@ -81,19 +82,6 @@ const ValidatorPanel = () => {
     }, [params])
 
     useEffect(() => {
-        let vals = []
-        if (status === 0) {
-            vals = validators.filter(val => {
-                return val.status === 'BOND_STATUS_BONDED'
-            })
-        }
-        else {
-            vals = [...validators]
-        }
-        setFilterVals([...vals])
-    }, [status])
-
-    useEffect(() => {
         const pagingList = filterVals.slice((params.page - 1) * params.limit, params.page * params.limit)
         setViewVals([...pagingList])
         setParams({
@@ -111,8 +99,16 @@ const ValidatorPanel = () => {
         setTotalSum(sum)
     }, [validators])
 
+    // Handle when user filter by search, favourites and status
     useEffect(() => {
-        let vals = []
+        let vals = filterBySearch(validators)
+        vals = filterByFavourites(vals)
+        vals = filterByStatus(vals)
+        setFilterVals([...vals])
+    }, [pannelMode, status, search])
+
+    const filterByFavourites = (vals) => {
+        let newVals = []
         if (pannelMode === 1) {
             const favouritesList = localStorage.getItem('favourites')
             let currentList
@@ -120,25 +116,50 @@ const ValidatorPanel = () => {
                 try {
                     currentList = JSON.parse(favouritesList)
                 } catch {
-                    vals = []
+                    alert('hmmmm')
+                    return newVals
                 }
-                vals = filterVals.filter(val => {
+                newVals = vals.filter(val => {
                     return currentList.indexOf(val.operator_address) !== -1
                 })
             }
             else {
-                setFilterVals([])
+                newVals = []
             }
         } else {
-            vals = [...validators]
-            if (status === 0) {
-                vals = validators.filter(val => {
-                    return val.status === 'BOND_STATUS_BONDED'
-                })
-            }
+            newVals = [...vals]
         }
-        setFilterVals([...vals])
-    }, [pannelMode])
+        return newVals
+    }
+
+    const filterByStatus = (vals) => {
+        let newVals = []
+        if (status === 0) {
+            newVals = vals.filter(val => {
+                return val.status === 'BOND_STATUS_BONDED'
+            })
+        }
+        else {
+            newVals = [...vals]
+        }
+        return newVals
+    }
+
+    const filterBySearch = (vals) => {
+        let newVals
+        if (search === '') {
+            newVals = [...vals]
+        } else {
+            newVals = vals.filter(val => {
+                return val.description.moniker.toLowerCase().includes(search)
+            })
+        }
+        return newVals
+    }
+
+    const handleSearch = (e) => {
+        setSearch(e.target.value)
+    }
 
     const wrapSetParams = (index) => {
         setParams({ ...params, page: index })
@@ -150,17 +171,6 @@ const ValidatorPanel = () => {
         } else {
             setStatus(0)
         }
-    }
-
-    const handleSearch = (e) => {
-        if (e.target.value === '') {
-            setFilterVals([...validators])
-            return
-        }
-        const fiterVals = validators.filter(val => {
-            return val.description.moniker.toLowerCase().includes(e.target.value)
-        })
-        setFilterVals([...fiterVals])
     }
 
     const calculateIntent = () => {
