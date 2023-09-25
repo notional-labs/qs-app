@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Inter } from 'next/font/google'
 import React, { useEffect, useState } from "react";
 import {
     Table,
@@ -9,10 +10,15 @@ import {
     TableCell,
     Tabs, Tab, Button
 } from "@nextui-org/react";
+import {
+    Center
+} from '@chakra-ui/react'
 import Umee from "@/assets/logos/umee.png";
 import Osmosis from "@/assets/logos/osmosis.svg";
 import Quasar from "@/assets/logos/quasar.svg";
 import Image from "next/image";
+
+const inter = Inter({ subsets: ['latin'] })
 
 const defiApps = [
     {
@@ -101,84 +107,123 @@ const DefiDashboard = () => {
     const [category, setCategory] = useState("All");
 
     return (
-        <>
-            <div className="defi-header">
-                <h2 className="h1">DeFi Opportunities</h2>
-                <p>Use your qAssets to earn extra yield in DeFi.</p>
+        <Center w={'100%'}>
+            <div className="defi-dashboard">
+                <div className="defi-header">
+                    <h2 className="h1">DeFi Opportunities</h2>
+                    <p>Use your qAssets to earn extra yield in DeFi.</p>
+                </div>
+                <div className="category-filter">
+                    <Tabs selectedKey={category} onSelectionChange={setCategory}>
+                        <Tab key="All" title="All" />
+                        <Tab key="Vault" title="Vault" />
+                        <Tab key="Liquidity Provides" title="Liquidity Provides" />
+                        <Tab key="Lending & Borrowing" title="Lending & Borrowing" />
+                    </Tabs>
+                </div>
+                <Table className="defi-table">
+                    <TableHeader className="text-left">
+                        <TableColumn>ASSETS PAIR</TableColumn>
+                        <TableColumn>APY</TableColumn>
+                        <TableColumn>TVL</TableColumn>
+                        <TableColumn>PROVIDER</TableColumn>
+                    </TableHeader>
+                    {category === "All" ? (
+                        <TableBody items={defiApps}>
+                            {(item) => (
+                                <TableRow key={item.key}>
+                                    <TableCell style={{
+                                        fontSize: "30px",
+                                    }}
+                                    >
+                                        {item.name}
+                                    </TableCell>
+                                    <TableCell style={{
+                                        fontSize: "30px",
+                                        fontWeight: "700",
+                                    }}
+                                    >{item.APY * 100}%</TableCell>
+                                    <TableCell style={{
+                                        fontSize: "30px",
+                                        fontWeight: "700",
+                                    }}
+                                    >${item.TVL.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}</TableCell>
+                                    <TableCell className="provider flex" style={{
+
+                                    }}>
+                                        {
+                                            item.provider === "Osmosis" ? (
+                                                <>
+                                                    <Image src={Osmosis} />
+                                                    <a href={item.URL} target="_blank">
+                                                        Add Liquidity
+                                                    </a>
+                                                </>
+                                            ) : item.provider === "Umee" ? (
+                                                <>
+                                                    <Image src={Umee} />
+                                                    <a href={item.URL} target="_blank">
+                                                        Lend/Borrow
+                                                    </a>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Image src={Quasar} />
+                                                    <a href={item.URL} target="_blank">
+                                                        Vault
+                                                    </a>
+                                                </>
+                                            )
+                                        }
+                                        {console.log(item.category)}
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    ) : (
+                        <TableBody
+                            items={defiApps.filter(item => {
+                                return (item.category === category)
+                            })}
+                        >
+                            {(item) => (
+                                <TableRow key={item.key}>
+                                    <TableCell>{item.name}</TableCell>
+                                    <TableCell>{item.APY}</TableCell>
+                                    <TableCell>{item.TVL}</TableCell>
+                                    <TableCell className="provider">
+                                        {
+                                            item.provider === "Osmosis" ? (
+                                                <>
+                                                    <Image src={Osmosis} />
+                                                    <a href={item.URL} target="_blank">
+                                                        Add Liquidity
+                                                    </a>
+                                                </>
+                                            ) : item.provider === "Umee" ? (
+                                                <>
+                                                    <Image src={Umee} />
+                                                    <a href={item.URL} target="_blank">
+                                                        Lend/Borrow
+                                                    </a>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Image src={Quasar} />
+                                                    <a href={item.URL} target="_blank">
+                                                        Vault
+                                                    </a>
+                                                </>
+                                            )
+                                        }
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    )}
+                </Table >
             </div>
-            <div className="category-filter border">
-                <Tabs selectedKey={category} onSelectionChange={setCategory} >
-                    <Tab key="All" title="All" />
-                    <Tab key="Vault" title="Vault" />
-                    <Tab key="Liquidity Provides" title="Liquidity Provides" />
-                    <Tab key="Lending & Borrowing" title="Lending & Borrowing" />
-                </Tabs>
-            </div>
-            <Table className="defi-table">
-                <TableHeader>
-                    <TableColumn>ASSETS PAIR</TableColumn>
-                    <TableColumn>APY</TableColumn>
-                    <TableColumn>TVL</TableColumn>
-                    <TableColumn>PROVIDER</TableColumn>
-                </TableHeader>
-                {category === "All" ? (
-                    <TableBody items={defiApps}>
-                        {(item) => (
-                            <TableRow key={item.key}>
-                                <TableCell>{item.name}</TableCell>
-                                <TableCell>{item.APY}</TableCell>
-                                <TableCell>{item.TVL}</TableCell>
-                                <TableCell className="provider">
-                                    {
-                                        item.provider === "Osmosis" ?
-                                            (
-                                                <Image src={Osmosis} width="100" height="100" />
-                                            ) : item.provider === "Umee" ?
-                                                (
-                                                    <Image src={Umee} width="100" height="100" />
-                                                ) : (
-                                                    <Image src={Quasar} width="100" height="100" />
-                                                )
-                                    }
-                                    <Button>
-                                        asdas
-                                    </Button>
-                                    {console.log(item.category)}
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                ) : (
-                    <TableBody
-                        items={defiApps.filter(item => {
-                            return (item.category === category)
-                        })}
-                    >
-                        {(item) => (
-                            <TableRow key={item.key}>
-                                <TableCell>{item.name}</TableCell>
-                                <TableCell>{item.APY}</TableCell>
-                                <TableCell>{item.TVL}</TableCell>
-                                <TableCell className="provider">
-                                    {
-                                        item.provider === "Osmosis" ? (
-                                            <Image src={Osmosis} width="100" height="100" />
-                                        ) : item.provider === "Umee" ? (
-                                            <Image src={Umee} width="100" height="100" />
-                                        ) : (
-                                            <Image src={Quasar} width="100" height="100" />
-                                        )
-                                    }
-                                    <Button>
-                                        asdas
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        )}
-                    </TableBody>
-                )}
-            </Table >
-        </>
+        </Center>
 
     );
 }

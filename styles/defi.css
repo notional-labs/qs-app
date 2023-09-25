@@ -1,9 +1,75 @@
-
-.defi-table {
-    border: 1px solid white;
+.defi-dashboard {
+    width: 80%;
+    max-width: 1500px;
+    padding: 40px;
+    border-radius: 30px;
+    color: white;
+    background-color: #2a2a2a80;
+    top: 15%;
+    max-height: 70%;
+    overflow: scroll;
+    position: absolute;
+    box-shadow: 0px 0px 5px 0px rgba(255, 255, 255, 0.60);
 }
 
+.defi-header {
+    margin-bottom: 20px;
+}
+
+.defi-header h2 {
+    font-size: 40px;
+    font-weight: 800;
+}
+
+.defi-header p {
+    font-size: 30px;
+    font-weight: 200;
+}
+
+.category-filter {
+    font-size: 30px;
+}
+
+.defi-table {
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.defi-table thead tr {
+    height: 20px;
+    font-size: 20px;
+}
+
+
 .defi-table tbody {
+    background-color: #141414;
+    box-shadow: 0px 0px 5px 0px rgba(255, 255, 255, 0.50);
     max-height: 100px;
     overflow: scroll;
+    border-radius: 20px;
+}
+
+.defi-table tbody tr {
+    height: 120px;
+}
+
+.defi-table tbody tr .provider {
+    height: 120px;
+    padding: 10px 0px;
+}
+
+.provider img {
+    width: 100px;
+    height: 100px;
+    background-size: contain;
+    margin-right: 20px;
+}
+
+.provider a {
+    background-color: #ff850050;
+    height: 60px;
+    align-self: center;
+    width: 170px;
+    text-align: center;
+    font-size: 20px;
 }
