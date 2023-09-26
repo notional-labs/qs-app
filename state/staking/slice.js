@@ -64,7 +64,12 @@ export const slice = createSlice({
         },
         setApr: (state, action) => {
             state.apr = action.payload.apr
-        }
+        },
+        clearData: (state, action) => {
+            state.stakingStep = 1
+            state.stakeAmount = 0
+            state.qAssetAmount = 0
+        },
     },
     extraReducers(builder) {
         builder.addCase(fetchRemdemtionRate.pending, (state) => {
@@ -86,5 +91,6 @@ export const {
     calculateIntent,
     editIntent,
     setApr,
+    clearData,
 } = slice.actions;
 export default slice.reducer;

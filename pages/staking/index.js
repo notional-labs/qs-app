@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from "next/router";
 import StakingPannel from '@/components/staking/staking';
 import ValidatorPanel from '@/components/staking/validator';
 import PageHead from '@/components/layout/PageHead';
 import { useDispatch, useSelector } from 'react-redux'
 import { getAPYs } from '@/services/zone';
-import { setApr } from '@/state/staking/slice';
+import { clearData, resetStep, setApr } from '@/state/staking/slice';
 
 export async function getServerSideProps() {
     const res = await getAPYs()
@@ -14,6 +15,21 @@ export async function getServerSideProps() {
 export default function Staking(props) {
     const dispatch = useDispatch()
     const { stakingStep } = useSelector(state => state.staking)
+    const router = useRouter();
+    
+    // Reset state when exit page
+    useEffect(() => {
+      const exitingFunction = () => {
+        console.log('exiting')
+      };
+  
+      router.events.on("routeChangeStart", exitingFunction);
+  
+      return () => {
+        dispatch(clearData())
+        router.events.off("routeChangeStart", exitingFunction);
+      };
+    }, []);
 
     useEffect(() => {
         dispatch(setApr({apr: props.apr}))
