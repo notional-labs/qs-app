@@ -40,7 +40,7 @@ const Header = ({ currentPath }) => {
                 {navButton.map((button, index) => {
                     return (
                         <Link
-                            key={index}
+                            key={"nav-" +index}
                             href={button.path}
                             className="text-xl leading-10 text-black dark:text-white font-thin hover:text-red dark:hover:text-red"
                             style={{

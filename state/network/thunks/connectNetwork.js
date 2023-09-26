@@ -45,7 +45,7 @@ const connectToNetwork = createAsyncThunk("network/connect", async (denom) => {
 
             let signer1 = window.leap.getOfflineSignerOnlyAmino(chainInfo.chainId);
             let offlineSigner1 = await getSigningQuicksilverClient({ rpcEndpoint: chainInfo.rpc, signer: signer1 });
-            result = await fetchNetworkDetails(window.leap, offlineSigner1, chainInfo.chainId)
+            result = await fetchNetworkDetails(window.leap, offlineSigner1, signer1, chainInfo.chainId)
             localStorage.setItem('ChainId', JSON.stringify(chainInfo.chainId));
             console.log("Added to Leap for chainid " + chainInfo.chainId)
         }
@@ -105,7 +105,7 @@ const connectToNetwork = createAsyncThunk("network/connect", async (denom) => {
                     }
                 },
             });
-            result = await fetchNetworkDetails(window.cosmostation.providers.keplr, offlineSigner1, chainInfo.chainId)
+            result = await fetchNetworkDetails(window.cosmostation.providers.keplr, offlineSigner1, signer1, chainInfo.chainId)
         }
         localStorage.setItem('NetworkDenom', denom);
     } catch (e) {

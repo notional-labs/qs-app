@@ -9,3 +9,8 @@ export const getNativeTokenBalance = (balances, baseDenom) => {
     return filterBalance.length > 0 ? filterBalance[0] : {amount: 0, denom: baseDenom}
 }
 
+export const getBalances = async (restApi, addr) => {
+    let balanceReq = await fetch(`${restApi}/cosmos/bank/v1beta1/balances/${addr}`)
+    let balanceRes = await balanceReq.json()
+    return balanceRes
+}
