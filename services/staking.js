@@ -55,3 +55,7 @@ const addValidator = (valAddr, weight) => {
     converted?.unshift(valToByte(weight));
     return converted;
 }
+
+export const unbond = async (zone, sender, unbondAmount, signer) => {
+
+}

@@ -21,7 +21,6 @@ const connectToNetwork = createAsyncThunk("network/connect", async (denom) => {
         if (walletType === 'keplr') {
             const keplr = await getKeplrFromWindow();
             if (keplr) {
-                console.log(denom)
                 await keplr.enable(chainInfo.chainId)
                 let signer = keplr.getOfflineSigner(chainInfo.chainId);
                 let offlineSigner = await getSigningQuicksilverClient({ rpcEndpoint: chainInfo.rpc, signer: signer });

@@ -192,8 +192,6 @@ const ValidatorPanel = () => {
         setSelectVals([...newList])
     }
 
-    console.log(validators)
-
     return (
         <Center w={'100%'} padding={'10vh'} minH={'100%'}>
             <Box className={`${stakingStyles.staking_container}`} w={'100%'} h={'100%'}>

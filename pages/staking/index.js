@@ -5,7 +5,9 @@ import ValidatorPanel from '@/components/staking/validator';
 import PageHead from '@/components/layout/PageHead';
 import { useDispatch, useSelector } from 'react-redux'
 import { getAPYs } from '@/services/zone';
-import { clearData, resetStep, setApr } from '@/state/staking/slice';
+import { clearData, setApr } from '@/state/staking/slice';
+import fetchRemdemtionRate from '@/state/staking/thunks/fetchRedemptionRate';
+import { DataMap } from '@/state/network/utils';
 
 export async function getServerSideProps() {
     const res = await getAPYs()
@@ -15,7 +17,12 @@ export async function getServerSideProps() {
 export default function Staking(props) {
     const dispatch = useDispatch()
     const { stakingStep } = useSelector(state => state.staking)
+    const { selectedDenom, connecting } = useSelector(state => state.network)
     const router = useRouter();
+
+    useEffect(() => {
+        dispatch(fetchRemdemtionRate(DataMap[selectedDenom]?.network.chainId))
+    }, [connecting, selectedDenom, stakingStep])
     
     // Reset state when exit page
     useEffect(() => {
