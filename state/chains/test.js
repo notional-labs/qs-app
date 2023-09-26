@@ -584,8 +584,8 @@ export const TestDataMap = {
         network: {
             chainId: "theta-testnet-001",
             chainName: "Cosmos Hub Test",
-            rpc: "https://rpc.theta-testnet-001.test.quicksilver.zone",
-            rest: "https://lcd.theta-testnet-001.test.quicksilver.zone",
+            rpc: "https://rpc.sentry-02.theta-testnet.polypore.xyz",
+            rest: "https://rest.sentry-02.theta-testnet.polypore.xyz",
 
             bip44: {
                 coinType: 118,

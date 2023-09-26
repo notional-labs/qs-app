@@ -9,6 +9,7 @@ const initialState = {
     typeWallet: "",
     address: "",
     balance: "",
+    signer: {},
 }
 
 export const slice = createSlice({
@@ -34,6 +35,7 @@ export const slice = createSlice({
             state.typeWallet = action.payload.typeWallet
             state.balance = action.payload.balance
             state.connected = action.payload.connected
+            state.signer = action.payload.signer
         })
     }
 })

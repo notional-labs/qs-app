@@ -6,11 +6,7 @@ import {
     Flex,
     Avatar,
     Badge,
-    Divider,
-    Center
 } from "@chakra-ui/react";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
-import GradientDivider from "../layout/GradientDivider";
 
 export default function UnbondingItem() {
     return (

@@ -1,20 +1,69 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     VStack,
-    Flex,
     Text,
     HStack,
     Divider,
     useDisclosure,
-    Avatar,
     Button,
+    Center,
 } from "@chakra-ui/react";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import NetworkSelect from "./NetworkSelect";
 import IntentModal from "./IntentModal";
+import { useDispatch, useSelector } from "react-redux";
+import { DataMap } from "@/state/network/utils";
+import { setIntOpts } from "@/state/assets/slice";
+import ValidatorIntentDisplay from "./ValidatorIntentDisplay";
 
 export default function StakeIntent() {
-    const {isOpen, onClose, onOpen} = useDisclosure()
+    const dispatch = useDispatch()
+    const { client } = useSelector(state => state.wallet)
+    const { selectedDenom } = useSelector(state => state.network)
+    const { address } = useSelector(state => state.wallet)
+
+    const [completedFetch, setCompletedFetch] = useState(false)
+    const [originIntents, setOriginIntents] = useState([])
+    const [isFinished, setIsFinished] = useState(false)
+
+    const { isOpen, onClose, onOpen } = useDisclosure()
+
+    const handleCloseModal = () => {
+        setIsFinished(false)
+        onClose()
+    }
+
+    useEffect(() => {
+        if (client && address) {
+            client.quicksilver.interchainstaking.v1.delegatorIntent({ chain_id: DataMap[selectedDenom]?.zone.chain_id, delegator_address: address })
+                .then(res => {
+                    let intentArr = res.intent.intents.map(item => ({valoperAddress: item.valoper_address, weight: item.weight * 100}))
+                    dispatch(setIntOpts(intentArr))
+                    setOriginIntents(intentArr)
+                    setCompletedFetch(true)
+                })
+                .catch(e => {
+                    setCompletedFetch(true)
+                    console.log(e)
+                })
+        }
+    }, [client, address, selectedDenom])
+
+    useEffect(() => {
+        if (isFinished) {
+            client.quicksilver.interchainstaking.v1.delegatorIntent({ chain_id: DataMap[selectedDenom].zone.chain_id, delegator_address: address })
+                .then(res => {
+                    let intentArr = res.intent.intents.map(item => ({valoperAddress: item.valoper_address, weight: item.weight * 100}))
+                    dispatch(setIntOpts(intentArr))
+                    setOriginIntents(intentArr)
+                    setCompletedFetch(true)
+                })
+                .catch(e => {
+                    setCompletedFetch(true)
+                    console.log(e)
+                })
+        }
+    }, [isFinished])
 
     return (
         <VStack
@@ -25,7 +74,7 @@ export default function StakeIntent() {
             <HStack w='full' justifyContent={'space-between'}>
                 <Text fontSize={'18px'}>Stake Intent</Text>
                 <Button onClick={onOpen} color='#FF8500' p={0} h={'min'} variant='ghost' rightIcon={<ChevronRightIcon />} fontSize={'14px'}
-                    _hover={{textDecoration: 'underline'}}
+                    _hover={{ textDecoration: 'underline' }}
                 >
                     Edit / Reset Intent
                 </Button>
@@ -45,56 +94,16 @@ export default function StakeIntent() {
                     },
                 }}
             >
-                <Flex w='full' justifyContent={'space-between'}>
-                    <HStack>
-                        <Avatar src={"/assets/qOsmo.svg"} w='36px' h='36px' />
-                        <Text fontSize={'14px'} color='#CDCDCD'>qOSMO</Text>
-                    </HStack>
-                    <Text fontSize={'12px'} fontWeight={700}>20.00%</Text>
-
-                </Flex>
-                <Flex w='full' justifyContent={'space-between'}>
-                    <HStack>
-                        <Avatar src={"/assets/qOsmo.svg"} w='36px' h='36px' />
-                        <Text fontSize={'14px'} color='#CDCDCD'>qOSMO</Text>
-                    </HStack>
-                    <Text fontSize={'12px'} fontWeight={700}>20.00%</Text>
-
-                </Flex>
-                <Flex w='full' justifyContent={'space-between'}>
-                    <HStack>
-                        <Avatar src={"/assets/qOsmo.svg"} w='36px' h='36px' />
-                        <Text fontSize={'14px'} color='#CDCDCD'>qOSMO</Text>
-                    </HStack>
-                    <Text fontSize={'12px'} fontWeight={700}>20.00%</Text>
-
-                </Flex>
-                <Flex w='full' justifyContent={'space-between'}>
-                    <HStack>
-                        <Avatar src={"/assets/qOsmo.svg"} w='36px' h='36px' />
-                        <Text fontSize={'14px'} color='#CDCDCD'>qOSMO</Text>
-                    </HStack>
-                    <Text fontSize={'12px'} fontWeight={700}>20.00%</Text>
-
-                </Flex>
-                <Flex w='full' justifyContent={'space-between'}>
-                    <HStack>
-                        <Avatar src={"/assets/qOsmo.svg"} w='36px' h='36px' />
-                        <Text fontSize={'14px'} color='#CDCDCD'>qOSMO</Text>
-                    </HStack>
-                    <Text fontSize={'12px'} fontWeight={700}>20.00%</Text>
-
-                </Flex>
-                <Flex w='full' justifyContent={'space-between'}>
-                    <HStack>
-                        <Avatar src={"/assets/qOsmo.svg"} w='36px' h='36px' />
-                        <Text fontSize={'14px'} color='#CDCDCD'>qOSMO</Text>
-                    </HStack>
-                    <Text fontSize={'12px'} fontWeight={700}>20.00%</Text>
-
-                </Flex>
+                {originIntents.length ? originIntents.map((item, index) =>
+                    <ValidatorIntentDisplay key={"intent-display" + index} valoperAddress={item.valoperAddress} weight={item.weight} />
+                ) : <Center p='20px' textAlign={'center'}>
+                    <Text color='#FBFBFB' fontSize={'16px'} >
+                        You have not set the intent yet. Please click on the button to 'Set Intent'
+                    </Text>
+                </Center>
+                }
             </VStack>
-            <IntentModal isOpen={isOpen} onClose={onClose} />
+            <IntentModal isFinished={isFinished} setIsFinished={setIsFinished} completedFetch={completedFetch} isOpen={isOpen} onClose={handleCloseModal} />
         </VStack>
     );
 }
