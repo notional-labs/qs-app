@@ -15,15 +15,17 @@ import {
     Collapse,
 } from "@chakra-ui/react"
 import stakingStyles from '@/styles/Staking.module.css'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import ValidatorIntent from "../list/validatorIntent"
 import OperationProgress from "../progress/operationProgress"
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { getDisplayDenom } from "@/services/string"
 import { staking } from "@/services/staking"
 import { DataMap } from "@/state/network/utils"
+import refreshBalance from "@/state/network/thunks/refreshBalance"
 
 const StakingModal = (props) => {
+    const dispatch = useDispatch()
     const [isProcessing, setIsProcessing] = useState(false)
     const [isFinished, setIsFinished] = useState(false)
     const { selectedDenom, address, signer } = useSelector(state => state.network)
@@ -49,6 +51,12 @@ const StakingModal = (props) => {
         }
     }
 
+    useEffect(() => {
+        if (isFinished) {
+            dispatch(refreshBalance())
+        }
+    }, [isFinished])
+    
     return (
         <Modal
             isOpen={props.isShow}

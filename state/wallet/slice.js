@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import connectToWallet from "./thunks/connectWallet";
 import connectToClient from "./thunks/connectClient";
+import refreshBalance from "./thunks/refreshBalance";
 
 const initialState = {
     client: null,
@@ -8,7 +9,7 @@ const initialState = {
     connected: false,
     typeWallet: "",
     address: "",
-    balance: "",
+    balance: [],
     signer: {},
 }
 
@@ -36,6 +37,9 @@ export const slice = createSlice({
             state.balance = action.payload.balance
             state.connected = action.payload.connected
             state.signer = action.payload.signer
+        })
+        builder.addCase(refreshBalance.fulfilled, (state, action) => {
+            state.balance = action.payload.balance
         })
     }
 })

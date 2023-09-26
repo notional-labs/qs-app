@@ -3,15 +3,14 @@ import { getKeplrFromWindow } from '@keplr-wallet/stores';
 import { getSigningQuicksilverClient } from "quicksilverjs";
 import { TestQuickSilverChainInfo } from '@/state/chains/test'
 import { QuickSilverChainInfo } from "../utils";
-import { Dec } from "@keplr-wallet/unit";
 
 const fetchWalletDetails = async (windowWallet, qsClient, offlineSigner, walletType) => {
     let pubkey = await windowWallet?.getKey(QuickSilverChainInfo.chainId);
     let bech32 = pubkey?.bech32Address;
     if (bech32) {
-        let roBalance = await qsClient.getBalance(bech32, "uqck");
+        let roBalance = await qsClient.getAllBalances(bech32);
         localStorage.setItem('WalletType', walletType);
-        return {signer: offlineSigner, address: bech32, balance: new Dec(roBalance.amount, 6).toString(), connected: true, typeWallet: walletType}
+        return {signer: offlineSigner, address: bech32, balance: roBalance, connected: true, typeWallet: walletType}
     }
     return {signer: offlineSigner, connected: false, typeWallet: "", address: "", balance: ""}
 }

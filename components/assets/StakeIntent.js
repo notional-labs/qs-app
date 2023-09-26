@@ -15,12 +15,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { DataMap } from "@/state/network/utils";
 import { setIntOpts } from "@/state/assets/slice";
 import ValidatorIntentDisplay from "./ValidatorIntentDisplay";
+import refreshBalance from "@/state/wallet/thunks/refreshBalance";
 
 export default function StakeIntent() {
     const dispatch = useDispatch()
-    const { client } = useSelector(state => state.wallet)
+    const { client, address } = useSelector(state => state.wallet)
     const { selectedDenom } = useSelector(state => state.network)
-    const { address } = useSelector(state => state.wallet)
 
     const [completedFetch, setCompletedFetch] = useState(false)
     const [originIntents, setOriginIntents] = useState([])
@@ -62,6 +62,7 @@ export default function StakeIntent() {
                     setCompletedFetch(true)
                     console.log(e)
                 })
+            dispatch(refreshBalance())
         }
     }, [isFinished])
 

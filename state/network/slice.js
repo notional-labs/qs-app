@@ -1,13 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import connectToNetwork from "./thunks/connectNetwork";
 import fetchValidators from "./thunks/fetchValidators";
+import refreshBalance from "./thunks/refreshBalance";
 
 const initialState = {
     connecting: false,
     connected: false,
     selectedDenom: "",
     address: "",
-    balance: "",
+    balance: [],
     zoneData: {},
     isFetching: false,
     valStatus: 0,
@@ -44,6 +45,9 @@ export const slice = createSlice({
             state.isFetching = false
             state.valMap = action.payload.valMap
             state.valArr = action.payload.valArr
+        })
+        builder.addCase(refreshBalance.fulfilled, (state, action) => {
+            state.balance = action.payload.balance
         })
     }
 })
