@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import {
     VStack,
     Flex,
@@ -10,9 +10,12 @@ import {
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { useSelector } from "react-redux";
+import { getNativeTokenBalance } from '@/services/account'
+import { getAmountFromDenom } from "@/services/string";
 
 export default function StakingInfo({aprInfo}) {
     const { balance, typeWallet } = useSelector(state => state.wallet)
+    const [nativeBalance, setNativeBalance] = useState({amount: 0, denom: "uqck"})
 
     const stakeLink = useMemo(() => {
         switch(typeWallet) {
@@ -25,6 +28,12 @@ export default function StakingInfo({aprInfo}) {
         }
         return "#"
     }, [typeWallet])
+
+    useEffect(() => {
+        if (balance) {
+            setNativeBalance(getNativeTokenBalance(balance, "uqck"))
+        }
+    }, [balance])
 
     return (
         <VStack
@@ -42,7 +51,7 @@ export default function StakingInfo({aprInfo}) {
             </HStack>
             <Flex w='full' justifyContent={'space-between'}>
                 <Text fontSize={'12px'} color={'#9E9E9E'}>Quicksilver Balance</Text>
-                <Text fontSize={'12px'} color={'#9E9E9E'}>{parseFloat(balance).toFixed(4)}</Text>
+                <Text fontSize={'12px'} color={'#9E9E9E'}>{getAmountFromDenom(nativeBalance)}</Text>
             </Flex>
 
             <Button as={Link}
