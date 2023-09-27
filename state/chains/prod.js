@@ -221,8 +221,8 @@ export const ProdChainInfos = [
     {
         chainId: "stargaze-1",
         chainName: "Stargaze",
-        rpc: "https://rpc.stargaze-1.quicksilver.zone",
-        rest: "https://lcd.stargaze-1.quicksilver.zone",
+        rpc: "https://rpc-stargaze-ia.cosmosia.notional.ventures",
+        rest: "https://api-stargaze-ia.cosmosia.notional.ventures",
 
         bip44: {
             coinType: 118,
@@ -394,41 +394,6 @@ export const ProdZoneInfos = [
         base_logo: "/assets/Cosmos.png",
     },
     {
-        name: "Juno",
-        connection_id: "connection-50",
-        chain_id: "juno-1",
-        deposit_address: {
-            address: "juno1weac6k2gfyy0xa3rmzvlclzn9rl5msqt9hyjd7gx8dzx49zcjpssjx25x4",
-            port_name: "icacontroller-juno-1.deposit",
-            withdrawal_address: "juno1c6asq2pt0s6pg62jmgvvr3ad2rd39u4ts63809qc8jejr5lpjtlqw4f4ra",
-            balance_waitgroup: 0
-        },
-        withdrawal_address: {
-            address: "juno1c6asq2pt0s6pg62jmgvvr3ad2rd39u4ts63809qc8jejr5lpjtlqw4f4ra",
-            port_name: "icacontroller-juno-1.withdrawal",
-            withdrawal_address: "juno1c6asq2pt0s6pg62jmgvvr3ad2rd39u4ts63809qc8jejr5lpjtlqw4f4ra",
-            balance_waitgroup: 0
-        },
-        performance_address: {
-            address: "juno1jq9hx9ncl7wsjpr0fw5mvpnds8u7cdxtj77jvxg66j5jpng7se4q6nf0ly",
-            port_name: "icacontroller-juno-1.performance",
-            withdrawal_address: "juno1c6asq2pt0s6pg62jmgvvr3ad2rd39u4ts63809qc8jejr5lpjtlqw4f4ra",
-            balance_waitgroup: 0
-        },
-        delegation_address: {
-            address: "juno1rawmfcfnaul2qmtc3qds4t87h9wcnnp9rp5mw925vzkery4ewrcq30r6hl",
-
-            port_name: "icacontroller-juno-1.delegate",
-            withdrawal_address: "juno1c6asq2pt0s6pg62jmgvvr3ad2rd39u4ts63809qc8jejr5lpjtlqw4f4ra",
-            balance_waitgroup: 0
-        },
-        account_prefix: "juno",
-        local_denom: "uqjuno",
-        base_denom: "ujuno",
-        local_logo: "/assets/qJuno.svg",
-        base_logo: "/assets/Juno.png",
-    },
-    {
         name: "Osmosis",
         connection_id: "connection-2",
         chain_id: "osmosis-1",
@@ -584,6 +549,11 @@ export const ProdDataMap = {
     uatom: {
         local_logo: "/assets/qAtom.svg",
         base_logo: "/assets/Cosmos.png",
+        local_symbol: "qATOM",
+        base_symbol: "ATOM",
+        pool_id: "944",
+        chainlist_prefix: "cosmos",
+        decimals: 6,
         network_name: "Cosmos",
         symbol: "ATOM",
         zone: {
@@ -616,12 +586,14 @@ export const ProdDataMap = {
             account_prefix: "cosmos",
             local_denom: "uqatom",
             base_denom: "uatom",
+            local_ibc_denom: "ibc/32B1E5958441B955D176EE7691EB25CEEA1002D1A9E4A4A897161114FF6ED008",
+            base_ibc_denom: "ibc/C4CFF46FD6DE35CA4CF4CE031E643C8FDC9BA4B99AE598E9B0ED98FE3A2319F9",
         },
         network: {
             chainId: "cosmoshub-4",
             chainName: "CosmosHub",
-            rpc: "https://rpc.cosmoshub-4.quicksilver.zone",
-            rest: "https://lcd.cosmoshub-4.quicksilver.zone",
+            rpc: "https://rpc-cosmoshub-ia.cosmosia.notional.ventures",
+            rest: "https://api-cosmoshub-ia.cosmosia.notional.ventures",
 
             bip44: {
                 coinType: 118,
@@ -668,7 +640,11 @@ export const ProdDataMap = {
         local_logo: "/assets/qOsmo.svg",
         base_logo: "/assets/Osmosis.png",
         network_name: "Osmosis",
-        symbol: "OSMO",
+        local_symbol: "qOSMO",
+        base_symbol: "OSMO",
+        pool_id: "956",
+        chainlist_prefix: "osmosis",
+        decimals: 6,
         zone: {
             connection_id: "connection-2",
             chain_id: "osmosis-1",
@@ -681,14 +657,12 @@ export const ProdDataMap = {
             },
             withdrawal_address: {
                 address: "osmo1ckchpf8xc822qyy7alfknrvux24zx382jqsnwfyxuxk44ljsefgsa2m9x4",
-
                 port_name: "icacontroller-osmosis-1.withdrawal",
                 withdrawal_address: "osmo1ckchpf8xc822qyy7alfknrvux24zx382jqsnwfyxuxk44ljsefgsa2m9x4",
                 balance_waitgroup: 0
             },
             performance_address: {
                 address: "osmo1laez676yk5lhtujzp86equz0vl0wu23uk29t7cne6258nk6a3mdsexkaqg",
-
                 port_name: "icacontroller-osmosis-1.performance",
                 withdrawal_address: "osmo1ckchpf8xc822qyy7alfknrvux24zx382jqsnwfyxuxk44ljsefgsa2m9x4",
                 balance_waitgroup: 0
@@ -703,12 +677,14 @@ export const ProdDataMap = {
             account_prefix: "osmo",
             local_denom: "uqosmo",
             base_denom: "uosmo",
+            local_ibc_denom: "ibc/42D24879D4569CE6477B7E88206ADBFE47C222C6CAD51A54083E4A72594269FC",
+            base_ibc_denom: "ibc/6CE8E927869E764D11651D0E498FDF532963F6B8BFAC13943C458224DB3F88B9",
         },
         network: {
             chainId: "osmosis-1",
             chainName: "Osmosis",
-            rpc: "https://rpc.osmosis-1.quicksilver.zone",
-            rest: "https://lcd.osmosis-1.quicksilver.zone",
+            rpc: "https://rpc-osmosis-ia.cosmosia.notional.ventures",
+            rest: "https://api-osmosis-ia.cosmosia.notional.ventures",
             bip44: {
                 coinType: 118,
             },
@@ -750,95 +726,15 @@ export const ProdDataMap = {
             },
         }
     },
-    ujuno: {
-        local_logo: "/assets/qJuno.svg",
-        base_logo: "/assets/Juno.png",
-        network_name: "Juno",
-        symbol: "JUNO",
-        zone: {
-            connection_id: "connection-50",
-            chain_id: "juno-1",
-            deposit_address: {
-                address: "juno1weac6k2gfyy0xa3rmzvlclzn9rl5msqt9hyjd7gx8dzx49zcjpssjx25x4",
-                port_name: "icacontroller-juno-1.deposit",
-                withdrawal_address: "juno1c6asq2pt0s6pg62jmgvvr3ad2rd39u4ts63809qc8jejr5lpjtlqw4f4ra",
-                balance_waitgroup: 0
-            },
-            withdrawal_address: {
-                address: "juno1c6asq2pt0s6pg62jmgvvr3ad2rd39u4ts63809qc8jejr5lpjtlqw4f4ra",
-                port_name: "icacontroller-juno-1.withdrawal",
-                withdrawal_address: "juno1c6asq2pt0s6pg62jmgvvr3ad2rd39u4ts63809qc8jejr5lpjtlqw4f4ra",
-                balance_waitgroup: 0
-            },
-            performance_address: {
-                address: "juno1jq9hx9ncl7wsjpr0fw5mvpnds8u7cdxtj77jvxg66j5jpng7se4q6nf0ly",
-                port_name: "icacontroller-juno-1.performance",
-                withdrawal_address: "juno1c6asq2pt0s6pg62jmgvvr3ad2rd39u4ts63809qc8jejr5lpjtlqw4f4ra",
-                balance_waitgroup: 0
-            },
-            delegation_address: {
-                address: "juno1rawmfcfnaul2qmtc3qds4t87h9wcnnp9rp5mw925vzkery4ewrcq30r6hl",
-
-                port_name: "icacontroller-juno-1.delegate",
-                withdrawal_address: "juno1c6asq2pt0s6pg62jmgvvr3ad2rd39u4ts63809qc8jejr5lpjtlqw4f4ra",
-                balance_waitgroup: 0
-            },
-            account_prefix: "juno",
-            local_denom: "uqjuno",
-            base_denom: "ujuno",
-        },
-        network: {
-            chainId: "juno-1",
-            chainName: "Juno",
-            rpc: "https://rpc.juno-1.quicksilver.zone",
-            rest: "https://lcd.juno-1.quicksilver.zone",
-
-            bip44: {
-                coinType: 118,
-            },
-            bech32Config: {
-                bech32PrefixAccAddr: "juno",
-                bech32PrefixAccPub: "junopub",
-                bech32PrefixValAddr: "junovaloper",
-                bech32PrefixValPub: "junovaloperpub",
-                bech32PrefixConsAddr: "junovalcons",
-                bech32PrefixConsPub: "junovalconspub",
-            },
-            currencies: [
-                {
-                    coinDenom: "JUNO",
-                    coinMinimalDenom: "ujuno",
-                    coinDecimals: 6,
-                    coinGeckoId: "juno-network",
-                },
-            ],
-            feeCurrencies: [
-                {
-                    coinDenom: "JUNO",
-                    coinMinimalDenom: "ujuno",
-                    coinDecimals: 6,
-                    coinGeckoId: "juno-network",
-                },
-            ],
-            stakeCurrency: {
-                coinDenom: "JUNO",
-                coinMinimalDenom: "ujuno",
-                coinDecimals: 6,
-                coinGeckoId: "juno-network",
-            },
-            coinType: 118,
-            gasPriceStep: {
-                low: 0.01,
-                average: 0.015,
-                high: 0.03,
-            }
-        }
-    },
     uregen: {
         local_logo: "/assets/qRegen.svg",
         base_logo: "/assets/Regen.png",
         network_name: "Regen",
-        symbol: "REGEN",
+        local_symbol: "qREGEN",
+        base_symbol: "REGEN",
+        pool_id: "948",
+        chainlist_prefix: "regen",
+        decimals: 6,
         zone: {
             connection_id: "connection-9",
             chain_id: "regen-1",
@@ -872,12 +768,14 @@ export const ProdDataMap = {
             account_prefix: "regen",
             local_denom: "uqregen",
             base_denom: "uregen",
+            local_ibc_denom: "ibc/B2DCA297A3AFF98480BCCCC962E1D00A3BBE06A37136D3FABD16DC8FB19451E1",
+            base_ibc_denom: "ibc/A7E38774F447445DB94A8ED00BEE78EFC43EED7A732D314D3F7F4AB743993E9F",
         },
         network: {
             chainId: "regen-1",
             chainName: "Regen Mainnet",
-            rpc: "https://rpc.regen-1.quicksilver.zone",
-            rest: "https://lcd.regen-1.quicksilver.zone",
+            rpc: "https://rpc-regen-ia.cosmosia.notional.ventures",
+            rest: "https://api-regen-ia.cosmosia.notional.ventures",
             bip44: {
                 coinType: 118,
             },
@@ -920,10 +818,14 @@ export const ProdDataMap = {
         }
     },
     usomm: {
-        local_logo: "/assets/qSomm.svg",
+        local_logo: "/assets/qSomm.png",
         base_logo: "/assets/sommelier.png",
         network_name: "Sommelier",
-        symbol: "SOMM",
+        local_symbol: "qSOMM",
+        base_symbol: "SOMM",
+        pool_id: "1087",
+        chainlist_prefix: "sommelier",
+        decimals: 6,
         zone: {
             connection_id: "connection-54",
             chain_id: "sommelier-3",
@@ -958,6 +860,8 @@ export const ProdDataMap = {
             account_prefix: "somm",
             local_denom: "uqsomm",
             base_denom: "usomm",
+            local_ibc_denom: "ibc/9C634C3B5AD926FB709CB6F6F5435B8D5B42C5ED7B47D3ABA433868FB47C5A8B",
+            base_ibc_denom: "ibc/BFF8BC09B94E2EA90B64961A181D2383280FFA7847109DE1AB4ECA366466462A",
         },
         network: {
             chainId: "sommelier-3",
@@ -1010,7 +914,11 @@ export const ProdDataMap = {
         local_logo: "/assets/qSTAR.svg",
         base_logo: "/assets/Stargaze.png",
         network_name: "Stargaze",
-        symbol: "STARS",
+        local_symbol: "qSTARS",
+        base_symbol: "STARS",
+        chainlist_prefix: "stargaze",
+        pool_id: "903",
+        decimals: 6,
         zone: {
             connection_id: "connection-0",
             chain_id: "stargaze-1",
@@ -1044,12 +952,14 @@ export const ProdDataMap = {
             account_prefix: "stars",
             local_denom: "uqstars",
             base_denom: "ustars",
+            local_ibc_denom: "ibc/46E27FBBC56A14AD0029678BB34A4164F650AA3711EEDEA0D05E08DB41D13BF0",
+            base_ibc_denom: "ibc/49BAE4CD2172833F14000627DA87ED8024AD46A38D6ED33F6239F22B5832F958",
         },
         network: {
             chainId: "stargaze-1",
             chainName: "Stargaze",
-            rpc: "https://rpc.stargaze-1.quicksilver.zone",
-            rest: "https://lcd.stargaze-1.quicksilver.zone",
+            rpc: "https://rpc-stargaze-ia.cosmosia.notional.ventures",
+            rest: "https://api-stargaze-ia.cosmosia.notional.ventures",
 
             bip44: {
                 coinType: 118,

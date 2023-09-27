@@ -16,15 +16,17 @@ import {
     useToast,
 } from "@chakra-ui/react"
 import stakingStyles from '@/styles/Staking.module.css'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import ValidatorIntent from "../list/validatorIntent"
 import OperationProgress from "../progress/operationProgress"
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { getDisplayDenom } from "@/services/string"
 import { staking } from "@/services/staking"
 import { DataMap } from "@/state/network/utils"
+import refreshBalance from "@/state/network/thunks/refreshBalance"
 
 const StakingModal = (props) => {
+    const dispatch = useDispatch()
     const [isProcessing, setIsProcessing] = useState(false)
     const [isFinished, setIsFinished] = useState(false)
     const { selectedDenom, address, signer } = useSelector(state => state.network)
@@ -53,11 +55,16 @@ const StakingModal = (props) => {
             })
             setIsFinished(false)
             setIsProcessing(false)
-            console.log(e)
             props.setIsShow(false)
         }
     }
 
+    useEffect(() => {
+        if (isFinished) {
+            dispatch(refreshBalance())
+        }
+    }, [isFinished])
+    
     return (
         <Modal
             isOpen={props.isShow}
@@ -164,7 +171,7 @@ const StakingModal = (props) => {
                             {
                                 isFinished ? <OperationProgress
                                     mainText={'Transaction Successful'}
-                                    subText={'The updated qAsset balance will be reflected in your Quicksilver wallet in approximately 10 minutes. This dialogue will auto-refresh.'}
+                                    subText={'The updated qAsset balance will be reflected in your Quicksilver wallet in approximately 30 to 60 seconds. This dialogue will auto-refresh.'}
                                     txHash={txHash}
                                     isFinished={isFinished}
                                 /> : isProcessing ? <OperationProgress

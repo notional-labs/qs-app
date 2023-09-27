@@ -101,8 +101,8 @@ const ValidatorPanel = () => {
 
     // Handle when user filter by search, favourites and status
     useEffect(() => {
-        let vals = filterBySearch(validators)
-        vals = filterByFavourites(vals)
+        let vals = filterByFavourites(validators)
+        vals = filterBySearch(vals)
         vals = filterByStatus(vals)
         setFilterVals([...vals])
     }, [pannelMode, status, search])
@@ -110,6 +110,7 @@ const ValidatorPanel = () => {
     const filterByFavourites = (vals) => {
         let newVals = []
         if (pannelMode === 1) {
+            let count = 0
             const favouritesList = localStorage.getItem('favourites')
             let currentList
             if (favouritesList) {
@@ -118,9 +119,15 @@ const ValidatorPanel = () => {
                 } catch {
                     return newVals
                 }
-                newVals = vals.filter(val => {
-                    return currentList.indexOf(val.operator_address) !== -1
-                })
+                for (let i = 0; i < vals.length; i++) {
+                    if (count === currentList.length) {
+                        break
+                    }
+                    if (currentList.indexOf(vals[i].operator_address) !== -1) {
+                        newVals.push(vals[i])
+                        count ++
+                    }
+                }
             }
             else {
                 newVals = []
@@ -259,16 +266,16 @@ const ValidatorPanel = () => {
                             >
                                 {
                                     isLoading ? <Center h={'100%'}>
-                                        <Image src='/icons/loading.gif'/>
+                                        <Image src='/icons/loading.gif' h={'25%'} />
                                     </Center> : viewVals.map((val, i) => {
                                         return (
                                             <ValidatorCard
                                                 index={params.limit * (params.page - 1) + i + 1}
                                                 address={val.operator_address}
                                                 name={val.description.moniker}
-                                                votingPower={(parseInt(val.delegator_shares)).toFixed(0)}
+                                                votingPower={(parseInt(val.delegator_shares) / Math.pow(10, 6)).toFixed(0)}
                                                 votingPowerPercentage={`${totalSum > 0 ? parseFloat(((parseInt(val.delegator_shares)) / totalSum) * 100).toFixed(2) : 0} %`}
-                                                commission={`${(parseFloat(val.commission.commission_rates.rate)).toFixed(2)} %`}
+                                                commission={`${(parseFloat(val.commission.commission_rates.rate) * 100).toFixed(2)} %`}
                                                 prScore={0}
                                                 chainName={DataMap[selectedDenom]?.network_name?.toLowerCase()}
                                                 selectVals={selectVals}
@@ -328,6 +335,7 @@ const ValidatorPanel = () => {
                                         calculateIntent()
                                         setShow(true)
                                     }}
+                                    isDisabled={selectVals.length === 0}
                                 >
                                     Next
                                 </Button>
