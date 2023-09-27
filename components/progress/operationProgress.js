@@ -1,8 +1,11 @@
-import { Box, Center, Flex, Image, Link, Spinner, Text } from "@chakra-ui/react";
+import { Box, Center, Flex, Link, Spinner, Text } from "@chakra-ui/react";
 import Lottie from "lottie-react";
 import finishAnimation from '@/public/imgs/finish.json'
+import { DataMap } from "@/state/network/utils";
+import { useSelector } from "react-redux";
 
 const OperationProgress = (props) => {
+    const { selectedDenom } = useSelector(state => state.network)
     return (
         <Center
             padding={'1em 2em'}
@@ -31,7 +34,7 @@ const OperationProgress = (props) => {
                         </Text>
                         {
                             props.txHash && <Text fontSize={'14px'} marginTop={'10px'} color='rgba(205, 205, 205, 1)' fontWeight={'400'}>
-                                Transaction Hash <Link color='rgba(62, 115, 240, 1)'>{props.txHash}</Link>
+                                Transaction Hash <Link color='rgba(62, 115, 240, 1)' href={`https://www.mintscan.io/${DataMap[selectedDenom]?.network_name.toLowerCase() / tx}/${props.txHash}`} isExternal>{props.txHash}</Link>
                             </Text>
                         }
                     </Box>
