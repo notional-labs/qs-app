@@ -11,7 +11,9 @@ import {
     Switch,
     Box,
     Icon,
-    Spinner} from '@chakra-ui/react'
+    Image,
+    useToast
+} from '@chakra-ui/react'
 import { ChevronLeftIcon, SearchIcon } from '@chakra-ui/icons'
 import ValidatorCard from '@/components/card/validator'
 import { GoPencil } from "react-icons/go";
@@ -21,11 +23,6 @@ import { DataMap } from '@/state/network/utils'
 import { getValidatorsFromAPI } from '@/services/zone'
 import { prevStep } from '@/state/staking/slice'
 import ButtonList from '../list/pagination'
-
-const statuses = [
-    'active',
-    'inactive'
-]
 
 const ValidatorPanel = () => {
     const [pannelMode, setPannelMode] = useState(0)
@@ -45,6 +42,8 @@ const ValidatorPanel = () => {
         limit: 10,
         total: 0,
     })
+    const [search, setSearch] = useState('')
+    const toast = useToast()
 
     useEffect(() => {
         (async () => {
@@ -65,11 +64,17 @@ const ValidatorPanel = () => {
                 })
                 setIsloading(false)
             } catch (e) {
+                toast({
+                    position: 'top',
+                    status: 'error',
+                    isClosable: true,
+                    duration: 9000,
+                    title: `Failed to fetch validtor`
+                })
                 setIsloading(false)
-                console.log(e.message)
             }
         })()
-    }, [connecting, selectedDenom, status])
+    }, [connecting, selectedDenom])
 
     useEffect(() => {
         const pagingList = filterVals.slice((params.page - 1) * params.limit, params.page * params.limit)
@@ -94,6 +99,74 @@ const ValidatorPanel = () => {
         setTotalSum(sum)
     }, [validators])
 
+    // Handle when user filter by search, favourites and status
+    useEffect(() => {
+        let vals = filterByFavourites(validators)
+        vals = filterBySearch(vals)
+        vals = filterByStatus(vals)
+        setFilterVals([...vals])
+    }, [pannelMode, status, search])
+
+    const filterByFavourites = (vals) => {
+        let newVals = []
+        if (pannelMode === 1) {
+            let count = 0
+            const favouritesList = localStorage.getItem('favourites')
+            let currentList
+            if (favouritesList) {
+                try {
+                    currentList = JSON.parse(favouritesList)
+                } catch {
+                    return newVals
+                }
+                for (let i = 0; i < vals.length; i++) {
+                    if (count === currentList.length) {
+                        break
+                    }
+                    if (currentList.indexOf(vals[i].operator_address) !== -1) {
+                        newVals.push(vals[i])
+                        count ++
+                    }
+                }
+            }
+            else {
+                newVals = []
+            }
+        } else {
+            newVals = [...vals]
+        }
+        return newVals
+    }
+
+    const filterByStatus = (vals) => {
+        let newVals = []
+        if (status === 0) {
+            newVals = vals.filter(val => {
+                return val.status === 'BOND_STATUS_BONDED'
+            })
+        }
+        else {
+            newVals = [...vals]
+        }
+        return newVals
+    }
+
+    const filterBySearch = (vals) => {
+        let newVals
+        if (search === '') {
+            newVals = [...vals]
+        } else {
+            newVals = vals.filter(val => {
+                return val.description.moniker.toLowerCase().includes(search)
+            })
+        }
+        return newVals
+    }
+
+    const handleSearch = (e) => {
+        setSearch(e.target.value)
+    }
+
     const wrapSetParams = (index) => {
         setParams({ ...params, page: index })
     }
@@ -104,17 +177,6 @@ const ValidatorPanel = () => {
         } else {
             setStatus(0)
         }
-    }
-
-    const handleSearch = (e) => {
-        if (e.target.value === '') {
-            setFilterVals([...validators])
-            return
-        }
-        const fiterVals = validators.filter(val => {
-            return val.description.moniker.toLowerCase().includes(e.target.value)
-        })
-        setFilterVals([...fiterVals])
     }
 
     const calculateIntent = () => {
@@ -204,16 +266,16 @@ const ValidatorPanel = () => {
                             >
                                 {
                                     isLoading ? <Center h={'100%'}>
-                                        <Spinner color='white' boxSize={'4em'} />
+                                        <Image src='/icons/loading.gif' h={'25%'} />
                                     </Center> : viewVals.map((val, i) => {
                                         return (
                                             <ValidatorCard
-                                                index={params.limit * ( params.page - 1 ) + i  + 1}
+                                                index={params.limit * (params.page - 1) + i + 1}
                                                 address={val.operator_address}
                                                 name={val.description.moniker}
-                                                votingPower={(parseInt(val.delegator_shares)).toFixed(0)}
+                                                votingPower={(parseInt(val.delegator_shares) / Math.pow(10, 6)).toFixed(0)}
                                                 votingPowerPercentage={`${totalSum > 0 ? parseFloat(((parseInt(val.delegator_shares)) / totalSum) * 100).toFixed(2) : 0} %`}
-                                                commission={`${(parseFloat(val.commission.commission_rates.rate)).toFixed(2)} %`}
+                                                commission={`${(parseFloat(val.commission.commission_rates.rate) * 100).toFixed(2)} %`}
                                                 prScore={0}
                                                 chainName={DataMap[selectedDenom]?.network_name?.toLowerCase()}
                                                 selectVals={selectVals}
@@ -273,6 +335,7 @@ const ValidatorPanel = () => {
                                         calculateIntent()
                                         setShow(true)
                                     }}
+                                    isDisabled={selectVals.length === 0}
                                 >
                                     Next
                                 </Button>

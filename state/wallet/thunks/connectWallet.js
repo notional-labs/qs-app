@@ -22,13 +22,13 @@ const connectToWallet = createAsyncThunk("wallet/connect", async (walletType) =>
             const keplr = await getKeplrFromWindow();
             if (keplr) {
                 await keplr.enable(QuickSilverChainInfo.chainId)
-                let signer = keplr.getOfflineSignerOnlyAmino(QuickSilverChainInfo.chainId);
+                let signer = keplr.getOfflineSigner(QuickSilverChainInfo.chainId);
                 let offlineSigner = await getSigningQuicksilverClient({ rpcEndpoint: QuickSilverChainInfo.rpc, signer: signer });
                 localStorage.setItem('ChainId', JSON.stringify(QuickSilverChainInfo.chainId));
                 console.log("Enabled for chainid " + QuickSilverChainInfo.chainId)
 
                 await keplr.experimentalSuggestChain(QuickSilverChainInfo)
-                let signer1 = keplr.getOfflineSignerOnlyAmino(QuickSilverChainInfo.chainId);
+                let signer1 = keplr.getOfflineSigner(QuickSilverChainInfo.chainId);
                 let offlineSigner1 = await getSigningQuicksilverClient({ rpcEndpoint: QuickSilverChainInfo.rpc, signer: signer1 });
                 result = await fetchWalletDetails(keplr, offlineSigner1, signer1, walletType)
 

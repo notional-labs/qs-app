@@ -13,6 +13,7 @@ import {
     Button,
     VStack,
     Collapse,
+    useToast,
 } from "@chakra-ui/react"
 import stakingStyles from '@/styles/Staking.module.css'
 import { useEffect, useState } from "react"
@@ -31,6 +32,7 @@ const StakingModal = (props) => {
     const { selectedDenom, address, signer } = useSelector(state => state.network)
     const { stakeAmount, redemptionRate } = useSelector(state => state.staking)
     const [txHash, setTxHash] = useState('')
+    const toast = useToast()
 
     const liquidStake = async () => {
         setIsProcessing(true)
@@ -44,9 +46,15 @@ const StakingModal = (props) => {
             }
             props.setSelectVals([])
         } catch (e) {
+            toast({
+                position: 'top',
+                status: 'error',
+                isClosable: true,
+                duration: 9000,
+                title: `Fail to execute transaction: ${e.message}`
+            })
             setIsFinished(false)
             setIsProcessing(false)
-            console.log(e)
             props.setIsShow(false)
         }
     }
@@ -163,7 +171,7 @@ const StakingModal = (props) => {
                             {
                                 isFinished ? <OperationProgress
                                     mainText={'Transaction Successful'}
-                                    subText={'The updated qAsset balance will be reflected in your Quicksilver wallet in approximately 10 minutes. This dialogue will auto-refresh.'}
+                                    subText={'The updated qAsset balance will be reflected in your Quicksilver wallet in approximately 30 to 60 seconds. This dialogue will auto-refresh.'}
                                     txHash={txHash}
                                     isFinished={isFinished}
                                 /> : isProcessing ? <OperationProgress

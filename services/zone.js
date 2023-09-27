@@ -78,7 +78,6 @@ export const getNativeValidators = async (rpc, status) => {
                 }
             }
         }
-        console.log(validators)
         return validators
     }
     catch (e) {
@@ -110,6 +109,23 @@ export const getAPY = async (chainId) => {
             return chain.chain_id === chainId
         })
         return chainInfo.length > 0 ? chainInfo[0].apr : 0
+    } catch (e) {
+        throw e
+    }
+}
+
+export const getAPYs = async () => {
+    try {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_QUICKSILVER_DATA_API}/apr`)
+        const { chains } = res.data
+        if (!chains) {
+            return {}
+        }
+        let apr = {}
+        chains.forEach(chain => {
+            apr[chain.chain_id] = chain.apr
+        })
+        return apr
     } catch (e) {
         throw e
     }

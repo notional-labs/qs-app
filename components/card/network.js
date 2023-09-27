@@ -17,22 +17,12 @@ import { getAPY } from '@/services/zone'
 
 const NetworkCard = (props) => {
     const dispatch = useDispatch()
-    const [apy, setApy] = useState(0)
-
-    useEffect(() => {
-        (async () => {
-            try {
-                const res = await getAPY(props.zone.chain_id)
-                setApy(res)
-            } catch (e) {
-                console.log(e.message)
-            }
-        })()
-    }, [])
+    const { apr } = useSelector(state => state.staking)
 
     const handleSelectNetwork = useCallback((denom) => {
         dispatch(connectToNetwork(denom))
     }, [])
+    
     return (
         <Flex
             background='linear-gradient(93deg, rgba(0, 0, 0, 0.39) 41.57%, rgba(0, 0, 0, 0.39) 102.36%, rgba(165, 162, 162, 0.29) 105.28%, rgba(120, 117, 117, 0.40) 108.95%, rgba(231, 227, 227, 0.14) 110.37%, rgba(171, 171, 171, 0.09) 123.66%)'
@@ -59,7 +49,7 @@ const NetworkCard = (props) => {
             </Center>
             <Box>
                 <Heading as='h6' size={'md'}>
-                    {`${(apy * 100).toFixed(2)} %`}
+                    {`${(apr && apr[props.zone.chain_id]? apr[props.zone.chain_id] * 100 : 0 ).toFixed(2)} %`}
                 </Heading>
                 <Text className={`${stakingStyles.switch_network_modal_sub_text}`} textAlign={'end'}>
                     APY

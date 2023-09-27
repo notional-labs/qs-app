@@ -24,12 +24,12 @@ const navButton = [
         img: '/icons/defi.svg',
         currentPathImg: '/icons/defib.svg'
     },
-    {
-        text: "Airdrop",
-        path: "/airdrop",
-        img: '/icons/airdrop.svg',
-        currentPathImg: '/icons/airdropb.svg'
-    },
+    // {
+    //     text: "Airdrop",
+    //     path: "/airdrop",
+    //     img: '/icons/airdrop.svg',
+    //     currentPathImg: '/icons/airdropb.svg'
+    // },
     {
         text: "Governance",
         path: "/governance",

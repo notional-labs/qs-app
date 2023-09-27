@@ -4,6 +4,7 @@ import networkReducer from "./network/slice";
 import stakingReducer from './staking/slice'
 import assetsReducer from './assets/slice'
 import proposalReducer from "./proposals/slice"
+import unbondReducer from "./unbond/slice"
 
 export const store = configureStore({
     reducer: {
@@ -11,7 +12,8 @@ export const store = configureStore({
         network: networkReducer,
         staking: stakingReducer,
         assets: assetsReducer,
-        proposals: proposalReducer
+        proposals: proposalReducer,
+        unbond: unbondReducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
