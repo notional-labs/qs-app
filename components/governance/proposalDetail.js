@@ -147,7 +147,7 @@ const ProposalDetail = ({ proposal }) => {
               <Text>Time Left:</Text>
             </Center>
           </Flex>
-          <Flex>
+          <Flex> 
             <HStack
               style={{
                 textAlign: "left",
@@ -196,7 +196,7 @@ const ProposalDetail = ({ proposal }) => {
               </Text>
             </div>
           </HStack>
-          <HStack spacing="50px" style={{ textAlign: "left" }}>
+          <HStack spacing="50px" marginTop={'20px'} style={{ textAlign: "left" }}>
             <div>
               <Doughnut
                 key={Math.random()}

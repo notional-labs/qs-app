@@ -16,7 +16,12 @@ import {
   Center,
   Box,
 } from "@chakra-ui/react";
-import { ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
+import {
+  ChevronDownIcon,
+  SearchIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { fetchProposal } from "@/state/proposals/thunks/connectProposal";
@@ -33,6 +38,33 @@ const GovernanceList = () => {
   }, [fetchProposal]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+
+  // Calculate total pages
+  const filteredProposals = proposals.filter((proposal) => {
+    const matchesSearch = proposal.messages[0].content.title
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+    const matchesStatus = !filterStatus || proposal.status === filterStatus;
+    return matchesSearch && matchesStatus;
+  });
+
+  const totalPages = Math.ceil(filteredProposals.length / itemsPerPage);
+
+  // Create pagination
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredProposals.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
+
+  const pageNumbers = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pageNumbers.push(i);
+  }
+
   return (
     <>
       <PageHead pageTitle="Governance | Quicksilver" />
@@ -170,29 +202,72 @@ const GovernanceList = () => {
                       <Skeleton height="16px" width="60%" mt={4} />
                     </Box>
                   ))
-              : proposals
-                  .filter((proposal) => {
-                    // Filter by search term
-                    const matchesSearch = proposal.messages[0].content.title
-                      .toLowerCase()
-                      .includes(searchTerm.toLowerCase());
-                    const matchesStatus =
-                      !filterStatus || proposal.status === filterStatus;
-                    return matchesSearch && matchesStatus;
-                  })
-                  .map((filteredProposal, index) => {
-                      return (
-                        <GovernanceItem
-                        proposalId={filteredProposal.id}
-                        title={filteredProposal.messages[0].content.title}
-                        vote={filteredProposal.final_tally_result}
-                        startTime={filteredProposal.voting_start_time}
-                        endTime={filteredProposal.voting_end_time}
-                        key={filteredProposal.proposal_id}
-                        index={index}
-                        />
-                        );
-                  })}
+              : currentItems.map((filteredProposal, index) => {
+                  return (
+                    <GovernanceItem
+                      proposalId={filteredProposal.id}
+                      title={filteredProposal.messages[0].content.title}
+                      vote={filteredProposal.final_tally_result}
+                      startTime={filteredProposal.voting_start_time}
+                      endTime={filteredProposal.voting_end_time}
+                      key={filteredProposal.proposal_id}
+                      index={index}
+                    />
+                  );
+                })}
+          </div>
+          <div>
+            <Center marginTop={"32px"} gap={"30px"}>
+              <button
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(currentPage - 1)}
+              >
+                {currentPage === 1 ? (
+                  <ChevronLeftIcon
+                    borderRadius={10}
+                    boxSize={8}
+                    backgroundColor={"#9E9E9E"}
+                  />
+                ) : (
+                  <ChevronLeftIcon
+                    borderRadius={10}
+                    boxSize={8}
+                    backgroundColor={"#FF8500"}
+                  />
+                )}
+              </button>
+              {pageNumbers.map((number) => (
+                <Button
+                  key={number}
+                  backgroundColor={"inherit"}
+                  style={{
+                    color: currentPage === number ? "#FF8500" : "#b0afab",
+                  }}
+                  onClick={() => setCurrentPage(number)}
+                  disabled={currentPage === number}
+                >
+                  {number}
+                </Button>
+              ))}
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(currentPage + 1)}
+              >
+                {currentPage === totalPages ? (
+                  <ChevronRightIcon
+                    borderRadius={10}
+                    boxSize={8}
+                    backgroundColor={"#9E9E9E"}
+                  />
+                ) : (
+                  <ChevronRightIcon
+                    borderRadius={10}
+                    boxSize={8}
+                    backgroundColor={"#FF8500"}
+                  />
+                )}
+              </button>
+            </Center>
           </div>
         </Box>
       </Center>
