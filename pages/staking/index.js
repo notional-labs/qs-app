@@ -8,6 +8,7 @@ import { getAPYs } from '@/services/zone';
 import { clearData, setApr } from '@/state/staking/slice';
 import fetchRemdemtionRate from '@/state/staking/thunks/fetchRedemptionRate';
 import { DataMap } from '@/state/network/utils';
+import { resetData } from '@/state/unbond/slice';
 
 export async function getServerSideProps() {
     const res = await getAPYs()
@@ -34,6 +35,7 @@ export default function Staking(props) {
   
       return () => {
         dispatch(clearData())
+        dispatch(resetData())
         router.events.off("routeChangeStart", exitingFunction);
       };
     }, []);

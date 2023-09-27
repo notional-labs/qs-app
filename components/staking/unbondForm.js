@@ -1,6 +1,6 @@
 import stakingStyles from '@/styles/Staking.module.css'
 import {
-    Button, ButtonGroup, Image, Checkbox,
+    Button, ButtonGroup, Image, 
     Center,
     Flex,
     NumberInput,
@@ -10,40 +10,42 @@ import {
     Text,
 } from '@chakra-ui/react'
 import { useDispatch, useSelector } from 'react-redux'
-import { nextStep, inputAmount } from '@/state/staking/slice'
+import { setUnbondAmout, setNativeAmout, setProcessing } from '@/state/unbond/slice'
 import { DataMap } from '@/state/network/utils'
-import { getAmountFromDenom, getDisplayDenom } from '@/services/string'
-import { getNativeTokenBalance } from '@/services/account'
+import { getAmountFromDenom } from '@/services/string'
 import { getInputPrefix, } from './staking'
+import UnbondModal from '../modal/unbond'
 
 // Make sure user have enough for fee
 const marginAmount = 0.03
 
-const UnbondForm = ({ nativeBalance, qAsset }) => {
+const UnbondForm = ({ qAsset }) => {
     const dispatch = useDispatch()
-    const { selectedDenom, connecting, balance } = useSelector(state => state.network)
-    const { redemptionRate, stakeAmount, qAssetAmount } = useSelector(state => state.staking)
+    const { selectedDenom, connecting } = useSelector(state => state.network)
+    const { redemptionRate } = useSelector(state => state.staking)
+    const { unbondAmount, nativeAmount } = useSelector(state => state.unbond)
 
     const handlerInput = (amt, type) => {
-        if (type === 'native') {
-            dispatch(inputAmount({ stakeAmount: amt, qAssetAmount: amt / redemptionRate }))
+        if (type === 'qAsset') {
+            dispatch(setUnbondAmout({ unbondAmount: amt, redemptionRate: redemptionRate }))
         } else {
-            dispatch(inputAmount({ stakeAmount: amt * redemptionRate, qAssetAmount: amt }))
+            dispatch(setNativeAmout({ nativeAmount: amt, redemptionRate: redemptionRate }))
         }
     }
 
     return (
+        <>
         <div className={`${stakingStyles.panel_container}`}>
             <Text marginBottom={'10px'}>
                 Amount to Unbond
             </Text>
             <InputGroup>
                 <InputLeftElement pointerEvents='none' w={100} h={'100%'}>
-                    {getInputPrefix(DataMap[selectedDenom]?.local_logo, `${DataMap[selectedDenom]?.zone.local_denom}`, '24px')}
+                    {getInputPrefix(DataMap[selectedDenom]?.local_logo, `${DataMap[selectedDenom]?.local_symbol}`, '24px')}
                 </InputLeftElement>
                 <NumberInput
                     defaultValue={0}
-                    value={stakeAmount}
+                    value={unbondAmount}
                     min={0}
                     max={getAmountFromDenom(qAsset)}
                     backgroundColor='#141414'
@@ -66,8 +68,7 @@ const UnbondForm = ({ nativeBalance, qAsset }) => {
             <div className={`${stakingStyles.amount_input_balance}`}>
                 <Center>
                     <text>
-                        BALANCE: {getNativeTokenBalance(balance, DataMap[selectedDenom]?.zone.local_denom).amount / Math.pow(10, 6)} 
-                        {DataMap[selectedDenom]?.zone.local_denom}
+                        BALANCE: {qAsset?.amount / Math.pow(10, 6)} {DataMap[selectedDenom]?.local_symbol}
                     </text>
                 </Center>
                 <ButtonGroup gap='1'>
@@ -80,7 +81,7 @@ const UnbondForm = ({ nativeBalance, qAsset }) => {
                         }}
                         fontSize={'1em'}
                         onClick={() => {
-                            handlerInput(getAmountFromDenom(qAssetAmount) / 2, 'native')
+                            handlerInput(getAmountFromDenom(qAsset) / 2, 'qAsset')
                         }}
                     >
                         Half
@@ -94,11 +95,11 @@ const UnbondForm = ({ nativeBalance, qAsset }) => {
                         }}
                         fontSize={'1em'}
                         onClick={() => {
-                            const newAmount = getAmountFromDenom(qAssetAmount) - marginAmount
+                            const newAmount = getAmountFromDenom(qAsset) - marginAmount
                             if (newAmount < 0) {
-                                handlerInput(0, 'native')
+                                handlerInput(0, 'qAsset')
                             } else {
-                                handlerInput(newAmount, 'native')
+                                handlerInput(newAmount, 'qAsset')
                             }
                         }}
                     >
@@ -118,11 +119,11 @@ const UnbondForm = ({ nativeBalance, qAsset }) => {
             </Text>
             <InputGroup>
                 <InputLeftElement pointerEvents='none' w={100} h={'100%'}>
-                    {getInputPrefix(DataMap[selectedDenom]?.base_logo, DataMap[selectedDenom]?.symbol, '24px')}
+                    {getInputPrefix(DataMap[selectedDenom]?.base_logo, DataMap[selectedDenom]?.base_symbol, '24px')}
                 </InputLeftElement>
                 <NumberInput
                     defaultValue={0}
-                    value={stakeAmount}
+                    value={nativeAmount}
                     min={0}
                     backgroundColor='#141414'
                     w={'full'}
@@ -136,7 +137,7 @@ const UnbondForm = ({ nativeBalance, qAsset }) => {
                     }}
                     variant={'flushed'}
                     boxShadow={'0px 0px 5px 0px rgba(255, 255, 255, 0.50)'}
-                    onChange={(val) => handlerInput(val, 'qAsset')}
+                    onChange={(val) => handlerInput(val, 'native')}
                 >
                     <NumberInputField textAlign="right" />
                 </NumberInput>
@@ -153,7 +154,7 @@ const UnbondForm = ({ nativeBalance, qAsset }) => {
                         Transaction Cost
                     </text>
                     <text className={`${stakingStyles.stat_info_value}`}>
-                        {`${stakeAmount} ${getDisplayDenom(selectedDenom)}`}
+                        {`${unbondAmount} ${DataMap[selectedDenom]?.local_symbol}`}
                     </text>
                 </Flex>
                 <Flex justify={'space-between'} className={`${stakingStyles.stat_info}`}>
@@ -161,7 +162,7 @@ const UnbondForm = ({ nativeBalance, qAsset }) => {
                         Redemption Rate
                     </text>
                     <text className={`${stakingStyles.stat_info_value}`}>
-                        {`1 q${getDisplayDenom(selectedDenom, false)} = ${redemptionRate.toFixed(6)} ${getDisplayDenom(selectedDenom, false)}`}
+                        {`1 ${DataMap[selectedDenom]?.local_symbol} = ${redemptionRate.toFixed(6)} ${DataMap[selectedDenom]?.base_symbol}`}
                     </text>
                 </Flex>
                 <Flex justify={'space-between'} className={`${stakingStyles.stat_info}`}>
@@ -183,12 +184,14 @@ const UnbondForm = ({ nativeBalance, qAsset }) => {
                 _hover={{
                     backgroundColor: '#ba5c1a'
                 }}
-                onClick={() => dispatch(nextStep())}
-                isDisabled={!qAssetAmount || qAssetAmount === 0 || connecting}
+                onClick={() => dispatch(setProcessing({isUnbond: true}))}
+                isDisabled={!unbondAmount || unbondAmount === 0 || connecting}
             >
                 Unbond
             </Button>
         </div>
+        <UnbondModal/>
+        </>
     )
 }
 

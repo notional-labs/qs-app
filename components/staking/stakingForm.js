@@ -39,7 +39,7 @@ const StakingForm = ({nativeBalance}) => {
             </Text>
             <InputGroup>
                 <InputLeftElement pointerEvents='none' w={100} h={'100%'}>
-                    {getInputPrefix(DataMap[selectedDenom]?.base_logo, DataMap[selectedDenom]?.symbol, '24px')}
+                    {getInputPrefix(DataMap[selectedDenom]?.base_logo, DataMap[selectedDenom]?.base_symbol, '24px')}
                 </InputLeftElement>
                 <NumberInput
                     defaultValue={0}
@@ -66,7 +66,7 @@ const StakingForm = ({nativeBalance}) => {
             <div className={`${stakingStyles.amount_input_balance}`}>
                 <Center>
                     <text>
-                        BALANCE: {getNativeTokenBalance(balance, selectedDenom).amount / Math.pow(10, 6)} {DataMap[selectedDenom]?.symbol}
+                        BALANCE: {getNativeTokenBalance(balance, selectedDenom).amount / Math.pow(10, 6)} {DataMap[selectedDenom]?.base_symbol}
                     </text>
                 </Center>
                 <ButtonGroup gap='1'>
@@ -117,7 +117,7 @@ const StakingForm = ({nativeBalance}) => {
             </Text>
             <InputGroup>
                 <InputLeftElement pointerEvents='none' w={100} h={'100%'}>
-                    {getInputPrefix(DataMap[selectedDenom]?.local_logo, `q${DataMap[selectedDenom]?.symbol}`, '24px')}
+                    {getInputPrefix(DataMap[selectedDenom]?.local_logo, `${DataMap[selectedDenom]?.local_symbol}`, '24px')}
                 </InputLeftElement>
                 <NumberInput
                     defaultValue={0}
@@ -160,7 +160,7 @@ const StakingForm = ({nativeBalance}) => {
                         Redemption Rate
                     </text>
                     <text className={`${stakingStyles.stat_info_value}`}>
-                        {`1 q${getDisplayDenom(selectedDenom, false)} = ${redemptionRate.toFixed(6)} ${getDisplayDenom(selectedDenom, false)}`}
+                        {`1 ${DataMap[selectedDenom]?.local_symbol} = ${redemptionRate.toFixed(6)} ${DataMap[selectedDenom]?.base_symbol}`}
                     </text>
                 </Flex>
                 <Flex justify={'space-between'} className={`${stakingStyles.stat_info}`}>

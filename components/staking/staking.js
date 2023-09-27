@@ -54,8 +54,8 @@ export const getOption = (chainInfo) => {
 }
 
 const StakingPannel = () => {
-    const [nativeBalance, setNativeBalance] = useState()
-    const [qAsset, setQAsset] = useState()
+    const [nativeBalance, setNativeBalance] = useState({amount: 0, denom: 'uatom'})
+    const [qAsset, setQAsset] = useState({amount: 0, denom: 'uqatom'})
     const [pannelMode, setPannelMode] = useState(0)
     const [isOpenNetworkSelect, setIsOpenNetworkSelect] = useState(false)
     const dispatch = useDispatch()
@@ -118,7 +118,7 @@ const StakingPannel = () => {
                         boxShadow='0px 0px 5px 0px rgba(255, 255, 255, 0.50)'
                         isLoading={connecting}
                     >
-                        {DataMap[selectedDenom]?.symbol}
+                        {DataMap[selectedDenom]?.base_symbol}
                     </Button>
                 </Flex>
                 <Flex justify={'space-between'}>
@@ -131,7 +131,7 @@ const StakingPannel = () => {
                     </Center>
                     <div className={`${stakingStyles.panel_container}`}>
                         <Text fontSize={'1.25em'}>
-                            About {DataMap[selectedDenom]?.symbol} on Quicksilver
+                            About {DataMap[selectedDenom]?.base_symbol} on Quicksilver
                         </Text>
                         <br />
                         <Flex justify={'space-between'} className={`${stakingStyles.stat_info}`} >
@@ -167,10 +167,10 @@ const StakingPannel = () => {
                         <Flex justify={'space-between'} className={`${stakingStyles.stat_info}`}>
                             <Center gap={2}>
                                 <Image src='/icons/icon4.svg' boxSize={'20px'} />
-                                <Text>Value of 1 {`q${getDisplayDenom(selectedDenom, false)}`}</Text>
+                                <Text>Value of 1 {`${DataMap[selectedDenom]?.local_symbol}`}</Text>
                             </Center>
                             <text className={`${stakingStyles.in_color}`}>
-                                {`1 q${getDisplayDenom(selectedDenom, false)} = ${redemptionRate.toFixed(6)} ${getDisplayDenom(selectedDenom, false)}`}
+                                {`1 ${DataMap[selectedDenom]?.local_symbol} = ${redemptionRate.toFixed(6)} ${DataMap[selectedDenom]?.base_symbol}`}
                             </text>
                         </Flex>
                         <Box
