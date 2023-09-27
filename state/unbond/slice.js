@@ -15,11 +15,11 @@ export const slice = createSlice({
         },
         setUnbondAmout: (state, action) => {
             state.unbondAmount = action.payload.unbondAmount
-            state.nativeAmount = action.payload.unbondAmount / action.payload.redemptionRate
+            state.nativeAmount = action.payload.unbondAmount * action.payload.redemptionRate
         },
         setNativeAmout: (state, action) => {
             state.nativeAmount = action.payload.nativeAmount
-            state.unbondAmount = action.payload.nativeAmount * action.payload.redemptionRate
+            state.unbondAmount = action.payload.nativeAmount / action.payload.redemptionRate
         },
         resetData: (state, action) => {
             state.isUnbond = false

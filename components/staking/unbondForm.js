@@ -58,7 +58,7 @@ const UnbondForm = ({ qAsset }) => {
                     _focus={{
                         borderColor: 'transparent'
                     }}
-                    onChange={(val) => handlerInput(val, 'native')}
+                    onChange={(val) => handlerInput(val, 'qAsset')}
                     variant={'flushed'}
                     boxShadow={'0px 0px 5px 0px rgba(255, 255, 255, 0.50)'}
                 >
