@@ -60,7 +60,7 @@ const StakingPannel = () => {
     const dispatch = useDispatch()
     const { selectedDenom, connecting, balance } = useSelector(state => state.network)
     const walletState = useSelector(state => state.wallet)
-    const { redemptionRate, stakingStep } = useSelector(state => state.staking)
+    const { redemptionRate } = useSelector(state => state.staking)
 
     const handleSelectNetwork = useCallback((denom) => {
         dispatch(connectToNetwork(denom))
@@ -70,7 +70,7 @@ const StakingPannel = () => {
         if (selectedDenom) {
             setNativeBalance(getNativeTokenBalance(balance, selectedDenom))
         }
-    }, [connecting, selectedDenom, balance, stakingStep])
+    }, [connecting, selectedDenom, balance])
 
     useEffect(() => {
         if (selectedDenom) {

@@ -21,7 +21,7 @@ import OperationProgress from "../progress/operationProgress"
 import { useDispatch, useSelector } from 'react-redux'
 import { unbond } from "@/services/staking"
 import { DataMap } from "@/state/network/utils"
-import refreshBalance from "@/state/network/thunks/refreshBalance"
+import refreshBalance from "@/state/wallet/thunks/refreshBalance"
 import { setProcessing } from "@/state/unbond/slice"
 import { ProdQuickSilverChainInfo } from "@/state/chains/prod"
 
@@ -50,6 +50,7 @@ const UnbondModal = () => {
             } else {
                 throw new Error(`Transaction failed, log: ${result.rawLog}`)
             }
+            dispatch(refreshBalance())
         } catch (e) {
             toast({
                 position: 'top',
@@ -63,12 +64,6 @@ const UnbondModal = () => {
             dispatch(setProcessing({ isUnbond: false }))
         }
     }
-
-    useEffect(() => {
-        if (isFinished) {
-            dispatch(refreshBalance())
-        }
-    }, [isFinished])
 
     return (
         <Modal

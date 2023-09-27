@@ -7,9 +7,12 @@ const refreshBalance = createAsyncThunk("wallet/fetch-balance", async (_, {getSt
     const { address } = state.network
 
     try {
-        const balances = await getBalances(QuickSilverChainInfo.rest, address)
-
-        return { result: balances, error: false}
+        const res = await getBalances(QuickSilverChainInfo.rest, address)
+        const {balances} = res
+        if (!balances) {
+            return { balance: [], error: true}
+        }
+        return { balance: balances, error: false}
     } catch (e) {
         console.log(e)
         return { result: [], error: true}

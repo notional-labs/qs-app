@@ -1,0 +1,13 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Cosmoverse 2023//EN
+BEGIN:VEVENT
+UID:Decentralized Success: Community Building in the Web3 Era
+SUMMARY:Decentralized Success: Community Building in the Web3 Era
+DESCRIPTION:Cosmoverse 2023 Day 2 Panel Avril Dutheil - Neutron Daria Chernozub - ICP Turkey Hub Dr. Danny Lim - MarginX Moderator: Adam Wozney
+LOCATION:Main Stage
+DTSTAMP:20230927T175027Z
+DTSTART:20231003T140000Z
+DTEND:20231003T143500Z
+END:VEVENT
+END:VCALENDAR
