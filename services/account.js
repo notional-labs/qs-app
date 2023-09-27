@@ -1,5 +1,5 @@
 export const getNativeTokenBalance = (balances, baseDenom) => {
-    if (balances.length === 0) {
+    if (!balances || balances.length === 0) {
         return {amount: 0, denom: baseDenom}
     }
     const filterBalance = balances.filter(balance => {

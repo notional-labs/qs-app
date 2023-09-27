@@ -34,7 +34,7 @@ const OperationProgress = (props) => {
                         </Text>
                         {
                             props.txHash && <Text fontSize={'14px'} marginTop={'10px'} color='rgba(205, 205, 205, 1)' fontWeight={'400'}>
-                                Transaction Hash <Link color='rgba(62, 115, 240, 1)' href={`https://www.mintscan.io/${DataMap[selectedDenom]?.network_name.toLowerCase() / tx}/${props.txHash}`} isExternal>{props.txHash}</Link>
+                                Transaction Hash <Link color='rgba(62, 115, 240, 1)' href={`https://www.mintscan.io/${DataMap[selectedDenom]?.network_name.toLowerCase()}/tx/${props.txHash}`} isExternal>{props.txHash}</Link>
                             </Text>
                         }
                     </Box>

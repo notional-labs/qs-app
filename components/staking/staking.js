@@ -16,7 +16,6 @@ import SelectNetwork from '@/components/modal/selectNetwork'
 import { ProdZoneInfos } from '@/state/chains/prod'
 import { useDispatch, useSelector } from 'react-redux'
 import connectToNetwork from '@/state/network/thunks/connectNetwork'
-import { inputAmount } from '@/state/staking/slice'
 import fetchRemdemtionRate from '@/state/staking/thunks/fetchRedemptionRate'
 import { DataMap } from '@/state/network/utils'
 import { getAmountFromDenom, getDisplayDenom } from '@/services/string'
@@ -61,7 +60,7 @@ const StakingPannel = () => {
     const dispatch = useDispatch()
     const { selectedDenom, connecting, balance } = useSelector(state => state.network)
     const walletState = useSelector(state => state.wallet)
-    const { redemptionRate } = useSelector(state => state.staking)
+    const { redemptionRate, stakingStep } = useSelector(state => state.staking)
 
     const handleSelectNetwork = useCallback((denom) => {
         dispatch(connectToNetwork(denom))
@@ -71,7 +70,7 @@ const StakingPannel = () => {
         if (selectedDenom) {
             setNativeBalance(getNativeTokenBalance(balance, selectedDenom))
         }
-    }, [connecting, selectedDenom, balance])
+    }, [connecting, selectedDenom, balance, stakingStep])
 
     useEffect(() => {
         if (selectedDenom) {
