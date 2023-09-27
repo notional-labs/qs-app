@@ -78,7 +78,6 @@ export const getNativeValidators = async (rpc, status) => {
                 }
             }
         }
-        console.log(validators)
         return validators
     }
     catch (e) {
