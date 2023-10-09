@@ -50,6 +50,7 @@ const ValidatorCard = (props) => {
             setIsStar(false)
             currentList.splice(index, 1)
             localStorage.setItem('favourites', JSON.stringify([...currentList]))
+            window.dispatchEvent(new Event("update_favourite_list"))
         }
         else {
             setIsStar(true)
