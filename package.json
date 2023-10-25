@@ -30,7 +30,7 @@
     "chart.js": "^4.4.0",
     "framer-motion": "^10.16.4",
     "lottie-react": "^2.4.0",
-    "next": "13.4.19",
+    "next": "13.5.0",
     "quicksilverjs": "^0.8.0",
     "react": "18.2.0",
     "react-chartjs-2": "^5.2.0",
