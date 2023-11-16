@@ -44,6 +44,7 @@ const StakingModal = (props) => {
             } else {
                 throw new Error(`Transaction failed, log: ${result.rawLog}`)
             }
+            dispatch(refreshBalance())
             props.setSelectVals([])
         } catch (e) {
             toast({
@@ -58,12 +59,6 @@ const StakingModal = (props) => {
             props.setIsShow(false)
         }
     }
-
-    useEffect(() => {
-        if (isFinished) {
-            dispatch(refreshBalance())
-        }
-    }, [isFinished])
     
     return (
         <Modal

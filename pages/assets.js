@@ -4,7 +4,7 @@ import {
     VStack,
     Flex,
     Box,
-    Spinner,
+    Image,
 } from "@chakra-ui/react";
 import GradientDivider from "@/components/layout/GradientDivider";
 import ClaimRewards from "@/components/assets/ClaimRewards";
@@ -20,10 +20,10 @@ import { useSelector } from "react-redux";
 import { QuickSilverChainInfo } from "@/state/wallet/utils";
 import { Int } from "@keplr-wallet/unit";
 
-function LoadingBox() {
+function LoadingBox({height}) {
     return (
-        <Center w='full' py={8} gap={2}>
-            <Spinner color='white' boxSize={'4em'} />
+        <Center w='full' py={8} gap={2} h={'100%'}>
+            <Image src='/icons/loading.gif' h={height} />
         </Center>
     )
 }
@@ -103,12 +103,12 @@ function Assets() {
                         <Flex w='full' gap={4} justifyContent={'space-between'} alignItems={'stretch'}>
                             <StakingInfo aprInfo={aprList.find(item => item.chain_id === QuickSilverChainInfo.chainId)} />
                             <GradientDivider orientation="vertical" />
-                            {isLoading ? <Box w='35%'><LoadingBox /></Box> : <Portfolio assets={assetList.filter(item => !(new Int(item.balance).isZero()))} />}
+                            {isLoading ? <Box w='35%'><LoadingBox height={'50%'}/></Box> : <Portfolio assets={assetList.filter(item => !(new Int(item.balance).isZero()))} />}
                             <GradientDivider orientation="vertical" />
                             <StakeIntent />
                         </Flex>
                         <GradientDivider />
-                        {isLoading ? <LoadingBox /> : <QAssets assets={assetList} aprList={aprList} />}
+                        {isLoading ? <LoadingBox height={'10em'}/> : <QAssets assets={assetList} aprList={aprList} />}
                     </VStack>
                 </Center>
                 <Center

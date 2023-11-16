@@ -47,6 +47,7 @@ export const slice = createSlice({
             state.valArr = action.payload.valArr
         })
         builder.addCase(refreshBalance.fulfilled, (state, action) => {
+            console.log(action.payload.balance)
             state.balance = action.payload.balance
         })
     }

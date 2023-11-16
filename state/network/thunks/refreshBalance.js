@@ -7,12 +7,15 @@ const refreshBalance = createAsyncThunk("network/fetch-balance", async (_, {getS
     const { selectedDenom, address } = state.network
 
     try {
-        const balances = await getBalances(DataMap[selectedDenom].network.rest, address)
-
-        return { result: balances, error: false}
+        const res = await getBalances(DataMap[selectedDenom].network.rest, address)
+        const {balances} = res
+        if (!balances) {
+            return { balance: [], error: true}
+        }
+        return { balance: balances, error: false}
     } catch (e) {
         console.log(e)
-        return { result: [], error: true}
+        return { balance: [], error: true}
     }
 })
 
