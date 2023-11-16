@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Navbar, NavbarBrand } from "reactstrap";
-import { Box, Image as ChakraImage, Flex } from "@chakra-ui/react";
+import { Box, Image as ChakraImage, Flex, Text } from "@chakra-ui/react";
 import Link from "next/link";
-import { Center } from "@chakra-ui/react";
 import { usePathname } from 'next/navigation'
 
 const navButton = [
@@ -41,8 +40,6 @@ const navButton = [
 const SideBar = () => {
     const currentPath = usePathname()
     const sidebar = React.createRef();
-    const [width, setWidth] = useState(233);
-    const [full, setFull] = useState(true);
     const [isShows, setIsShows] = useState([]);
 
     useEffect(() => {
@@ -52,31 +49,21 @@ const SideBar = () => {
         setIsShows([...showArray]);
     }, []);
 
-    useEffect(() => {
-        const updateWidth = () => {
-            const container = document.querySelector('.sidebar');
-            if (container) {
-                setWidth(container.offsetWidth);
-            }
-        };
+    // useEffect(() => {
+    //     const updateWidth = () => {
+    //         const container = document.querySelector('.sidebar');
+    //         if (container) {
+    //             setWidth(container.offsetWidth);
+    //         }
+    //     };
 
-        updateWidth();
-        window.addEventListener('resize', updateWidth);
+    //     updateWidth();
+    //     window.addEventListener('resize', updateWidth);
 
-        return () => {
-            window.removeEventListener('resize', updateWidth);
-        };
-    }, []);
-
-    useEffect(() => {
-        if (width < 233) {
-            setFull(false);
-        }
-    }, [width]);
-
-    const resize = () => {
-        setFull(!full);
-    }
+    //     return () => {
+    //         window.removeEventListener('resize', updateWidth);
+    //     };
+    // }, []);
 
     const handleMouseEnter = (button, index) => {
         if (button.subNav) {
@@ -95,25 +82,20 @@ const SideBar = () => {
     };
 
     return (
-        <Box mx={'20px'} my={'10vh'} zIndex={1}>
-            <div className={full ? `sidebar` : `sidebar minimal-size`} ref={sidebar}>
-                <Center>
+        <Box h={'100vh'} zIndex={2} >
+            <div className={`sidebar`} ref={sidebar}>
+                <Box h={'100%'}>
                     <Navbar
                         className="menu"
                         light
                         expand="md"
+                        height={'100vh'}
                     >
-                        <Flex justify={'space-between'} direction={'column'}>
+                        <Flex justify={'start'} direction={'column'}>
                             <NavbarBrand className="text-black dark:text-white logo flex items-center font-semibold text-xl">
                                 {
-                                    full ? <ChakraImage alt="cnweb logo" src={'/logo/qs-text.svg'} />
-                                        : <ChakraImage alt="cnweb logo" src={'/logo/qs_logo.svg'} boxSize={'100%'} />
+                                    <ChakraImage alt="cnweb logo" src={'/logo/qs-text.svg'} />
                                 }
-                                <button 
-                                    className={full ? `resize-btn` : `resize-btn minimal-btn`} onClick={resize} style={{left: full ? '.9em' : '-.9em'}}>
-                                    <span className="up-arrow"></span>
-                                    <span className="down-arrow"></span>
-                                </button>
                             </NavbarBrand>
                             <div className="menu-bar">
                                 {navButton.map((button, index) => {
@@ -133,11 +115,13 @@ const SideBar = () => {
                                             }}
 
                                         >
-                                            {currentPath.includes(button.path) ? <ChakraImage src={button.currentPathImg} boxSize={'80%'} /> : <ChakraImage src={button.img} boxSize={'80%'} />}
+                                            {currentPath.includes(button.path) ? <ChakraImage src={button.currentPathImg} boxSize={'60%'} /> : <ChakraImage src={button.img} boxSize={'60%'} />}
                                             <p style={{
                                                 color: 'rgba(255, 255, 255, 1)',
-                                                display: !full ? 'none' : "inline-block",
-                                                color: currentPath.includes(button.path)? 'rgba(14, 14, 14, 1)' : 'rgba(255, 255, 255, 1)'
+                                                display: "inline-block",
+                                                color: currentPath.includes(button.path) ? 'rgba(14, 14, 14, 1)' : 'rgba(255, 255, 255, 1)',
+                                                fontSize: '1.15em',
+                                                fontWeight: 'bold'
                                             }}
                                             >
                                                 {button.text}
@@ -146,12 +130,20 @@ const SideBar = () => {
                                     );
                                 })}
                             </div>
-                            {full ? <div className="menu-down flex items-center" style={{ color: '#979797', height:'18px', fontSize: '12px'}}>
-                                Powered by Quicksilver Protocol.
-                            </div> : <Box h='18px'/> } 
+                            <Flex
+                                className="menu-down flex items-center"
+                                style={{ color: '#979797', height: '18px', fontSize: '12px' }}
+                                justifyContent={'end'}
+                                flexDirection={'column'}
+                                h={'100%'}
+                            >
+                                <Text>
+                                    Powered by Quicksilver Protocol.
+                                </Text>
+                            </Flex>
                         </Flex>
                     </Navbar>
-                </Center>
+                </Box>
             </div>
         </Box>
     );

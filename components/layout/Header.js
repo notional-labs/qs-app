@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react';
-import { Box } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import WalletModal from '../wallet/WalletModal';
 import WalletPopover from '../wallet/WalletPopover';
 import { useSelector, useDispatch } from 'react-redux';
@@ -11,8 +11,8 @@ import connectToNetwork from '@/state/network/thunks/connectNetwork';
 import fetchValidators from '@/state/network/thunks/fetchValidators';
 export default function Header() {
     const dispatch = useDispatch()
-    const {connected, connecting} = useSelector(state => state.wallet)
-    const {connected: networkConnected, connecting: networkConnecting, selectedDenom} = useSelector(state => state.network)
+    const { connected, connecting } = useSelector(state => state.wallet)
+    const { connected: networkConnected, connecting: networkConnecting, selectedDenom } = useSelector(state => state.network)
 
     useEffect(() => {
         if (window && !connected && !connecting) {
@@ -37,7 +37,7 @@ export default function Header() {
     useEffect(() => {
         dispatch(connectToClient())
     }, [])
-    
+
     useEffect(() => {
         if (selectedDenom && networkConnected && !networkConnecting) {
             dispatch(fetchValidators())
@@ -45,9 +45,17 @@ export default function Header() {
     }, [selectedDenom])
 
     return (
-        <Box position={'fixed'} top={10} right={10} zIndex={10}>
-            {connected ? <WalletPopover /> :
-                <WalletModal />}
+        <Box w={'85vw'}
+            position={'fixed'}
+            backgroundColor={'#191919'}
+            zIndex={1}
+            right={0}
+            padding={'20px 40px 20px 20px'}
+        >
+            <Flex justifyContent={'end'}>
+                {connected ? <WalletPopover /> :
+                    <WalletModal />}
+            </Flex>
         </Box>
     )
 }

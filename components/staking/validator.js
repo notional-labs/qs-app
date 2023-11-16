@@ -1,5 +1,5 @@
 import stakingStyles from '@/styles/Staking.module.css'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import {
     Button, Grid,
     Center,
@@ -44,6 +44,21 @@ const ValidatorPanel = () => {
     })
     const [search, setSearch] = useState('')
     const toast = useToast()
+
+    const filterValidators = useCallback(() => {
+        let vals = filterByFavourites(validators)
+        vals = filterBySearch(vals)
+        vals = filterByStatus(vals)
+        setFilterVals([...vals])
+    }, [validators])
+
+    useEffect(() => {
+        window.keplr && window.addEventListener("update_favourite_list", filterValidators)
+
+        return () => {
+            window.removeEventListener("update_favourite_liste", filterValidators)
+        }
+    }, [])
 
     useEffect(() => {
         (async () => {
